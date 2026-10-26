@@ -1,0 +1,551 @@
+/* ========================================================
+   PORTAL UTAMA PEMBELAJARAN
+   CYBER SECURITY MANAGEMENT - BWP5030
+   style.css (Home Portal)
+   ======================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --bg-dark: #050b14;
+  --bg-surface: #0a1324;
+  --bg-card: #0f1c36;
+  --bg-card-hover: #14254a;
+  --border: #1a2f57;
+  --border-glow: #254685;
+
+  --cyan: #00d4ff;
+  --cyan-glow: rgba(0, 212, 255, 0.2);
+  --cyan-subtle: rgba(0, 212, 255, 0.08);
+
+  --blue-cia: #38bdf8;
+  --purple-gov: #c084fc;
+  --orange-reg: #fb923c;
+  --green-nist: #4ade80;
+
+  --text-main: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-white: #ffffff;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(0, 212, 255, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(192, 132, 252, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(15, 28, 54, 0.7) 0%, transparent 60%),
+    var(--bg-dark);
+}
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Background Cyber Grid */
+.cyber-grid-overlay {
+  position: fixed;
+  inset: 0;
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Header Navbar */
+.portal-header {
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  background: rgba(5, 11, 20, 0.85);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 0 32px;
+}
+
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+}
+
+.brand-shield {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(192, 132, 252, 0.25));
+  border: 1px solid rgba(0, 212, 255, 0.4);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.25);
+}
+
+.brand-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text-white);
+  letter-spacing: -0.01em;
+}
+
+.brand-badge {
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--cyan);
+  letter-spacing: 1px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-pill-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  background: rgba(10, 19, 36, 0.6);
+  transition: var(--transition);
+}
+.nav-pill-link:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: var(--cyan-subtle);
+}
+
+/* ========================================================
+   HERO BANNER
+   ======================================================== */
+.portal-hero {
+  padding: 60px 0 40px;
+  text-align: center;
+}
+
+.hero-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  color: var(--cyan);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.portal-hero h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 46px;
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffffff 40%, #bae6fd 80%, #7dd3fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.portal-hero p {
+  font-size: 17px;
+  color: var(--text-secondary);
+  max-width: 780px;
+  margin: 0 auto 36px;
+  line-height: 1.7;
+}
+
+/* Quick Statistics Grid */
+.portal-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  max-width: 960px;
+  margin: 0 auto 48px;
+}
+
+.stat-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  padding: 18px;
+  border-radius: var(--radius-md);
+  text-align: center;
+  transition: var(--transition);
+}
+.stat-item:hover {
+  border-color: var(--border-glow);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.stat-val {
+  font-family: 'Outfit', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--cyan);
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+
+/* ========================================================
+   SEARCH & FILTER BAR
+   ======================================================== */
+.search-filter-box {
+  max-width: 680px;
+  margin: 0 auto 48px;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: 16px 20px 16px 52px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-white);
+  font-size: 15px;
+  outline: none;
+  transition: var(--transition);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+.search-input:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.25);
+}
+
+.search-icon-pos {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: var(--text-muted);
+}
+
+/* ========================================================
+   MEETING CARDS SECTION
+   ======================================================== */
+.section-title-wrap {
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.section-main-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-white);
+}
+
+.meetings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 28px;
+  margin-bottom: 60px;
+}
+
+.meeting-card {
+  background: linear-gradient(160deg, var(--bg-card) 0%, rgba(10, 19, 36, 0.95) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: var(--transition);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+}
+
+.meeting-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--cyan);
+  box-shadow: 0 20px 45px rgba(0, 212, 255, 0.15);
+}
+
+.meeting-card.p3-theme:hover {
+  border-color: var(--blue-cia);
+  box-shadow: 0 20px 45px rgba(56, 189, 248, 0.2);
+}
+
+.meeting-card.p4-theme {
+  border-top: 4px solid var(--purple-gov);
+}
+.meeting-card.p4-theme:hover {
+  border-color: var(--purple-gov);
+  box-shadow: 0 20px 45px rgba(192, 132, 252, 0.2);
+}
+
+.meeting-top-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.meeting-num-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.p3-num { background: rgba(56, 189, 248, 0.15); color: var(--blue-cia); border: 1px solid rgba(56, 189, 248, 0.3); }
+.p4-num { background: rgba(192, 132, 252, 0.15); color: var(--purple-gov); border: 1px solid rgba(192, 132, 252, 0.3); }
+
+.status-badge-ready {
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(16, 185, 129, 0.15);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 4px 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.meeting-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-white);
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+.meeting-subcpmk {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.meeting-subcpmk strong {
+  color: var(--text-white);
+}
+
+/* Feature tags list */
+.topics-tag-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.topic-tag {
+  font-size: 11.5px;
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+}
+
+.btn-open-module {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 24px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.btn-p3 {
+  background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+  color: #070d19;
+  box-shadow: 0 4px 18px rgba(56, 189, 248, 0.3);
+}
+.btn-p3:hover {
+  box-shadow: 0 8px 25px rgba(56, 189, 248, 0.5);
+  transform: translateY(-2px);
+  color: #000;
+}
+
+.btn-p4 {
+  background: linear-gradient(135deg, #7c3aed 0%, #c084fc 100%);
+  color: #070d19;
+  box-shadow: 0 4px 18px rgba(192, 132, 252, 0.3);
+}
+.btn-p4:hover {
+  box-shadow: 0 8px 25px rgba(192, 132, 252, 0.5);
+  transform: translateY(-2px);
+  color: #000;
+}
+
+.meeting-card.p5-theme {
+  border-top: 4px solid var(--green-nist);
+}
+.meeting-card.p5-theme:hover {
+  border-color: var(--green-nist);
+  box-shadow: 0 20px 45px rgba(74, 222, 128, 0.2);
+}
+.p5-num {
+  background: rgba(74, 222, 128, 0.15);
+  color: var(--green-nist);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+}
+.btn-p5 {
+  background: linear-gradient(135deg, #10b981 0%, #4ade80 100%);
+  color: #070d19;
+  box-shadow: 0 4px 18px rgba(74, 222, 128, 0.3);
+}
+.btn-p5:hover {
+  box-shadow: 0 8px 25px rgba(74, 222, 128, 0.5);
+  transform: translateY(-2px);
+  color: #000;
+}
+
+.meeting-card.p6-theme {
+  border-top: 4px solid #ef4444;
+}
+.meeting-card.p6-theme:hover {
+  border-color: #ef4444;
+  box-shadow: 0 20px 45px rgba(239, 68, 68, 0.25);
+}
+.p6-num {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+.btn-p6 {
+  background: linear-gradient(135deg, #dc2626 0%, #ef4444 60%, #f87171 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 18px rgba(239, 68, 68, 0.35);
+}
+.btn-p6:hover {
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.5);
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+/* Syllabus / Roadmap Card */
+.syllabus-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 36px;
+  margin-bottom: 60px;
+}
+
+.syllabus-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.syllabus-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px;
+}
+.syllabus-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.syllabus-item-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-white);
+}
+
+/* Footer */
+.portal-footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 0 48px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.portal-footer a {
+  color: var(--cyan);
+  text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .portal-header {
+    padding: 0 16px;
+  }
+  .portal-hero h1 {
+    font-size: 32px;
+  }
+  .meetings-grid {
+    grid-template-columns: 1fr;
+  }
+}

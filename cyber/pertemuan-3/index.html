@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CIA Triad & Perlindungan Data | Cyber Security Management - Pertemuan 3</title>
+  <meta name="description" content="Media pembelajaran interaktif Cyber Security Management - Pertemuan 3: Penerapan CIA Triad dan Perlindungan Data untuk mahasiswa perguruan tinggi." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+</head>
+<body>
+<!-- ============ TOPBAR ============ -->
+<header class="topbar" role="banner">
+  <div class="topbar-left">
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle Menu" aria-expanded="false">☰</button>
+    <div class="topbar-brand">
+      <div class="brand-icon" aria-hidden="true">🛡️</div>
+      <div>
+        <div class="brand-text">CyberSec</div>
+        <div class="brand-sub">BWP5030</div>
+      </div>
+    </div>
+  </div>
+  <div class="progress-container" aria-label="Progress belajar">
+    <div class="progress-label">
+      <span>PROGRESS BELAJAR</span>
+      <span id="progressPercent">0%</span>
+    </div>
+    <div class="progress-bar-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="progressBarTrack">
+      <div class="progress-bar-fill" id="progressBarFill"></div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <a href="../index.html" class="btn-reset-progress" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px;" title="Kembali ke Portal Materi">🏠 Portal</a>
+    <button class="btn-reset-progress" id="btnResetProgress" aria-label="Reset progress">↺ Reset</button>
+  </div>
+</header>
+
+<!-- ============ SIDEBAR ============ -->
+<div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+<nav class="sidebar" id="sidebar" aria-label="Navigasi materi">
+  <div class="sidebar-nav">
+    <a href="../index.html" class="nav-item" style="color:var(--cyan);border-bottom:1px solid var(--border);margin-bottom:10px;font-weight:600;"><span class="nav-icon">🏠</span>Portal Utama</a>
+    <div class="nav-section-title">Materi</div>
+    <a href="#hero" class="nav-item" data-section="hero"><span class="nav-num">00</span><span class="nav-icon">🏠</span>Dashboard<span class="nav-dot"></span></a>
+    <a href="#tujuan" class="nav-item" data-section="tujuan"><span class="nav-num">01</span><span class="nav-icon">🎯</span>Tujuan<span class="nav-dot"></span></a>
+    <a href="#cia-triad" class="nav-item" data-section="cia-triad"><span class="nav-num">02</span><span class="nav-icon">🔺</span>CIA Triad<span class="nav-dot"></span></a>
+    <a href="#perlindungan-data" class="nav-item" data-section="perlindungan-data"><span class="nav-num">03</span><span class="nav-icon">🗄️</span>Perlindungan Data<span class="nav-dot"></span></a>
+    <a href="#data-at-rest" class="nav-item" data-section="data-at-rest"><span class="nav-num">04</span><span class="nav-icon">💾</span>Data at Rest<span class="nav-dot"></span></a>
+    <a href="#data-in-transit" class="nav-item" data-section="data-in-transit"><span class="nav-num">05</span><span class="nav-icon">📡</span>Data in Transit<span class="nav-dot"></span></a>
+    <a href="#data-in-use" class="nav-item" data-section="data-in-use"><span class="nav-num">06</span><span class="nav-icon">⚙️</span>Data in Use<span class="nav-dot"></span></a>
+    <a href="#authentication" class="nav-item" data-section="authentication"><span class="nav-num">07</span><span class="nav-icon">🔑</span>Authentication<span class="nav-dot"></span></a>
+    <a href="#authorization" class="nav-item" data-section="authorization"><span class="nav-num">08</span><span class="nav-icon">🔓</span>Authorization<span class="nav-dot"></span></a>
+    <a href="#access-control" class="nav-item" data-section="access-control"><span class="nav-num">09</span><span class="nav-icon">🚦</span>Access Control<span class="nav-dot"></span></a>
+    <a href="#audit-trail" class="nav-item" data-section="audit-trail"><span class="nav-num">10</span><span class="nav-icon">📋</span>Audit Trail<span class="nav-dot"></span></a>
+    <div class="nav-section-title">Latihan</div>
+    <a href="#studi-kasus" class="nav-item" data-section="studi-kasus"><span class="nav-num">11</span><span class="nav-icon">📖</span>Studi Kasus<span class="nav-dot"></span></a>
+    <a href="#simulasi" class="nav-item" data-section="simulasi"><span class="nav-num">12</span><span class="nav-icon">🧠</span>Simulasi CIA<span class="nav-dot"></span></a>
+    <a href="#toko-online" class="nav-item" data-section="toko-online"><span class="nav-num">13</span><span class="nav-icon">🛒</span>Kasus Toko Online<span class="nav-dot"></span></a>
+    <a href="#kasus-kampus" class="nav-item" data-section="kasus-kampus"><span class="nav-num">14</span><span class="nav-icon">🏫</span>Kasus Kampus<span class="nav-dot"></span></a>
+    <a href="#diskusi" class="nav-item" data-section="diskusi"><span class="nav-num">15</span><span class="nav-icon">💬</span>Diskusi<span class="nav-dot"></span></a>
+    <a href="#kuis" class="nav-item" data-section="kuis"><span class="nav-num">16</span><span class="nav-icon">📝</span>Kuis Akhir<span class="nav-dot"></span></a>
+    <div class="nav-section-title">Penutup</div>
+    <a href="#rangkuman" class="nav-item" data-section="rangkuman"><span class="nav-num">17</span><span class="nav-icon">📌</span>Rangkuman<span class="nav-dot"></span></a>
+    <a href="#tugas" class="nav-item" data-section="tugas"><span class="nav-num">18</span><span class="nav-icon">📤</span>Tugas<span class="nav-dot"></span></a>
+  </div>
+</nav>
+
+<!-- ============ MAIN CONTENT ============ -->
+<main class="main-content" id="mainContent">
+
+<!-- ============ HERO ============ -->
+<section id="hero" class="section">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="hero-content">
+    <div class="hero-badge" aria-label="Kode mata kuliah BWP5030">BWP5030 · Pertemuan 3</div>
+    <p class="hero-subject">Cyber Security Management</p>
+    <h1 class="hero-title">PENERAPAN CIA TRIAD<br>& PERLINDUNGAN DATA</h1>
+    <p class="hero-subtitle">Memahami bagaimana menjaga kerahasiaan, integritas, dan ketersediaan informasi dalam sistem digital.</p>
+    <div class="hero-icons" aria-hidden="true">
+      <div class="hero-icon-item"><div class="hero-icon-box">🛡️</div><span class="hero-icon-label">Shield</span></div>
+      <div class="hero-icon-item"><div class="hero-icon-box">🔒</div><span class="hero-icon-label">Lock</span></div>
+      <div class="hero-icon-item"><div class="hero-icon-box">🗄️</div><span class="hero-icon-label">Database</span></div>
+      <div class="hero-icon-item"><div class="hero-icon-box">🌐</div><span class="hero-icon-label">Network</span></div>
+      <div class="hero-icon-item"><div class="hero-icon-box">🖥️</div><span class="hero-icon-label">Server</span></div>
+    </div>
+    <button class="btn-primary" id="btnMulaiBelajar" onclick="scrollToSection('tujuan')">
+      🚀 MULAI BELAJAR
+    </button>
+  </div>
+</section>
+
+<!-- ============ TUJUAN PEMBELAJARAN ============ -->
+<section id="tujuan" class="section">
+  <div class="section-header">
+    <span class="section-num">01 // TUJUAN PEMBELAJARAN</span>
+    <h2 class="section-title">Apa yang Akan Dipelajari?</h2>
+    <p class="section-desc">Sub-CPMK 2.1 — Mahasiswa mampu menjelaskan prinsip dasar keamanan siber dan perlindungan data.</p>
+    <div class="section-divider"></div>
+  </div>
+  <div class="card-grid">
+    <div class="card">
+      <div style="font-size:28px;margin-bottom:10px">1️⃣</div>
+      <div style="font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:6px">Menjelaskan CIA Triad</div>
+      <div style="font-size:13px;color:var(--text-secondary)">Confidentiality, Integrity, dan Availability — tiga pilar keamanan siber.</div>
+    </div>
+    <div class="card">
+      <div style="font-size:28px;margin-bottom:10px">2️⃣</div>
+      <div style="font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:6px">Mengidentifikasi Data</div>
+      <div style="font-size:13px;color:var(--text-secondary)">Mengenali jenis-jenis data yang perlu mendapat perlindungan khusus.</div>
+    </div>
+    <div class="card">
+      <div style="font-size:28px;margin-bottom:10px">3️⃣</div>
+      <div style="font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:6px">Kondisi Data</div>
+      <div style="font-size:13px;color:var(--text-secondary)">Memahami perlindungan data at rest, in transit, dan in use.</div>
+    </div>
+    <div class="card">
+      <div style="font-size:28px;margin-bottom:10px">4️⃣</div>
+      <div style="font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:6px">Analisis Masalah</div>
+      <div style="font-size:13px;color:var(--text-secondary)">Menganalisis kejadian keamanan berdasarkan kerangka CIA Triad.</div>
+    </div>
+    <div class="card">
+      <div style="font-size:28px;margin-bottom:10px">5️⃣</div>
+      <div style="font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:6px">Langkah Perlindungan</div>
+      <div style="font-size:13px;color:var(--text-secondary)">Menentukan tindakan yang tepat untuk melindungi sistem dari ancaman.</div>
+    </div>
+  </div>
+  <div class="section-nav">
+    <button class="btn-nav next" onclick="scrollToSection('cia-triad')">CIA Triad →</button>
+  </div>
+</section>
+
+<!-- ============ CIA TRIAD ============ -->
+<section id="cia-triad" class="section">
+  <div class="section-header">
+    <span class="section-num">02 // CIA TRIAD</span>
+    <h2 class="section-title">Tiga Pilar Keamanan Siber</h2>
+    <p class="section-desc">CIA Triad adalah kerangka fundamental dalam keamanan informasi. Klik setiap kartu untuk melihat penjelasan lebih lengkap.</p>
+    <div class="section-divider"></div>
+  </div>
+  <div class="cia-grid" role="list">
+    <article class="cia-card c-card" role="listitem" tabindex="0" aria-label="Confidentiality" onclick="openCIAModal('C')" onkeydown="if(event.key==='Enter')openCIAModal('C')">
+      <div class="cia-icon" aria-hidden="true">🔒</div>
+      <div class="cia-letter">C</div>
+      <h3 class="cia-title">CONFIDENTIALITY</h3>
+      <p class="cia-subtitle">Kerahasiaan</p>
+      <div class="cia-question">"Siapa yang boleh melihat?"</div>
+      <p class="cia-desc">Informasi hanya dapat diakses oleh pihak yang berwenang. Data rahasia tidak boleh bocor ke pihak luar.</p>
+      <div class="cia-example"><strong>Contoh:</strong> Data nilai mahasiswa hanya dapat diakses oleh pihak yang memiliki kewenangan.</div>
+      <div class="cia-click-hint">👆 Klik untuk detail lengkap</div>
+    </article>
+    <article class="cia-card i-card" role="listitem" tabindex="0" aria-label="Integrity" onclick="openCIAModal('I')" onkeydown="if(event.key==='Enter')openCIAModal('I')">
+      <div class="cia-icon" aria-hidden="true">✅</div>
+      <div class="cia-letter">I</div>
+      <h3 class="cia-title">INTEGRITY</h3>
+      <p class="cia-subtitle">Integritas</p>
+      <div class="cia-question">"Apakah data masih benar?"</div>
+      <p class="cia-desc">Data harus tetap akurat, utuh, dan tidak diubah secara tidak sah. Setiap perubahan harus melalui proses yang sah.</p>
+      <div class="cia-example"><strong>Contoh:</strong> Nilai mahasiswa tidak boleh diubah tanpa izin dari dosen yang bersangkutan.</div>
+      <div class="cia-click-hint">👆 Klik untuk detail lengkap</div>
+    </article>
+    <article class="cia-card a-card" role="listitem" tabindex="0" aria-label="Availability" onclick="openCIAModal('A')" onkeydown="if(event.key==='Enter')openCIAModal('A')">
+      <div class="cia-icon" aria-hidden="true">⚡</div>
+      <div class="cia-letter">A</div>
+      <h3 class="cia-title">AVAILABILITY</h3>
+      <p class="cia-subtitle">Ketersediaan</p>
+      <div class="cia-question">"Apakah sistem dapat digunakan?"</div>
+      <p class="cia-desc">Informasi dan sistem harus tersedia ketika dibutuhkan oleh pengguna yang berwenang.</p>
+      <div class="cia-example"><strong>Contoh:</strong> Sistem akademik harus dapat diakses saat mahasiswa melakukan pengisian KRS.</div>
+      <div class="cia-click-hint">👆 Klik untuk detail lengkap</div>
+    </article>
+  </div>
+
+  <div style="margin-top:32px">
+    <h3 style="font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:16px">🛡️ Perlindungan CIA</h3>
+    <div class="cia-protection-grid">
+      <div class="protection-column blue">
+        <div class="protection-header">🔒 Confidentiality</div>
+        <div class="protection-item">Password kuat</div>
+        <div class="protection-item">Multi-Factor Authentication (MFA)</div>
+        <div class="protection-item">Access Control</div>
+        <div class="protection-item">Authorization</div>
+        <div class="protection-item">Enkripsi data</div>
+        <div class="protection-item">Edukasi phishing</div>
+      </div>
+      <div class="protection-column green">
+        <div class="protection-header">✅ Integrity</div>
+        <div class="protection-item">Access Control</div>
+        <div class="protection-item">Audit Trail</div>
+        <div class="protection-item">Validasi perubahan</div>
+        <div class="protection-item">Backup data</div>
+        <div class="protection-item">Hashing</div>
+        <div class="protection-item">Digital Signature</div>
+      </div>
+      <div class="protection-column orange">
+        <div class="protection-header">⚡ Availability</div>
+        <div class="protection-item">Backup berkala</div>
+        <div class="protection-item">Redundancy sistem</div>
+        <div class="protection-item">Monitoring 24/7</div>
+        <div class="protection-item">Maintenance rutin</div>
+        <div class="protection-item">Disaster Recovery</div>
+        <div class="protection-item">Server cadangan</div>
+      </div>
+    </div>
+  </div>
+  <div class="section-nav">
+    <button class="btn-nav" onclick="scrollToSection('tujuan')">← Tujuan</button>
+    <button class="btn-nav next" onclick="scrollToSection('perlindungan-data')">Perlindungan Data →</button>
+  </div>
+</section>
+
+<!-- ============ PERLINDUNGAN DATA ============ -->
+<section id="perlindungan-data" class="section">
+  <div class="section-header">
+    <span class="section-num">03 // PERLINDUNGAN DATA</span>
+    <h2 class="section-title">Data Apa yang Perlu Dilindungi?</h2>
+    <p class="section-desc">Tidak semua data memiliki tingkat sensitivitas yang sama. Berikut ini jenis-jenis data yang memerlukan perlindungan khusus.</p>
+    <div class="section-divider"></div>
+  </div>
+  <div class="data-tags" aria-label="Jenis data yang perlu dilindungi">
+    <div class="data-tag"><span class="tag-icon">🎓</span> Data Mahasiswa</div>
+    <div class="data-tag"><span class="tag-icon">👥</span> Data Pelanggan</div>
+    <div class="data-tag"><span class="tag-icon">💳</span> Data Transaksi</div>
+    <div class="data-tag"><span class="tag-icon">💰</span> Data Keuangan</div>
+    <div class="data-tag"><span class="tag-icon">👤</span> Data Pribadi</div>
+    <div class="data-tag"><span class="tag-icon">🔑</span> Username</div>
+    <div class="data-tag"><span class="tag-icon">🔐</span> Password</div>
+    <div class="data-tag"><span class="tag-icon">📱</span> OTP</div>
+    <div class="data-tag"><span class="tag-icon">🏢</span> Data Bisnis</div>
+    <div class="data-tag"><span class="tag-icon">📚</span> Data Akademik</div>
+  </div>
+  <div class="info-box mt-24">
+    <strong>Mengapa data perlu dilindungi?</strong><br>
+    Data adalah aset berharga. Kebocoran data dapat merugikan individu, organisasi, bahkan negara. Perlindungan data bukan hanya tanggung jawab tim IT, tetapi seluruh pengguna sistem.
+  </div>
+  <div class="section-nav">
+    <button class="btn-nav" onclick="scrollToSection('cia-triad')">← CIA Triad</button>
+    <button class="btn-nav next" onclick="scrollToSection('data-at-rest')">Data at Rest →</button>
+  </div>
+</section>
+
+<!-- ============ DATA AT REST ============ -->
+<section id="data-at-rest" class="section">
+  <div class="section-header">
+    <span class="section-num">04 // DATA AT REST</span>
+    <h2 class="section-title">Data yang Sedang Tersimpan</h2>
+    <p class="section-desc">Data at Rest adalah data yang disimpan dalam media penyimpanan dan tidak sedang dipindahkan atau diproses.</p>
+    <div class="section-divider"></div>
+  </div>
+  <div class="card" style="border-left:3px solid var(--blue-cia)">
+    <div style="display:flex;gap:16px;align-items:flex-start">
+      <div style="font-size:40px;min-width:48px">💾</div>
+      <div>
+        <h3 style="font-size:16px;font-weight:700;color:var(--blue-cia);margin-bottom:8px">Data at Rest (Data Tersimpan)</h3>
+        <p style="font-size:14px;color:var(--text-secondary);margin-bottom:14px;line-height:1.7">Data yang sedang tersimpan dalam media penyimpanan seperti hard disk, database, atau perangkat lainnya. Data ini tidak sedang berpindah melalui jaringan.</p>
+        <div style="font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:8px">Contoh:</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary)"><span style="color:var(--blue-cia)">▸</span> Database nilai mahasiswa di server kampus</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary)"><span style="color:var(--blue-cia)">▸</span> File laporan keuangan di laptop</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary)"><span style="color:var(--blue-cia)">▸</span> Database pelanggan di cloud storage</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary)"><span style="color:var(--blue-cia)">▸</span> Foto identitas dalam sistem registrasi</div>
+        </div>
+        <div class="info-box mt-16"><strong>Perlindungan:</strong> Enkripsi disk, pembatasan akses fisik, password database, backup terenkripsi.</div>
+      </div>
+    </div>
+  </div>
+  <div class="section-nav">
+    <button class="btn-nav" onclick="scrollToSection('perlindungan-data')">← Perlindungan Data</button>
+    <button class="btn-nav next" onclick="scrollToSection('data-in-transit')">Data in Transit →</button>
+  </div>
+</section>
+
+<!-- ============ DATA IN TRANSIT ============ -->
+<section id="data-in-transit" class="section">
+  <div class="section-header">
+    <span class="section-num">05 // DATA IN TRANSIT</span>
+    <h2 class="section-title">Data yang Sedang Berpindah</h2>
+    <p class="section-desc">Data in Transit adalah data yang sedang dikirim atau dipindahkan melalui jaringan komunikasi.</p>
+    <div class="section-divider"></div>
+  </div>
+  <div class="card" style="border-left:3px solid var(--cyan)">
+    <div style="display:flex;gap:16px;align-items:flex-start">
+      <div style="font-size:40px;min-width:48px">📡</div>
+      <div>
+        <h3 style="font-size:16px;font-weight:700;color:var(--cyan);margin-bottom:8px">Data in Transit (Data Berpindah)</h3>
+        <p style="font-size:14px;color:var(--text-secondary);margin-bottom:14px;line-height:1.7">Data yang sedang dikirimkan melalui jaringan internet, intranet, atau media komunikasi lainnya. Data ini rentan terhadap serangan penyadapan (sniffing/man-in-the-middle attack).</p>
+        <div style="font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:8px">Contoh:</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary)"><span style="color:var(--cyan)">▸</span> Username dan password saat login ke website</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary)"><span style="color:var(--cyan)">▸</span> Data kartu kredit saat transaksi online</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary)"><span style="color:var(--cyan)">▸</span> Pengiriman file melalui email</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary)"><span style="color:var(--cyan)">▸</span> OTP yang dikirim ke nomor telepon</div>
+        </div>
+        <div class="info-box mt-16"><strong>Perlindungan:</strong> TLS/HTTPS, VPN, enkripsi end-to-end, sertifikat digital.</div>
+      </div>
+    </div>
+  </div>
+  <div class="section-nav">
+    <button class="btn-nav" onclick="scrollToSection('data-at-rest')">← Data at Rest</button>
+    <button class="btn-nav next" onclick="scrollToSection('data-in-use')">Data in Use →</button>
+  </div>
+</section>
+
+<!-- ============ DATA IN USE ============ -->
+<section id="data-in-use" class="section">
+  <div class="section-header">
+    <span class="section-num">06 // DATA IN USE</span>
+    <h2 class="section-title">Data yang Sedang Diproses</h2>
+    <p class="section-desc">Data in Use adalah data yang sedang aktif digunakan atau diproses oleh suatu aplikasi atau pengguna.</p>
+    <div class="section-divider"></div>
+  </div>
+  <div class="card" style="border-left:3px solid var(--orange-cia)">
+    <div style="display:flex;gap:16px;align-items:flex-start">
+      <div style="font-size:40px;min-width:48px">⚙️</div>
+      <div>
+        <h3 style="font-size:16px;font-weight:700;color:var(--orange-cia);margin-bottom:8px">Data in Use (Data Digunakan)</h3>
+        <p style="font-size:14px;color:var(--text-secondary);margin-bottom:14px;line-height:1.7">Data yang sedang aktif diproses di memori komputer (RAM) atau sedang digunakan oleh aplikasi. Data ini rentan terhadap serangan yang menarget memori sistem.</p>
+        <div style="font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:8px">Contoh:</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary)"><span style="color:var(--orange-cia)">▸</span> Dosen sedang menginput nilai mahasiswa di sistem</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary)"><span style="color:var(--orange-cia)">▸</span> Sistem menghitung total transaksi belanja</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary)"><span style="color:var(--orange-cia)">▸</span> Mahasiswa membuka halaman nilai di browser</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary)"><span style="color:var(--orange-cia)">▸</span> Aplikasi memverifikasi OTP yang dimasukkan</div>
+        </div>
+        <div class="info-box mt-16"><strong>Perlindungan:</strong> Enkripsi memori, session timeout, secure coding, pembatasan akses proses.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:24px">
+    <h3 style="font-size:15px;font-weight:700;color:var(--text-primary);margin-bottom:16px">Ringkasan Tiga Kondisi Data</h3>
+    <div class="data-lifecycle">
+      <div class="lifecycle-central">
+        <div class="lifecycle-item" onclick="toggleLifecycle(this)" tabindex="0" aria-expanded="false">
+          <div class="lifecycle-node"><div class="lifecycle-icon">💾</div><div class="lifecycle-label">AT REST</div></div>
+          <div class="lifecycle-detail">
+            <div class="lifecycle-detail-title">Data Tersimpan</div>
+            <div class="lifecycle-detail-desc">Data yang sedang disimpan dalam media penyimpanan dan tidak bergerak.</div>
+            <div class="lifecycle-detail-examples">
+              <span>Database nilai di server</span>
+              <span>File di hard disk</span>
+              <span>Cloud storage</span>
+            </div>
+          </div>
+        </div>
+        <div class="lifecycle-arrow" aria-hidden="true">⬇</div>
+        <div class="lifecycle-item" onclick="toggleLifecycle(this)" tabindex="0" aria-expanded="false">
+          <div class="lifecycle-node"><div class="lifecycle-icon">📡</div><div class="lifecycle-label">IN TRANSIT</div></div>
+          <div class="lifecycle-detail">
+            <div class="lifecycle-detail-title">Data Berpindah</div>
+            <div class="lifecycle-detail-desc">Data yang sedang berpindah melalui jaringan komunikasi.</div>
+            <div class="lifecycle-detail-examples">
+              <span>Login ke website</span>
+              <span>Transaksi online</span>
+              <span>Pengiriman email</span>
+            </div>
+          </div>
+        </div>
+        <div class="lifecycle-arrow" aria-hidden="true">⬇</div>
+        <div class="lifecycle-item" onclick="toggleLifecycle(this)" tabindex="0" aria-expanded="false">
+          <div class="lifecycle-node"><div class="lifecycle-icon">⚙️</div><div class="lifecycle-label">IN USE</div></div>
+          <div class="lifecycle-detail">
+            <div class="lifecycle-detail-title">Data Digunakan</div>
+            <div class="lifecycle-detail-desc">Data yang sedang aktif diproses oleh aplikasi atau pengguna.</div>
+            <div class="lifecycle-detail-examples">
+              <span>Input nilai dosen</span>
+              <span>Kalkulasi transaksi</span>
+              <span>Verifikasi OTP</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="section-nav">
+    <button class="btn-nav" onclick="scrollToSection('data-in-transit')">← Data in Transit</button>
+    <button class="btn-nav next" onclick="scrollToSection('authentication')">Authentication →</button>
+  </div>
+</section>
+
+<!-- ============ AUTHENTICATION ============ -->
+<section id="authentication" class="section">
+  <div class="section-header">
+    <span class="section-num">07-08 // AUTHENTICATION & AUTHORIZATION</span>
+    <h2 class="section-title">Autentikasi vs Otorisasi</h2>
+    <p class="section-desc">Dua konsep penting yang sering dikacaukan, namun memiliki peran yang berbeda dalam sistem keamanan.</p>
+    <div class="section-divider"></div>
+  </div>
+  <div class="auth-compare-grid">
+    <div class="auth-col authn">
+      <div class="auth-col-icon" aria-hidden="true">🔑</div>
+      <h3 class="auth-col-title">AUTHENTICATION</h3>
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">Autentikasi</div>
+      <div class="auth-col-question">"Siapa kamu?"</div>
+      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">Proses memverifikasi identitas pengguna sebelum memberikan akses ke sistem.</p>
+      <ul class="auth-method-list" aria-label="Metode autentikasi">
+        <li><span class="method-icon" aria-hidden="true">👤</span> Username dan Password</li>
+        <li><span class="method-icon" aria-hidden="true">👆</span> Fingerprint (Sidik Jari)</li>
+        <li><span class="method-icon" aria-hidden="true">📷</span> Face Recognition (Wajah)</li>
+        <li><span class="method-icon" aria-hidden="true">📱</span> OTP (One-Time Password)</li>
+        <li><span class="method-icon" aria-hidden="true">🔐</span> MFA (Multi-Factor Auth)</li>
+      </ul>
+    </div>
+    <div class="auth-col authz">
+      <div class="auth-col-icon" aria-hidden="true">🔓</div>
+      <h3 class="auth-col-title">AUTHORIZATION</h3>
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">Otorisasi</div>
+      <div class="auth-col-question">"Apa yang boleh kamu lakukan?"</div>
+      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">Proses menentukan hak akses pengguna terhadap sumber daya setelah berhasil login.</p>
+      <ul class="auth-method-list" aria-label="Contoh otorisasi">
+        <li><span class="method-icon" aria-hidden="true">🎓</span> Mahasiswa → melihat nilai sendiri</li>
+        <li><span class="method-icon" aria-hidden="true">👨‍🏫</span> Dosen → mengelola nilai mata kuliah</li>
+        <li><span class="method-icon" aria-hidden="true">⚙️</span> Admin → mengelola data sistem</li>
+        <li><span class="method-icon" aria-hidden="true">🚫</span> Mahasiswa → tidak bisa ubah nilai lain</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- LOGIN SIMULATION -->
+  <div class="login-sim-wrap">
+    <div class="login-sim-title">🖥️ SIMULASI LOGIN SISTEM AKADEMIK</div>
+    <div class="login-fields">
+      <div class="login-field-group">
+        <label for="loginUser">Pilih Pengguna:</label>
+        <select id="loginUser">
+          <option value="mahasiswa">mahasiswa</option>
+          <option value="dosen">dosen</option>
+          <option value="admin">admin</option>
+        </select>
+      </div>
+      <div class="login-field-group">
+        <label for="loginPass">Password:</label>
+        <input type="password" id="loginPass" value="12345" placeholder="Masukkan password..." />
+      </div>
+    </div>
+    <button class="btn-primary" style="width:100%" id="btnSimLogin" onclick="simulateLogin()">🔐 LOGIN</button>
+    <div class="login-result" id="loginResult"></div>
+  </div>
+  <div class="section-nav">
+    <button class="btn-nav" onclick="scrollToSection('data-in-use')">← Data in Use</button>
+    <button class="btn-nav next" onclick="scrollToSection('access-control')">Access Control →</button>
+  </div>
+</section>
+
+<!-- ============ AUTHORIZATION (anchor) ============ -->
+<div id="authorization" style="height:1px;margin-top:-1px;visibility:hidden" aria-hidden="true"></div>
+
+<!-- ============ ACCESS CONTROL ============ -->
+<section id="access-control" class="section">
+  <div class="section-header">
+    <span class="section-num">09 // ACCESS CONTROL & LEAST PRIVILEGE</span>
+    <h2 class="section-title">Kontrol Akses & Hak Minimum</h2>
+    <p class="section-desc">Setiap pengguna hanya diberikan hak akses sesuai kebutuhan tugasnya — tidak lebih, tidak kurang.</p>
+    <div class="section-divider"></div>
+  </div>
+
+  <div class="info-box mb-24">
+    <strong>Least Privilege (Hak Minimum)</strong> — Prinsip yang menyatakan bahwa setiap pengguna hanya diberi hak akses minimum yang diperlukan untuk menjalankan tugasnya. Ini meminimalkan risiko penyalahgunaan akses.
+  </div>
+
+  <div class="access-sim">
+    <div class="access-users">
+      <div class="access-title">Pilih Pengguna</div>
+      <button class="user-btn" id="userBtn-mahasiswa" onclick="selectUser('mahasiswa')" aria-pressed="false">
+        <span class="user-icon" aria-hidden="true">🎓</span>
+        <div>
+          <div>Mahasiswa</div>
+          <div class="user-role-label">STUDENT ROLE</div>
+        </div>
+      </button>
+      <button class="user-btn" id="userBtn-dosen" onclick="selectUser('dosen')" aria-pressed="false">
+        <span class="user-icon" aria-hidden="true">👨‍🏫</span>
+        <div>
+          <div>Dosen</div>
+          <div class="user-role-label">LECTURER ROLE</div>
+        </div>
+      </button>
+      <button class="user-btn" id="userBtn-admin" onclick="selectUser('admin')" aria-pressed="false">
+        <span class="user-icon" aria-hidden="true">⚙️</span>
+        <div>
+          <div>Admin</div>
+          <div class="user-role-label">ADMIN ROLE</div>
+        </div>
+      </button>
+    </div>
+    <div>
+      <div class="access-title">Hak Akses</div>
+      <div class="access-matrix" id="accessMatrix" aria-live="polite">
+        <div class="access-matrix-header">— Pilih pengguna untuk melihat hak akses —</div>
+        <div id="accessMatrixRows"></div>
+      </div>
+    </div>
+  </div>
+  <div class="section-nav">
+    <button class="btn-nav" onclick="scrollToSection('authentication')">← Authentication</button>
+    <button class="btn-nav next" onclick="scrollToSection('audit-trail')">Audit Trail →</button>
+  </div>
+</section>
+
+<!-- ============ AUDIT TRAIL ============ -->
+<section id="audit-trail" class="section">
+  <div class="section-header">
+    <span class="section-num">10 // AUDIT TRAIL</span>
+    <h2 class="section-title">Jejak Audit Sistem</h2>
+    <p class="section-desc">Audit Trail adalah catatan lengkap aktivitas sistem yang memungkinkan penelusuran setiap tindakan yang terjadi.</p>
+    <div class="section-divider"></div>
+  </div>
+
+  <div class="card mb-24">
+    <h3 style="font-size:15px;font-weight:700;color:var(--text-primary);margin-bottom:12px">Apa yang dicatat oleh Audit Trail?</h3>
+    <div class="card-grid" style="grid-template-columns:repeat(2,1fr)">
+      <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary);padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:var(--cyan)">📌</span> Siapa yang login ke sistem</div>
+      <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary);padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:var(--cyan)">📌</span> Kapan login dilakukan</div>
+      <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary);padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:var(--cyan)">📌</span> Siapa yang mengubah data</div>
+      <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary);padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:var(--cyan)">📌</span> Data apa yang diubah</div>
+      <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary);padding:8px 0"><span style="color:var(--cyan)">📌</span> Nilai sebelum dan sesudah perubahan</div>
+      <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary);padding:8px 0"><span style="color:var(--cyan)">📌</span> Alamat IP yang digunakan</div>
+    </div>
+  </div>
+
+  <div class="audit-log" role="log" aria-label="Contoh log audit trail">
+    <div class="audit-log-header">
+      <span>●</span> SYSTEM_AUDIT_LOG — Sistem Informasi Akademik
+    </div>
+    <div class="audit-log-body">
+      <div class="audit-entry"><span class="audit-time">2026-09-25 08:02</span><span class="audit-user">dosen_ali</span><span class="audit-action">LOGIN berhasil dari 192.168.1.10</span></div>
+      <div class="audit-entry"><span class="audit-time">2026-09-25 08:15</span><span class="audit-user">dosen_ali</span><span class="audit-action">Akses halaman <span class="highlight">Nilai Mahasiswa</span></span></div>
+      <div class="audit-entry"><span class="audit-time">2026-09-25 08:22</span><span class="audit-user">dosen_ali</span><span class="audit-action"><span class="highlight">UPDATE</span> nilai mahasiswa A1234 → 75 (sebelum: 70)</span></div>
+      <div class="audit-entry"><span class="audit-time">2026-09-25 09:00</span><span class="audit-user">mahasiswa_B</span><span class="audit-action">LOGIN berhasil dari 10.0.0.5</span></div>
+      <div class="audit-entry"><span class="audit-time">2026-09-25 09:05</span><span class="audit-user">mahasiswa_B</span><span class="audit-action">Akses halaman nilai sendiri (READ)</span></div>
+      <div class="audit-entry"><span class="audit-time">2026-09-25 09:07</span><span class="audit-user">mahasiswa_B</span><span class="audit-action"><span class="highlight">DENIED</span> — percobaan akses data mahasiswa lain</span></div>
+      <div class="audit-entry"><span class="audit-time">2026-09-25 10:30</span><span class="audit-user">admin_sys</span><span class="audit-action">Backup database dilakukan</span></div>
+      <div class="audit-entry"><span class="audit-time">2026-09-25 23:45</span><span class="audit-user">unknown</span><span class="audit-action"><span class="highlight">FAILED LOGIN</span> — 5x percobaan gagal dari 203.x.x.x</span></div>
+    </div>
+  </div>
+
+  <div class="warning-box mt-16">
+    <span class="warning-icon" aria-hidden="true">⚠️</span>
+    <div>
+      <strong>Perhatian:</strong> Audit Trail <strong>BUKAN</strong> bagian dari Availability. Audit Trail berperan dalam menjaga <strong>Integritas</strong> data — membantu penelusuran aktivitas, pengendalian, dan investigasi insiden keamanan.
+    </div>
+  </div>
+  <div class="section-nav">
+    <button class="btn-nav" onclick="scrollToSection('access-control')">← Access Control</button>
+    <button class="btn-nav next" onclick="scrollToSection('studi-kasus')">Studi Kasus →</button>
+  </div>
+</section>
+
+<!-- ============ STUDI KASUS UTAMA ============ -->
+<section id="studi-kasus" class="section">
+  <div class="section-header">
+    <span class="section-num">11 // STUDI KASUS</span>
+    <h2 class="section-title">Perubahan Nilai di Sistem Akademik</h2>
+    <p class="section-desc">Analisis kejadian nyata menggunakan kerangka CIA Triad untuk mengidentifikasi pelanggaran keamanan.</p>
+    <div class="section-divider"></div>
+  </div>
+  <div class="kampus-case">
+    <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-md);padding:16px;margin-bottom:20px;font-size:14px;color:var(--text-secondary);line-height:1.7">
+      <strong style="color:#fca5a5">📋 KASUS:</strong><br>
+      "Seorang mahasiswa login ke Sistem Akademik Kampus. Beberapa hari kemudian, nilai mata kuliah berubah tanpa sepengetahuan dosen dan mahasiswa lain yang bersangkutan."
+    </div>
+    <h3 style="font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:16px">📍 Timeline Kejadian</h3>
+    <div class="timeline">
+      <div class="timeline-item"><div class="timeline-step">TAHAP 1</div><div class="timeline-label">LOGIN</div><div class="timeline-desc">Akun mahasiswa digunakan untuk login ke sistem akademik kampus.</div></div>
+      <div class="timeline-item"><div class="timeline-step">TAHAP 2</div><div class="timeline-label">AKUN DIGUNAKAN</div><div class="timeline-desc">Akun digunakan untuk mengakses data yang berada di luar hak aksesnya.</div></div>
+      <div class="timeline-item"><div class="timeline-step">TAHAP 3</div><div class="timeline-label">NILAI BERUBAH</div><div class="timeline-desc">Nilai mata kuliah beberapa mahasiswa berubah tanpa persetujuan dosen.</div></div>
+      <div class="timeline-item"><div class="timeline-step">TAHAP 4</div><div class="timeline-label">INSIDEN DITEMUKAN</div><div class="timeline-desc">Dosen atau admin menemukan adanya perubahan tidak sah melalui laporan atau audit trail.</div></div>
+    </div>
+    <h3 style="font-size:14px;font-weight:700;color:var(--text-primary);margin-top:24px;margin-bottom:12px">🔍 Analisis CIA Triad</h3>
+    <div class="case-analysis-grid">
+      <div class="cia-analysis-item c">
+        <div class="cia-analysis-label">🔒 CONFIDENTIALITY</div>
+        <div class="cia-analysis-text">Akun atau kredensial kemungkinan diakses oleh pihak yang tidak berwenang. Informasi login bersifat rahasia dan tidak boleh digunakan oleh orang lain.</div>
+      </div>
+      <div class="cia-analysis-item i">
+        <div class="cia-analysis-label">✅ INTEGRITY</div>
+        <div class="cia-analysis-text">Nilai mata kuliah berubah tanpa izin. Ini adalah pelanggaran integritas — data yang seharusnya akurat dan tidak berubah telah dimanipulasi.</div>
+      </div>
+      <div class="cia-analysis-item a">
+        <div class="cia-analysis-label">⚡ AVAILABILITY</div>
+        <div class="cia-analysis-text">Periksa apakah sistem tetap dapat diakses atau mengalami gangguan. Availability terganggu hanya jika sistem/data tidak tersedia ketika dibutuhkan.</div>
+      </div>
+    </div>
+    <div class="warning-box mt-16">
+      <span class="warning-icon">💡</span>
+      <div><strong>Catatan:</strong> Availability hanya dikatakan terganggu jika sistem atau data tidak tersedia ketika dibutuhkan. Jika sistem masih bisa diakses, masalah utama ada pada Confidentiality dan Integrity.</div>
+    </div>
+  </div>
+  <div class="section-nav">
+    <button class="btn-nav" onclick="scrollToSection('audit-trail')">← Audit Trail</button>
+    <button class="btn-nav next" onclick="scrollToSection('simulasi')">Simulasi CIA →</button>
+  </div>
+</section>
+
+<!-- ============ SIMULASI CIA ANALYSIS ============ -->
+<section id="simulasi" class="section">
+  <div class="section-header">
+    <span class="section-num">12 // SIMULASI ANALISIS CIA</span>
+    <h2 class="section-title">Latihan Analisis Kasus</h2>
+    <p class="section-desc">Pilih kategori CIA yang tepat untuk setiap kasus. Perhatikan kata kunci dalam setiap skenario!</p>
+    <div class="section-divider"></div>
+  </div>
+  <div id="caseSimContainer"></div>
+  <div class="section-nav">
+    <button class="btn-nav" onclick="scrollToSection('studi-kasus')">← Studi Kasus</button>
+    <button class="btn-nav next" onclick="scrollToSection('toko-online')">Kasus Toko Online →</button>
+  </div>
+</section>
+
+<!-- ============ TOKO ONLINE ============ -->
+<section id="toko-online" class="section">
+  <div class="section-header">
+    <span class="section-num">13 // STUDI KASUS: TOKO ONLINE</span>
+    <h2 class="section-title">Insiden di Toko Online</h2>
+    <p class="section-desc">Hubungkan setiap kejadian dengan elemen CIA Triad yang tepat. Klik kejadian, lalu klik target CIA-nya!</p>
+    <div class="section-divider"></div>
+  </div>
+  <div style="background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.2);border-radius:var(--radius-md);padding:16px;margin-bottom:24px;font-size:14px;color:var(--text-secondary);line-height:1.7">
+    <strong style="color:var(--cyan)">📋 SKENARIO:</strong> "Sebuah toko online mengalami tiga kejadian secara bersamaan: data pelanggan tersebar di internet, harga beberapa produk berubah tanpa izin, dan website tidak dapat diakses selama lima jam."
+  </div>
+  <div class="match-grid">
+    <div>
+      <div class="access-title">Kejadian</div>
+      <div class="match-cases" id="matchCases">
+        <div class="match-case" id="matchCase-1" onclick="selectMatchCase(1)" tabindex="0">📧 Data pelanggan bocor ke internet</div>
+        <div class="match-case" id="matchCase-2" onclick="selectMatchCase(2)" tabindex="0">💰 Harga produk berubah tanpa izin</div>
+        <div class="match-case" id="matchCase-3" onclick="selectMatchCase(3)" tabindex="0">🌐 Website tidak dapat diakses (5 jam)</div>
+      </div>
+    </div>
+    <div class="match-arrow-col" aria-hidden="true">
+      <span style="font-size:24px;color:var(--cyan)">→</span>
+      <span style="font-size:24px;color:var(--cyan)">→</span>
+      <span style="font-size:24px;color:var(--cyan)">→</span>
+    </div>
+    <div>
+      <div class="access-title">CIA Triad</div>
+      <div class="match-targets">
+        <div class="match-target c-target" id="matchTarget-C" onclick="doMatch('C')" tabindex="0">🔒 CONFIDENTIALITY<br><small style="font-weight:normal;font-size:11px">Kerahasiaan</small></div>
+        <div class="match-target i-target" id="matchTarget-I" onclick="doMatch('I')" tabindex="0">✅ INTEGRITY<br><small style="font-weight:normal;font-size:11px">Integritas</small></div>
+        <div class="match-target a-target" id="matchTarget-A" onclick="doMatch('A')" tabindex="0">⚡ AVAILABILITY<br><small style="font-weight:normal;font-size:11px">Ketersediaan</small></div>
+      </div>
+    </div>
+  </div>
+  <div class="match-result-box" id="matchResultBox"></div>
+  <div style="margin-top:16px">
+    <button class="btn-outline" onclick="resetMatch()" id="btnResetMatch">↺ Ulangi</button>
+  </div>
+  <div class="section-nav">
+    <button class="btn-nav" onclick="scrollToSection('simulasi')">← Simulasi CIA</button>
+    <button class="btn-nav next" onclick="scrollToSection('kasus-kampus')">Kasus Kampus →</button>
+  </div>
+</section>
+
+<!-- ============ KASUS KAMPUS ============ -->
+<section id="kasus-kampus" class="section">
+  <div class="section-header">
+    <span class="section-num">14 // STUDI KASUS: KAMPUS</span>
+    <h2 class="section-title">Insiden di Sistem Akademik Kampus</h2>
+    <p class="section-desc">Analisis kasus kelompok. Buka petunjuk dan pembahasan setelah mencoba menjawab sendiri.</p>
+    <div class="section-divider"></div>
+  </div>
+  <div class="kampus-case">
+    <h3 style="font-size:15px;font-weight:700;color:var(--text-primary);margin-bottom:14px">📋 Skenario Kasus</h3>
+    <div class="kampus-events">
+      <div class="event-item"><div class="event-num">1</div><div class="event-text">Password salah satu akun dosen diketahui oleh orang lain.</div></div>
+      <div class="event-item"><div class="event-num">2</div><div class="event-text">Orang tersebut login ke sistem akademik menggunakan akun dosen.</div></div>
+      <div class="event-item"><div class="event-num">3</div><div class="event-text">Beberapa nilai mahasiswa diubah tanpa sepengetahuan dosen.</div></div>
+      <div class="event-item"><div class="event-num">4</div><div class="event-text">Sistem akademik kemudian tidak dapat diakses selama 4 jam.</div></div>
+      <div class="event-item"><div class="event-num">5</div><div class="event-text">Sistem ternyata tidak memiliki pencatatan aktivitas (audit trail) yang lengkap.</div></div>
+    </div>
+    <h3 style="font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:12px">❓ Pertanyaan Diskusi</h3>
+    <div id="kampusAccordion"></div>
+    <div class="accordion-actions">
+      <button class="btn-secondary" onclick="revealAllKampus('hint')" id="btnPetunjuk">💡 LIHAT PETUNJUK</button>
+      <button class="btn-outline" onclick="revealAllKampus('pembahasan')" id="btnPembahasan">📖 LIHAT PEMBAHASAN</button>
+    </div>
+  </div>
+  <div class="section-nav">
+    <button class="btn-nav" onclick="scrollToSection('toko-online')">← Toko Online</button>
+    <button class="btn-nav next" onclick="scrollToSection('diskusi')">Diskusi →</button>
+  </div>
+</section>
+
+<!-- ============ DISKUSI ============ -->
+<section id="diskusi" class="section">
+  <div class="section-header">
+    <span class="section-num">15 // DISKUSI KELOMPOK</span>
+    <h2 class="section-title">Pertanyaan Diskusi</h2>
+    <p class="section-desc">Diskusikan pertanyaan berikut bersama kelompok Anda. Tidak ada jawaban tunggal yang benar — yang dinilai adalah argumentasi.</p>
+    <div class="section-divider"></div>
+  </div>
+  <div class="discussion-grid" id="discussionGrid"></div>
+  <div style="margin-top:24px;text-align:center">
+    <button class="btn-primary" id="btnMulaiDiskusi" onclick="startDiscussion()">💬 MULAI DISKUSI</button>
+  </div>
+  <div class="section-nav">
+    <button class="btn-nav" onclick="scrollToSection('kasus-kampus')">← Kasus Kampus</button>
+    <button class="btn-nav next" onclick="scrollToSection('kuis')">Kuis Akhir →</button>
+  </div>
+</section>
+
+<!-- ============ KUIS AKHIR ============ -->
+<section id="kuis" class="section">
+  <div class="section-header">
+    <span class="section-num">16 // KUIS AKHIR</span>
+    <h2 class="section-title">Uji Pemahaman Anda</h2>
+    <p class="section-desc">10 soal pilihan ganda mencakup seluruh materi pertemuan ini. Jawab dengan cermat!</p>
+    <div class="section-divider"></div>
+  </div>
+  <div id="finalQuizContainer"></div>
+  <div class="section-nav">
+    <button class="btn-nav" onclick="scrollToSection('diskusi')">← Diskusi</button>
+    <button class="btn-nav next" onclick="scrollToSection('rangkuman')">Rangkuman →</button>
+  </div>
+</section>
+
+<!-- ============ RANGKUMAN ============ -->
+<section id="rangkuman" class="section">
+  <div class="section-header">
+    <span class="section-num">17 // RANGKUMAN</span>
+    <h2 class="section-title">Poin Kunci Pertemuan 3</h2>
+    <p class="section-desc">Rekap materi yang telah dipelajari dalam pertemuan ini.</p>
+    <div class="section-divider"></div>
+  </div>
+  <div class="summary-grid">
+    <div class="summary-item">
+      <span class="summary-icon">🔒</span>
+      <div>
+        <div class="summary-label badge-blue">CONFIDENTIALITY</div>
+        <p class="summary-desc">Menjaga kerahasiaan — hanya pihak berwenang yang dapat mengakses data.</p>
+      </div>
+    </div>
+    <div class="summary-item">
+      <span class="summary-icon">✅</span>
+      <div>
+        <div class="summary-label badge-green">INTEGRITY</div>
+        <p class="summary-desc">Menjaga keutuhan dan keakuratan data — data tidak berubah tanpa izin.</p>
+      </div>
+    </div>
+    <div class="summary-item">
+      <span class="summary-icon">⚡</span>
+      <div>
+        <div class="summary-label badge-orange">AVAILABILITY</div>
+        <p class="summary-desc">Menjaga ketersediaan sistem dan data saat dibutuhkan pengguna.</p>
+      </div>
+    </div>
+    <div class="summary-item">
+      <span class="summary-icon">🔑</span>
+      <div>
+        <div class="summary-label">AUTHENTICATION</div>
+        <p class="summary-desc"><strong>"Siapa kamu?"</strong> — Verifikasi identitas pengguna sebelum akses diberikan.</p>
+      </div>
+    </div>
+    <div class="summary-item">
+      <span class="summary-icon">🔓</span>
+      <div>
+        <div class="summary-label">AUTHORIZATION</div>
+        <p class="summary-desc"><strong>"Apa yang boleh kamu lakukan?"</strong> — Penentuan hak akses setelah login.</p>
+      </div>
+    </div>
+    <div class="summary-item">
+      <span class="summary-icon">🚦</span>
+      <div>
+        <div class="summary-label">LEAST PRIVILEGE</div>
+        <p class="summary-desc">Berikan akses minimum yang diperlukan — tidak lebih dari kebutuhan tugas.</p>
+      </div>
+    </div>
+    <div class="summary-item">
+      <span class="summary-icon">📋</span>
+      <div>
+        <div class="summary-label">AUDIT TRAIL</div>
+        <p class="summary-desc">Catat setiap aktivitas sistem agar dapat ditelusuri bila terjadi insiden.</p>
+      </div>
+    </div>
+    <div class="summary-item">
+      <span class="summary-icon">🗄️</span>
+      <div>
+        <div class="summary-label">DATA CONDITIONS</div>
+        <p class="summary-desc">At Rest (tersimpan), In Transit (berpindah), In Use (digunakan) — masing-masing butuh perlindungan berbeda.</p>
+      </div>
+    </div>
+  </div>
+  <div class="section-nav">
+    <button class="btn-nav" onclick="scrollToSection('kuis')">← Kuis</button>
+    <button class="btn-nav next" onclick="scrollToSection('tugas')">Tugas →</button>
+  </div>
+</section>
+
+<!-- ============ TUGAS ============ -->
+<section id="tugas" class="section">
+  <div class="section-header">
+    <span class="section-num">18 // TUGAS</span>
+    <h2 class="section-title">Tugas Individu</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="task-card">
+    <div class="task-header">
+      <div class="task-icon" aria-hidden="true">📄</div>
+      <div>
+        <div class="task-label">TUGAS 1</div>
+        <h3 class="task-title">Ringkasan Konsep Dasar Keamanan Siber dan CIA Triad</h3>
+      </div>
+    </div>
+
+    <h4 style="font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:12px">📝 Instruksi Pengerjaan</h4>
+    <div class="task-instructions" id="taskInstructions">
+      <div class="task-instruction-item"><div class="task-instruction-num">1</div><div>Pengertian keamanan siber — apa itu, mengapa penting, dan apa tujuannya.</div></div>
+      <div class="task-instruction-item"><div class="task-instruction-num">2</div><div>Tujuan keamanan siber dalam konteks organisasi dan individu.</div></div>
+      <div class="task-instruction-item"><div class="task-instruction-num">3</div><div>Pentingnya perlindungan data di era digital saat ini.</div></div>
+      <div class="task-instruction-item"><div class="task-instruction-num">4</div><div>Confidentiality (Kerahasiaan) — pengertian, contoh, dan cara perlindungannya.</div></div>
+      <div class="task-instruction-item"><div class="task-instruction-num">5</div><div>Integrity (Integritas) — pengertian, contoh, dan cara perlindungannya.</div></div>
+      <div class="task-instruction-item"><div class="task-instruction-num">6</div><div>Availability (Ketersediaan) — pengertian, contoh, dan cara perlindungannya.</div></div>
+      <div class="task-instruction-item"><div class="task-instruction-num">7</div><div>Contoh penerapan CIA Triad dalam kehidupan nyata (minimal 2 contoh kasus).</div></div>
+      <div class="task-instruction-item"><div class="task-instruction-num">8</div><div>Kesimpulan — apa yang paling penting dipahami dari materi ini.</div></div>
+    </div>
+
+    <h4 style="font-size:14px;font-weight:700;color:var(--text-primary);margin:20px 0 12px">📌 Ketentuan Pengumpulan</h4>
+    <div class="task-requirements">
+      <div class="task-req-item">Individu (dikerjakan sendiri)</div>
+      <div class="task-req-item">Minimal 2 halaman</div>
+      <div class="task-req-item">Format: PDF</div>
+      <div class="task-req-item">Font: Times New Roman 12</div>
+      <div class="task-req-item">Spasi: 1,5</div>
+      <div class="task-req-item">Kertas: A4</div>
+      <div class="task-req-item">Minimal 2 referensi</div>
+    </div>
+
+    <button class="btn-copy-task" id="btnCopyTask" onclick="copyTaskInstructions()" aria-label="Salin instruksi tugas ke clipboard">
+      📋 SALIN INSTRUKSI TUGAS
+    </button>
+  </div>
+  <div class="section-nav">
+    <button class="btn-nav" onclick="scrollToSection('rangkuman')">← Rangkuman</button>
+    <button class="btn-nav next" onclick="scrollToSection('hero')">↑ Kembali ke Atas</button>
+  </div>
+</section>
+
+</main><!-- end main-content -->
+
+<!-- ============ MODAL CIA DETAIL ============ -->
+<div class="modal-overlay" id="ciaModal" role="dialog" aria-modal="true" aria-labelledby="ciaModalTitle" onclick="closeCIAModalOnOverlay(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeCIAModal()" aria-label="Tutup modal">✕</button>
+    <h2 class="modal-title" id="ciaModalTitle"></h2>
+    <div class="modal-content" id="ciaModalContent"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

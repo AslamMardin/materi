@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pertemuan 6: Ancaman & Kerentanan Sistem Informasi | Cyber Security Management</title>
+  <meta name="description" content="Cyber Security Learning Lab Pertemuan 6: Ancaman dan Kerentanan Sistem Informasi. Institut Teknologi dan Bisnis Muhammadiyah Polewali Mandar - Bisnis Digital." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+</head>
+<body>
+
+  <!-- ========================================================
+       TOPBAR / STICKY HEADER
+       ======================================================== -->
+  <header class="topbar" role="banner">
+    <div class="topbar-left">
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Buka navigasi menu" aria-expanded="false">☰</button>
+      <a href="../index.html" class="topbar-brand" title="Kembali ke Portal Utama">
+        <div class="brand-icon" aria-hidden="true">⚠️</div>
+        <div>
+          <div class="brand-title">CYBER SECURITY MGMT</div>
+          <div class="brand-subtitle">PERTEMUAN 06 • BWP5030</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Progress Tracker -->
+    <div class="progress-container" aria-label="Progress belajar">
+      <div class="progress-header">
+        <span>PROGRESS BELAJAR</span>
+        <span id="topbarProgressPercent">0%</span>
+      </div>
+      <div class="progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-fill" id="topbarProgressBar"></div>
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <a href="../index.html" class="btn-portal-back" title="Kembali ke Portal Mata Kuliah">
+        <span>🏠</span> <span>Portal Utama</span>
+      </a>
+      <button class="btn-reset" id="btnResetProgress" aria-label="Reset progres">↺ Reset</button>
+    </div>
+  </header>
+
+  <!-- ========================================================
+       SIDEBAR NAVIGATION
+       ======================================================== -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+  <nav class="sidebar" id="sidebar" aria-label="Navigasi Pertemuan 6">
+    <div class="sidebar-heading">Portal</div>
+    <a href="../index.html" class="nav-link" style="color:var(--cyan); font-weight:600; margin-bottom:12px;">
+      <span class="nav-badge-num">←</span>
+      <span>Menu Utama Portal</span>
+    </a>
+
+    <div class="sidebar-heading">01 - 06 Konsep Inti</div>
+    <a href="#cover" class="nav-link" data-section="cover">
+      <span class="nav-badge-num">01</span>
+      <span>Hero & Intro</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#tujuan" class="nav-link" data-section="tujuan">
+      <span class="nav-badge-num">02</span>
+      <span>Tujuan Belajar</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#apersepsi" class="nav-link" data-section="apersepsi">
+      <span class="nav-badge-num">03</span>
+      <span>Apersepsi Kasus</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#threat" class="nav-link" data-section="threat">
+      <span class="nav-badge-num">04</span>
+      <span>Apa Itu Threat?</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#vulnerability" class="nav-link" data-section="vulnerability">
+      <span class="nav-badge-num">05</span>
+      <span>Apa Itu Vulnerability?</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#threat-vs-vuln" class="nav-link" data-section="threat-vs-vuln">
+      <span class="nav-badge-num">06</span>
+      <span>Threat vs Vuln vs Risk</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+
+    <div class="sidebar-heading">07 - 13 Jenis & Simulasi</div>
+    <a href="#threat-types" class="nav-link" data-section="threat-types">
+      <span class="nav-badge-num">07</span>
+      <span>7 Jenis Ancaman</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#malware" class="nav-link" data-section="malware">
+      <span class="nav-badge-num">08</span>
+      <span>Malware Deep Dive</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#phishing" class="nav-link" data-section="phishing">
+      <span class="nav-badge-num">09</span>
+      <span>Simulasi Phishing</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#dos-ddos" class="nav-link" data-section="dos-ddos">
+      <span class="nav-badge-num">10</span>
+      <span>Simulasi DoS / DDoS</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#password-attack" class="nav-link" data-section="password-attack">
+      <span class="nav-badge-num">11</span>
+      <span>Password Attack</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#social-engineering" class="nav-link" data-section="social-engineering">
+      <span class="nav-badge-num">12</span>
+      <span>Social Engineering</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#insider-threat" class="nav-link" data-section="insider-threat">
+      <span class="nav-badge-num">13</span>
+      <span>Insider Threat</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+
+    <div class="sidebar-heading">14 - 18 Game & Kasus</div>
+    <a href="#klasifikasi-ancaman" class="nav-link" data-section="klasifikasi-ancaman">
+      <span class="nav-badge-num">14</span>
+      <span>Game Klasifikasi</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#temukan-kerentanan" class="nav-link" data-section="temukan-kerentanan">
+      <span class="nav-badge-num">15</span>
+      <span>Temukan Kerentanan!</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#studi-kasus" class="nav-link" data-section="studi-kasus">
+      <span class="nav-badge-num">16</span>
+      <span>Kasus Lab Komputer</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#attack-chain" class="nav-link" data-section="attack-chain">
+      <span class="nav-badge-num">17</span>
+      <span>Build Attack Chain</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#cyber-detective" class="nav-link" data-section="cyber-detective">
+      <span class="nav-badge-num">18</span>
+      <span>Cyber Detective Game</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+
+    <div class="sidebar-heading">19 - 24 Evaluasi & Tugas</div>
+    <a href="#diskusi-kelompok" class="nav-link" data-section="diskusi-kelompok">
+      <span class="nav-badge-num">19</span>
+      <span>Diskusi Kelompok</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#kuis" class="nav-link" data-section="kuis">
+      <span class="nav-badge-num">20</span>
+      <span>Kuis Pilihan Ganda</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#ringkasan" class="nav-link" data-section="ringkasan">
+      <span class="nav-badge-num">21</span>
+      <span>Ringkasan Materi</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#refleksi" class="nav-link" data-section="refleksi">
+      <span class="nav-badge-num">22</span>
+      <span>Refleksi Mahasiswa</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#tugas" class="nav-link" data-section="tugas">
+      <span class="nav-badge-num">23</span>
+      <span>Tugas Tabel Klasifikasi</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#progress-belajar" class="nav-link" data-section="progress-belajar">
+      <span class="nav-badge-num">24</span>
+      <span>Rekap Kemajuan Belajar</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+  </nav>
+
+  <!-- ========================================================
+       MAIN LEARNING CONTENT
+       ======================================================== -->
+  <main class="main-content" id="mainContent">
+
+    <!-- SECTION 1: HERO / COVER -->
+    <section id="cover" class="content-section" data-section-id="cover">
+      <div class="hero-wrapper">
+        <div class="hero-tag">
+          <span>⚡</span> CYBER SECURITY MANAGEMENT • BWP5030 • PERTEMUAN 06
+        </div>
+        <h1 class="hero-title">ANCAMAN DAN KERENTANAN<br>SISTEM INFORMASI</h1>
+        <p class="hero-subtitle">
+          "Kenali ancamannya, temukan kerentanannya, dan pahami risikonya sebelum pihak lain memanfaatkannya."
+        </p>
+
+        <div class="hero-badges-row">
+          <div class="hero-meta-badge">
+            <span>🏫 Institusi:</span> <strong>ITBM Polewali Mandar</strong>
+          </div>
+          <div class="hero-meta-badge">
+            <span>📚 Program Studi:</span> <strong>Bisnis Digital</strong>
+          </div>
+          <div class="hero-meta-badge">
+            <span>🎯 Capaian:</span> <strong>CPMK-3 • Sub-CPMK 3.1</strong>
+          </div>
+        </div>
+
+        <a href="#tujuan" class="btn-primary">
+          <span>MULAI BELAJAR</span>
+          <span>↓</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- SECTION 2: TUJUAN PEMBELAJARAN -->
+    <section id="tujuan" class="content-section" data-section-id="tujuan">
+      <div class="section-meta">
+        <span class="section-pill pill-cyan">02 • LEARNING OBJECTIVES</span>
+      </div>
+      <h2 class="section-title">Tujuan Pembelajaran</h2>
+      <p class="section-desc">
+        Setelah menyelesaikan sesi Cyber Security Learning Lab ini, mahasiswa diharapkan mampu:
+      </p>
+
+      <div class="goals-grid">
+        <div class="goal-card">
+          <div class="goal-check-icon">01</div>
+          <div>
+            <strong style="color:var(--text-white); font-size:14.5px;">Memahami Threat (Ancaman)</strong>
+            <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Menjelaskan konsep ancaman potensial yang membahayakan data dan sistem.</p>
+          </div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-check-icon">02</div>
+          <div>
+            <strong style="color:var(--text-white); font-size:14.5px;">Memahami Vulnerability (Kerentanan)</strong>
+            <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Mengidentifikasi celah kelemahan sistem, konfigurasi, dan perilaku manusia.</p>
+          </div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-check-icon">03</div>
+          <div>
+            <strong style="color:var(--text-white); font-size:14.5px;">Membedakan Threat, Vuln, & Risk</strong>
+            <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Menganalisis hubungan sebab-akibat antara celah, potensi serangan, dan risiko.</p>
+          </div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-check-icon">04</div>
+          <div>
+            <strong style="color:var(--text-white); font-size:14.5px;">Mengenali Jenis Ancaman Siber</strong>
+            <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Mengidentifikasi karakteristik Malware, Phishing, DDoS, hingga Social Engineering.</p>
+          </div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-check-icon">05</div>
+          <div>
+            <strong style="color:var(--text-white); font-size:14.5px;">Mengidentifikasi Kerentanan Nyata</strong>
+            <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Menemukan titik lemah autentikasi, hak akses berlebih, dan sistem usang.</p>
+          </div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-check-icon">06</div>
+          <div>
+            <strong style="color:var(--text-white); font-size:14.5px;">Menganalisis Kasus Keamanan</strong>
+            <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Menganalisis insiden laboratorium kampus dan merumuskan langkah proteksi terpadu.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: APERSEPSI -->
+    <section id="apersepsi" class="content-section" data-section-id="apersepsi">
+      <div class="section-meta">
+        <span class="section-pill pill-vuln">03 • APERSEPSI INTERAKTIF</span>
+      </div>
+      <h2 class="section-title">Uji Nalar Awal: Ancaman atau Kerentanan?</h2>
+      <div class="apersepsi-box">
+        <p style="font-size:16px; font-weight:600; color:var(--text-white); line-height:1.6;">
+          "Jika sebuah akun mahasiswa menggunakan password: <span class="mono" style="color:var(--warning-amber);">123456</span>, apakah masalah tersebut merupakan sebuah ANCAMAN atau KERENTANAN?"
+        </p>
+
+        <div class="apersepsi-options-row">
+          <button class="apersepsi-choice-btn" id="btnApersepsiThreat" onclick="checkApersepsi('threat')">
+            ⚠️ THREAT (ANCAMAN)
+          </button>
+          <button class="apersepsi-choice-btn" id="btnApersepsiVuln" onclick="checkApersepsi('vuln')">
+            🔓 VULNERABILITY (KERENTANAN)
+          </button>
+        </div>
+
+        <div id="apersepsiFeedback" style="display:none; padding:16px; border-radius:var(--radius-sm); font-size:14px; line-height:1.7; animation:fadeIn 0.3s ease;">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: APA ITU THREAT -->
+    <section id="threat" class="content-section" data-section-id="threat">
+      <div class="section-meta">
+        <span class="section-pill pill-threat">04 • THREAT (ANCAMAN)</span>
+      </div>
+      <h2 class="section-title">Apa Itu Threat dalam Keamanan Siber?</h2>
+      <p class="section-desc">
+        <strong>Threat (Ancaman)</strong> adalah segala sesuatu (entitas, kejadian berbahaya, atau tindakan pihak luar) yang berpotensi menyebabkan kerugian, kerusakan, atau pencurian terhadap sistem, data, perangkat, maupun pengguna.
+      </p>
+
+      <div class="flow-horizontal-wrap">
+        <div class="flow-step-box" style="border-color:rgba(239,68,68,0.3);">
+          <div style="font-size:22px;">⚡</div>
+          <div style="font-size:12px; font-weight:700; color:#fca5a5; margin-top:4px;">THREAT</div>
+          <div style="font-size:11px; color:var(--text-muted);">Potensi Bahaya</div>
+        </div>
+        <div style="color:var(--text-muted); font-weight:bold;">→</div>
+        <div class="flow-step-box">
+          <div style="font-size:22px;">🎯</div>
+          <div style="font-size:12px; font-weight:700; color:var(--cyan); margin-top:4px;">SERANGAN</div>
+          <div style="font-size:11px; color:var(--text-muted);">Eksploitasi Celah</div>
+        </div>
+        <div style="color:var(--text-muted); font-weight:bold;">→</div>
+        <div class="flow-step-box" style="border-color:rgba(245,158,11,0.3);">
+          <div style="font-size:22px;">🔓</div>
+          <div style="font-size:12px; font-weight:700; color:#fde047; margin-top:4px;">VULNERABILITY</div>
+          <div style="font-size:11px; color:var(--text-muted);">Titik Lemah</div>
+        </div>
+        <div style="color:var(--text-muted); font-weight:bold;">→</div>
+        <div class="flow-step-box" style="border-color:rgba(192,132,252,0.3);">
+          <div style="font-size:22px;">⚖️</div>
+          <div style="font-size:12px; font-weight:700; color:var(--purple-threat); margin-top:4px;">RISK</div>
+          <div style="font-size:11px; color:var(--text-muted);">Peluang Insiden</div>
+        </div>
+        <div style="color:var(--text-muted); font-weight:bold;">→</div>
+        <div class="flow-step-box" style="border-color:rgba(239,68,68,0.3);">
+          <div style="font-size:22px;">💥</div>
+          <div style="font-size:12px; font-weight:700; color:var(--danger-red); margin-top:4px;">IMPACT</div>
+          <div style="font-size:11px; color:var(--text-muted);">Dampak Kerugian</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: APA ITU VULNERABILITY -->
+    <section id="vulnerability" class="content-section" data-section-id="vulnerability">
+      <div class="section-meta">
+        <span class="section-pill pill-vuln">05 • VULNERABILITY (KERENTANAN)</span>
+      </div>
+      <h2 class="section-title">Apa Itu Vulnerability?</h2>
+      <p class="section-desc">
+        <strong>Vulnerability (Kerentanan)</strong> adalah kelemahan, cacat, atau celah pada sistem, aplikasi, konfigurasi jaringan, alur proses, maupun perilaku manusia yang dapat dimanfaatkan oleh ancaman untuk menembus pertahanan keamanan.
+      </p>
+
+      <div class="goals-grid">
+        <div class="goal-card" style="border-left:4px solid var(--warning-amber);">
+          <div>
+            <h4 style="color:#fde047; margin-bottom:6px;">🔑 Kelemahan Autentikasi</h4>
+            <p style="font-size:13px; color:var(--text-secondary);">Penggunaan password bawaan (default), password pendek, atau tanpa aktivasi Multi-Factor Authentication (MFA).</p>
+          </div>
+        </div>
+        <div class="goal-card" style="border-left:4px solid var(--warning-amber);">
+          <div>
+            <h4 style="color:#fde047; margin-bottom:6px;">💻 Kelemahan Perangkat Lunak</h4>
+            <p style="font-size:13px; color:var(--text-secondary);">Sistem operasi, plugin, atau server web yang tidak pernah di-update dengan patch keamanan terbaru.</p>
+          </div>
+        </div>
+        <div class="goal-card" style="border-left:4px solid var(--warning-amber);">
+          <div>
+            <h4 style="color:#fde047; margin-bottom:6px;">🚦 Kelemahan Kontrol Akses</h4>
+            <p style="font-size:13px; color:var(--text-secondary);">Memberikan hak akses administrator kepada seluruh staf atau pengguna biasa (pelanggaran Least Privilege).</p>
+          </div>
+        </div>
+        <div class="goal-card" style="border-left:4px solid var(--warning-amber);">
+          <div>
+            <h4 style="color:#fde047; margin-bottom:6px;">⚙️ Kelemahan Konfigurasi</h4>
+            <p style="font-size:13px; color:var(--text-secondary);">Port server yang tidak diperlukan dibiarkan terbuka ke publik, enkripsi database dimatikan.</p>
+          </div>
+        </div>
+        <div class="goal-card" style="border-left:4px solid var(--warning-amber);">
+          <div>
+            <h4 style="color:#fde047; margin-bottom:6px;">👥 Kelemahan Manusia / Proses</h4>
+            <p style="font-size:13px; color:var(--text-secondary);">Kurangnya pelatihan kewaspadaan (security awareness), sehingga mudah tertipu tautan manipulatif.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: THREAT VS VULNERABILITY VS RISK -->
+    <section id="threat-vs-vuln" class="content-section" data-section-id="threat-vs-vuln">
+      <div class="section-meta">
+        <span class="section-pill pill-risk">06 • PERBANDINGAN FUNDAMENTAL</span>
+      </div>
+      <h2 class="section-title">Threat vs Vulnerability vs Risk</h2>
+      <p class="section-desc">
+        Pahami formula relasi kunci dalam keamanan siber: <em>Ancaman mengeksploitasi Kerentanan, menciptakan Risiko yang memicu Dampak Kerugian</em>.
+      </p>
+
+      <div class="table-responsive-wrapper">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th style="width:20%; color:var(--text-white);">Istilah</th>
+              <th style="width:25%; color:var(--text-white);">Pertanyaan Kunci</th>
+              <th style="width:30%; color:var(--text-white);">Definisi Praktis</th>
+              <th style="width:25%; color:var(--text-white);">Contoh Kasus Kampus</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong style="color:#fca5a5;">THREAT (Ancaman)</strong></td>
+              <td><em>"Apa yang dapat menyebabkan bahaya?"</em></td>
+              <td>Faktor eksternal/internal yang berpotensi merusak aset</td>
+              <td style="color:var(--text-main);">Email phishing berisi link login tiruan SIAKAD</td>
+            </tr>
+            <tr>
+              <td><strong style="color:#fde047;">VULNERABILITY (Kerentanan)</strong></td>
+              <td><em>"Kelemahan apa yang dapat dimanfaatkan?"</em></td>
+              <td>Celah keamanan pada sistem, konfigurasi, atau manusia</td>
+              <td style="color:var(--text-main);">Mahasiswa tidak bisa membedakan URL resmi kampus dengan domain palsu</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--purple-threat);">RISK (Risiko)</strong></td>
+              <td><em>"Seberapa besar peluang & konsekuensinya?"</em></td>
+              <td>Kemungkinan ancaman berhasil mengeksploitasi kerentanan</td>
+              <td style="color:var(--text-main);">Peluang tinggi akun mahasiswa diretas dan dicuri kredensialnya</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--danger-red);">IMPACT (Dampak)</strong></td>
+              <td><em>"Apa kerugian yang ditimbulkan?"</em></td>
+              <td>Akibat riil terhadap kerahasiaan, integritas, dan operasional</td>
+              <td style="color:var(--text-main);">Data KRS dimanipulasi, kebocoran NIK & nomor rekening</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 7: 7 JENIS ANCAMAN SIBER -->
+    <section id="threat-types" class="content-section" data-section-id="threat-types">
+      <div class="section-meta">
+        <span class="section-pill pill-threat">07 • TAKSONOMI ANCAMAN</span>
+      </div>
+      <h2 class="section-title">7 Jenis Ancaman Siber Paling Kritis</h2>
+      <p class="section-desc">
+        Klik setiap kartu di bawah untuk membuka kartu modal rincian: definisi, target, dampak, dan contoh pencegahannya:
+      </p>
+
+      <div class="threat-cards-grid" id="threatGrid">
+        <div class="threat-interactive-card" onclick="openThreatModal('malware')">
+          <div style="font-size:28px; margin-bottom:8px;">🦠</div>
+          <h4 style="color:#fca5a5; font-size:16px;">1. MALWARE</h4>
+          <p style="font-size:12.5px; color:var(--text-secondary); margin-top:4px;">Perangkat lunak jahat yang dirancang untuk merusak atau menyusup perangkat.</p>
+        </div>
+
+        <div class="threat-interactive-card" onclick="openThreatModal('phishing')">
+          <div style="font-size:28px; margin-bottom:8px;">🎣</div>
+          <h4 style="color:#fca5a5; font-size:16px;">2. PHISHING</h4>
+          <p style="font-size:12.5px; color:var(--text-secondary); margin-top:4px;">Upaya manipulatif memancing korban memasukkan password atau data sensitif.</p>
+        </div>
+
+        <div class="threat-interactive-card" onclick="openThreatModal('ransomware')">
+          <div style="font-size:28px; margin-bottom:8px;">🔒</div>
+          <h4 style="color:#fca5a5; font-size:16px;">3. RANSOMWARE</h4>
+          <p style="font-size:12.5px; color:var(--text-secondary); margin-top:4px;">Malware yang mengunci/mengenkripsi data dan meminta tebusan uang.</p>
+        </div>
+
+        <div class="threat-interactive-card" onclick="openThreatModal('dos')">
+          <div style="font-size:28px; margin-bottom:8px;">🌊</div>
+          <h4 style="color:#fca5a5; font-size:16px;">4. DoS / DDoS</h4>
+          <p style="font-size:12.5px; color:var(--text-secondary); margin-top:4px;">Membanjiri server dengan jutaan lalu lintas palsu hingga lumpuh.</p>
+        </div>
+
+        <div class="threat-interactive-card" onclick="openThreatModal('social')">
+          <div style="font-size:28px; margin-bottom:8px;">🎭</div>
+          <h4 style="color:#fca5a5; font-size:16px;">5. SOCIAL ENGINEERING</h4>
+          <p style="font-size:12.5px; color:var(--text-secondary); margin-top:4px;">Manipulasi psikologis menipu korban demi membocorkan informasi rahasia.</p>
+        </div>
+
+        <div class="threat-interactive-card" onclick="openThreatModal('password')">
+          <div style="font-size:28px; margin-bottom:8px;">🔑</div>
+          <h4 style="color:#fca5a5; font-size:16px;">6. PASSWORD ATTACK</h4>
+          <p style="font-size:12.5px; color:var(--text-secondary); margin-top:4px;">Menebak kata sandi melalui serangan brute-force, dictionary, atau credential stuffing.</p>
+        </div>
+
+        <div class="threat-interactive-card" onclick="openThreatModal('insider')">
+          <div style="font-size:28px; margin-bottom:8px;">🕵️</div>
+          <h4 style="color:#fca5a5; font-size:16px;">7. INSIDER THREAT</h4>
+          <p style="font-size:12.5px; color:var(--text-secondary); margin-top:4px;">Ancaman bahaya yang bersumber dari internal pegawai atau pihak berizin.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 8: MALWARE DEEP DIVE -->
+    <section id="malware" class="content-section" data-section-id="malware">
+      <div class="section-meta">
+        <span class="section-pill pill-threat">08 • MALWARE DEEP DIVE</span>
+      </div>
+      <h2 class="section-title">Anatomi Malware (Malicious Software)</h2>
+      <p class="section-desc">
+        Malware adalah istilah payung untuk seluruh program komputer yang dibuat dengan niat jahat.
+      </p>
+
+      <div class="goals-grid">
+        <div class="goal-card">
+          <div>
+            <h4 style="color:var(--text-white); margin-bottom:6px;">🦠 Virus</h4>
+            <p style="font-size:13px; color:var(--text-secondary);">Program yang menempel pada file sah dan membutuhkan interaksi manusia (eksekusi file) untuk menyebar.</p>
+          </div>
+        </div>
+        <div class="goal-card">
+          <div>
+            <h4 style="color:var(--text-white); margin-bottom:6px;">🐛 Worm</h4>
+            <p style="font-size:13px; color:var(--text-secondary);">Program mandiri yang mampu menggandakan diri dan menyusup ke komputer lain melalui jaringan tanpa interaksi pengguna.</p>
+          </div>
+        </div>
+        <div class="goal-card">
+          <div>
+            <h4 style="color:var(--text-white); margin-bottom:6px;">🐴 Trojan Horse</h4>
+            <p style="font-size:13px; color:var(--text-secondary);">Menyamar sebagai software berguna (game, tools bajakan), namun membuka pintu belakang (backdoor) bagi peretas.</p>
+          </div>
+        </div>
+        <div class="goal-card">
+          <div>
+            <h4 style="color:var(--text-white); margin-bottom:6px;">👁️ Spyware</h4>
+            <p style="font-size:13px; color:var(--text-secondary);">Mengintai aktivitas pengguna secara diam-diam, merekam ketikan keyboard (keylogger), dan mencuri riwayat browsing.</p>
+          </div>
+        </div>
+        <div class="goal-card">
+          <div>
+            <h4 style="color:var(--text-white); margin-bottom:6px;">🔐 Ransomware</h4>
+            <p style="font-size:13px; color:var(--text-secondary);">Mengenkripsi seluruh dokumen penting korban sehingga terkunci, lalu memeras uang tebusan untuk kunci pembukanya.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 9: PHISHING SIMULATION -->
+    <section id="phishing" class="content-section" data-section-id="phishing">
+      <div class="section-meta">
+        <span class="section-pill pill-cyan">09 • SIMULASI EMAIL PHISHING</span>
+      </div>
+      <h2 class="section-title">Simulasi: Apakah Email Ini Aman?</h2>
+      <p class="section-desc">
+        Pelajari cara mengidentifikasi indikator penipuan dalam skenario email kampus tiruan berikut:
+      </p>
+
+      <div class="phishing-email-card">
+        <div class="phishing-header-row">
+          <div>
+            <strong>Dari:</strong> Helpdesk SIAKAD &lt;admin-kampus@siakad-verification-portal.xyz&gt;<br>
+            <strong>Kepada:</strong> mahasiswa@itbm.ac.id<br>
+            <strong>Subjek:</strong> <span style="color:#b91c1c; font-weight:700;">[PENTING] Akun Anda Akan Dinonaktifkan dalam 24 Jam!</span>
+          </div>
+          <div>
+            <span class="phishing-urgent-badge">URGENT!</span>
+          </div>
+        </div>
+        <div style="font-size:14px; line-height:1.6; margin-bottom:18px;">
+          <p>Yth. Mahasiswa,</p>
+          <p style="margin:8px 0;">
+            Sistem kami mendeteksi aktivitas login mencurigakan. Jika Anda tidak segera memverifikasi data dan password Anda sekarang, akun portal perkuliahan Anda akan <strong>DITUTUP PERMANEN</strong>.
+          </p>
+          <div style="text-align:center; margin:16px 0;">
+            <a href="javascript:void(0)" style="background:#dc2626; color:#fff; padding:10px 20px; border-radius:6px; text-decoration:none; font-weight:bold; font-size:13px; display:inline-block;">
+              VERIFIKASI AKUN SEKARANG
+            </a>
+          </div>
+          <p style="font-size:11.5px; color:#64748b;">
+            Tautan menuju: <code>http://siakad-update-login-security.net/verify</code>
+          </p>
+        </div>
+
+        <div style="background:#f8fafc; border-top:1px solid #e2e8f0; padding-top:14px; text-align:center;">
+          <span style="font-size:13.5px; font-weight:700; color:#0f172a; display:block; margin-bottom:10px;">
+            Menurut Anda, apakah email di atas aman untuk diklik?
+          </span>
+          <div style="display:flex; justify-content:center; gap:12px;">
+            <button class="btn-primary" style="background:#16a34a; padding:10px 20px;" onclick="checkPhishingSim('aman')">
+              ✅ AMAN (RESMI)
+            </button>
+            <button class="btn-primary" style="padding:10px 20px;" onclick="checkPhishingSim('phishing')">
+              ⚠️ PHISHING (PALSU)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="phishingFeedbackBox" style="display:none; max-width:680px; margin:0 auto; padding:16px; border-radius:var(--radius-md); font-size:13.5px; line-height:1.6;"></div>
+    </section>
+
+    <!-- SECTION 10: DoS / DDoS -->
+    <section id="dos-ddos" class="content-section" data-section-id="dos-ddos">
+      <div class="section-meta">
+        <span class="section-pill pill-threat">10 • DoS & DDoS</span>
+      </div>
+      <h2 class="section-title">Visualisasi Serangan DoS / DDoS</h2>
+      <p class="section-desc">
+        Serangan Denial-of-Service bertujuan merusak <em>Availability (Ketersediaan)</em> sistem dengan membanjiri server melampaui kapasitas kemampuannya.
+      </p>
+
+      <div class="dos-simulator-container">
+        <div style="display:flex; justify-content:center; gap:12px; margin-bottom:20px;">
+          <button class="btn-primary" style="background:var(--bg-surface); border:1px solid var(--cyan); color:var(--cyan);" onclick="setDosMode('normal')">
+            🟢 Trafik Normal Pengguna
+          </button>
+          <button class="btn-primary" onclick="setDosMode('attack')">
+            🔴 Lancarkan Serangan DDoS Banjir Trafik
+          </button>
+        </div>
+
+        <div class="dos-traffic-lane">
+          <div style="text-align:left;">
+            <div id="dosTrafficSource" style="font-size:13px; font-family:'JetBrains Mono',monospace; color:var(--text-secondary);">
+              👤 Mahasiswa 1 • Akses KRS<br>
+              👤 Mahasiswa 2 • Unduh KHS<br>
+              👤 Dosen 1 • Input Nilai
+            </div>
+          </div>
+          <div style="font-size:24px; color:var(--cyan);" id="dosArrowIcon">➔ ➔ ➔</div>
+          <div class="dos-server-icon" id="dosServerIcon">
+            <span>🖥️</span>
+            <span style="font-size:10px; font-weight:700; margin-top:4px;" id="dosServerStatusText">SERVER SEHAT</span>
+          </div>
+        </div>
+
+        <p id="dosExplanationText" style="font-size:13.5px; color:var(--text-secondary); max-width:620px; margin:0 auto; line-height:1.6;">
+          Pada kondisi normal, server SIAKAD memproses permintaan pengguna yang sah secara lancar tanpa hambatan latensi.
+        </p>
+      </div>
+    </section>
+
+    <!-- SECTION 11: PASSWORD ATTACK -->
+    <section id="password-attack" class="content-section" data-section-id="password-attack">
+      <div class="section-meta">
+        <span class="section-pill pill-vuln">11 • SIMULASI PASSWORD ATTACK</span>
+      </div>
+      <h2 class="section-title">Eksplorasi Tingkat Risiko Kata Sandi</h2>
+      <p class="section-desc">
+        Pilih skenario konfigurasi keamanan di bawah untuk melihat bagaimana tingkat kerentanan akun berubah:
+      </p>
+
+      <div class="password-sim-box">
+        <div style="background:var(--bg-surface); padding:16px; border-radius:var(--radius-sm); border:1px solid var(--border); margin-bottom:16px; font-family:'JetBrains Mono',monospace; font-size:13px;">
+          <div>Username: <strong style="color:var(--cyan);">admin_kampus</strong></div>
+          <div style="margin-top:6px;">Password: <strong id="simPasswordMask" style="color:#fca5a5;">123456</strong></div>
+        </div>
+
+        <div class="sim-level-btn-row">
+          <button class="sim-level-btn active" onclick="setPassSimLevel('lemah', this)">Password Lemah</button>
+          <button class="sim-level-btn" onclick="setPassSimLevel('kuat', this)">Password Kuat</button>
+          <button class="sim-level-btn" onclick="setPassSimLevel('mfa', this)">Password Kuat + MFA</button>
+        </div>
+
+        <div id="passSimResult" style="padding:16px; border-radius:var(--radius-sm); background:rgba(239,68,68,0.15); border:1px solid var(--danger-red); font-size:13.5px; line-height:1.6;">
+          <strong style="color:#fca5a5;">Tingkat Risiko: SANGAT TINGGI (CRITICAL)</strong>
+          <p style="margin-top:4px;">Password mudah ditebak dalam hitungan detik melalui kamus kata sandi bocor (dictionary attack) atau tebakan langsung.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 12 & 13: SOCIAL ENGINEERING & INSIDER THREAT -->
+    <section id="social-engineering" class="content-section" data-section-id="social-engineering">
+      <div class="section-meta">
+        <span class="section-pill pill-cyan">12 • STUDI KASUS SOCIAL ENGINEERING</span>
+      </div>
+      <h2 class="section-title">Kasus Manipulasi Psikologis</h2>
+      <div class="apersepsi-box">
+        <p style="font-size:14.5px; color:var(--text-main); line-height:1.7;">
+          <em>"Seseorang menelepon staf administrasi kampus dan mengaku sebagai teknisi IT pusat. Penelepon mendesak agar staf tersebut segera membacakan kode 6-digit OTP yang masuk ke SMS ponselnya dengan alasan perbaikan akun darurat."</em>
+        </p>
+        <div style="margin-top:16px;">
+          <p style="font-size:14px; font-weight:700; color:var(--text-white); margin-bottom:10px;">
+            Di manakah titik kelemahan (vulnerability) utama dalam kasus tersebut?
+          </p>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <button class="quiz-option-btn" onclick="checkSocialEng('A', this)">A. Kabel jaringan server terputus</button>
+            <button class="quiz-option-btn" onclick="checkSocialEng('B', this)">B. Pengguna dan kurangnya prosedur SOP verifikasi identitas</button>
+            <button class="quiz-option-btn" onclick="checkSocialEng('C', this)">C. Monitor komputer kurang terang</button>
+            <button class="quiz-option-btn" onclick="checkSocialEng('D', this)">D. Daya baterai handphone staf lemah</button>
+          </div>
+        </div>
+        <div id="socialFeedback" style="display:none; margin-top:14px; padding:14px; border-radius:var(--radius-sm); font-size:13.5px;"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 13: INSIDER THREAT -->
+    <section id="insider-threat" class="content-section" data-section-id="insider-threat">
+      <div class="section-meta">
+        <span class="section-pill pill-threat">13 • STUDI KASUS INSIDER THREAT</span>
+      </div>
+      <h2 class="section-title">Ancaman dari Orang Dalam</h2>
+      <div class="apersepsi-box">
+        <p style="font-size:14.5px; color:var(--text-main); line-height:1.7;">
+          <em>"Seorang pegawai administrasi yang memiliki akses ke database mahasiswa diam-diam menyalin 5.000 data nomor telepon mahasiswa lalu menjualnya kepada penyedia pinjaman online luar."</em>
+        </p>
+        <div style="margin-top:14px; padding:14px; background:var(--bg-surface); border-radius:var(--radius-sm); border:1px solid var(--border);">
+          <strong style="color:var(--danger-red);">Analisis Kategori Ancaman:</strong>
+          <p style="font-size:13.5px; color:var(--text-secondary); margin-top:4px;">
+            Kasus ini merupakan contoh murni <strong>Insider Threat</strong>. Orang dalam memiliki kredensial resmi, sehingga firewall jaringan seringkali tidak mencurigai aktivitas mereka. Solusinya membutuhkan <em>Access Control (Least Privilege)</em>, <em>Audit Trail Logging</em>, serta klausul pakta integritas hukum (NDA).
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 14: GAME KLASIFIKASI ANCAMAN -->
+    <section id="klasifikasi-ancaman" class="content-section" data-section-id="klasifikasi-ancaman">
+      <div class="section-meta">
+        <span class="section-pill pill-cyan">14 • GAME INTERAKTIF</span>
+      </div>
+      <h2 class="section-title">Latihan: Klasifikasikan Ancaman Siber!</h2>
+      <p class="section-desc">
+        Cocokkan setiap kasus nyata di bawah dengan kategori ancaman siber yang paling sesuai:
+      </p>
+
+      <div class="classification-game-box">
+        <div class="game-item-card" data-idx="1" data-answer="phishing">
+          <span style="font-size:13.5px; color:var(--text-main);">1. Menerima email login palsu yang meniru halaman web bank.</span>
+          <select class="category-select-dropdown" id="classSelect1">
+            <option value="">-- Pilih Kategori --</option>
+            <option value="malware">Malware</option>
+            <option value="phishing">Phishing</option>
+            <option value="dos">DoS / DDoS</option>
+            <option value="password">Password Attack</option>
+            <option value="social">Social Engineering</option>
+            <option value="insider">Insider Threat</option>
+          </select>
+        </div>
+
+        <div class="game-item-card" data-idx="2" data-answer="malware">
+          <span style="font-size:13.5px; color:var(--text-main);">2. Semua file dokumen terkunci dan meminta tebusan mata uang kripto.</span>
+          <select class="category-select-dropdown" id="classSelect2">
+            <option value="">-- Pilih Kategori --</option>
+            <option value="malware">Malware (Ransomware)</option>
+            <option value="phishing">Phishing</option>
+            <option value="dos">DoS / DDoS</option>
+            <option value="password">Password Attack</option>
+            <option value="social">Social Engineering</option>
+            <option value="insider">Insider Threat</option>
+          </select>
+        </div>
+
+        <div class="game-item-card" data-idx="3" data-answer="dos">
+          <span style="font-size:13.5px; color:var(--text-main);">3. Server website pendaftaran KRS lumpuh akibat dibanjiri jutaan request botnet.</span>
+          <select class="category-select-dropdown" id="classSelect3">
+            <option value="">-- Pilih Kategori --</option>
+            <option value="malware">Malware</option>
+            <option value="phishing">Phishing</option>
+            <option value="dos">DoS / DDoS</option>
+            <option value="password">Password Attack</option>
+            <option value="social">Social Engineering</option>
+            <option value="insider">Insider Threat</option>
+          </select>
+        </div>
+
+        <div class="game-item-card" data-idx="4" data-answer="password">
+          <span style="font-size:13.5px; color:var(--text-main);">4. Peretas menebak ribuan kombinasi kata sandi akun admin secara otomatis.</span>
+          <select class="category-select-dropdown" id="classSelect4">
+            <option value="">-- Pilih Kategori --</option>
+            <option value="malware">Malware</option>
+            <option value="phishing">Phishing</option>
+            <option value="dos">DoS / DDoS</option>
+            <option value="password">Password Attack (Brute Force)</option>
+            <option value="social">Social Engineering</option>
+            <option value="insider">Insider Threat</option>
+          </select>
+        </div>
+
+        <div class="game-item-card" data-idx="5" data-answer="insider">
+          <span style="font-size:13.5px; color:var(--text-main);">5. Staf internal yang memiliki izin membocorkan rahasia transkrip nilai ke luar.</span>
+          <select class="category-select-dropdown" id="classSelect5">
+            <option value="">-- Pilih Kategori --</option>
+            <option value="malware">Malware</option>
+            <option value="phishing">Phishing</option>
+            <option value="dos">DoS / DDoS</option>
+            <option value="password">Password Attack</option>
+            <option value="social">Social Engineering</option>
+            <option value="insider">Insider Threat</option>
+          </select>
+        </div>
+
+        <div class="game-item-card" data-idx="6" data-answer="social">
+          <span style="font-size:13.5px; color:var(--text-main);">6. Pengguna tertipu membacakan kode OTP melalui telepon dari penelepon gadungan.</span>
+          <select class="category-select-dropdown" id="classSelect6">
+            <option value="">-- Pilih Kategori --</option>
+            <option value="malware">Malware</option>
+            <option value="phishing">Phishing</option>
+            <option value="dos">DoS / DDoS</option>
+            <option value="password">Password Attack</option>
+            <option value="social">Social Engineering</option>
+            <option value="insider">Insider Threat</option>
+          </select>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <button class="btn-primary" onclick="checkClassificationGame()">
+            <span>🔍 PERIKSA JAWABAN</span>
+          </button>
+          <div id="gameScoreDisplay" style="font-size:14px; font-weight:700; color:var(--cyan);"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 15: IDENTIFIKASI VULNERABILITY -->
+    <section id="temukan-kerentanan" class="content-section" data-section-id="temukan-kerentanan">
+      <div class="section-meta">
+        <span class="section-pill pill-vuln">15 • DETEKTIF KERENTANAN</span>
+      </div>
+      <h2 class="section-title">Temukan Kerentanan! (Lab Komputer Kampus)</h2>
+      <p class="section-desc">
+        Klik setiap kondisi di bawah yang menurut Anda merupakan <strong>Vulnerability (Celah Kerentanan)</strong>:
+      </p>
+
+      <div class="vuln-chips-grid">
+        <div class="vuln-chip-item" onclick="toggleVulnChip(this, true, 'Kelemahan Autentikasi: Sangat rentan pembajakan massal!')">
+          <span>🔓</span>
+          <div>Semua 30 komputer menggunakan password yang sama</div>
+        </div>
+        <div class="vuln-chip-item" onclick="toggleVulnChip(this, true, 'Kelemahan Software: Celah keamanan lama belum ditambal!')">
+          <span>🔓</span>
+          <div>Sistem operasi jarang diperbarui (outdated)</div>
+        </div>
+        <div class="vuln-chip-item" onclick="toggleVulnChip(this, true, 'Kelemahan Access Control: Pengguna bebas menginstal malware!')">
+          <span>🔓</span>
+          <div>Semua mahasiswa login menggunakan akun Administrator</div>
+        </div>
+        <div class="vuln-chip-item" onclick="toggleVulnChip(this, true, 'Kelemahan Otorisasi: Tidak ada isolasi data antar pengguna!')">
+          <span>🔓</span>
+          <div>Tidak ada pembatasan hak akses jaringan antar komputer</div>
+        </div>
+        <div class="vuln-chip-item" onclick="toggleVulnChip(this, true, 'Kelemahan Manusia: Mahasiswa mudah terjebak file berbahaya!')">
+          <span>🔓</span>
+          <div>Pengguna tidak pernah mendapatkan edukasi keamanan siber</div>
+        </div>
+        <div class="vuln-chip-item" onclick="toggleVulnChip(this, false, 'Bukan kerentanan: Menggunakan kabel LAN adalah standar fisik jaringan biasa.')">
+          <span>🛡️</span>
+          <div>Komputer dihubungkan menggunakan kabel jaringan LAN Cat6</div>
+        </div>
+      </div>
+      <div id="vulnFeedbackAlert" style="margin-top:16px; font-size:13.5px; color:var(--cyan); min-height:22px;"></div>
+    </section>
+
+    <!-- SECTION 16: STUDI KASUS UTAMA -->
+    <section id="studi-kasus" class="content-section" data-section-id="studi-kasus">
+      <div class="section-meta">
+        <span class="section-pill pill-threat">16 • STUDI KASUS UTAMA</span>
+      </div>
+      <h2 class="section-title">Studi Kasus: Insiden Laboratorium Komputer Kampus</h2>
+      <p class="section-desc">
+        Analisis skenario kasus nyata berikut menggunakan lembar isian interaktif:
+      </p>
+
+      <div class="apersepsi-box" style="border-left:4px solid var(--danger-red); margin-bottom:24px;">
+        <h4 style="color:#fca5a5; margin-bottom:8px;">🚨 Kasus Laboratorium Komputer Bisnis Digital</h4>
+        <p style="font-size:14px; color:var(--text-main); line-height:1.7;">
+          Sebuah lab komputer kampus memiliki 30 unit komputer yang seluruhnya terhubung ke jaringan lokal yang sama. Sebagian besar OS belum di-update selama 1 tahun, password beberapa akun masih sederhana ("lab123"), dan mahasiswa login menggunakan hak akses administrator bebas. Suatu hari, sebagian komputer mengalami kelumpuhan dan file-file tugas terenkripsi setelah seorang mahasiswa mengunduh dan membuka file tidak dikenal dari flashdisk.
+        </p>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr; gap:16px;">
+        <div style="background:var(--bg-card); padding:16px; border-radius:var(--radius-sm); border:1px solid var(--border);">
+          <label style="font-weight:600; font-size:13.5px; color:var(--text-white); display:block; margin-bottom:6px;" for="caseAnalysisQ1">1. Apa saja ancaman (threat) yang terjadi?</label>
+          <textarea style="width:100%; min-height:70px; background:var(--bg-surface); border:1px solid var(--border); color:var(--text-main); padding:10px; border-radius:var(--radius-sm); font-size:13px;" id="caseAnalysisQ1" placeholder="Analisis jenis ancamannya..."></textarea>
+        </div>
+
+        <div style="background:var(--bg-card); padding:16px; border-radius:var(--radius-sm); border:1px solid var(--border);">
+          <label style="font-weight:600; font-size:13.5px; color:var(--text-white); display:block; margin-bottom:6px;" for="caseAnalysisQ2">2. Apa saja kerentanan (vulnerability) yang memicu insiden?</label>
+          <textarea style="width:100%; min-height:70px; background:var(--bg-surface); border:1px solid var(--border); color:var(--text-main); padding:10px; border-radius:var(--radius-sm); font-size:13px;" id="caseAnalysisQ2" placeholder="Analisis titik kelemahannya..."></textarea>
+        </div>
+
+        <div style="background:var(--bg-card); padding:16px; border-radius:var(--radius-sm); border:1px solid var(--border);">
+          <label style="font-weight:600; font-size:13.5px; color:var(--text-white); display:block; margin-bottom:6px;" for="caseAnalysisQ3">3. Apa risiko (risk) dan dampak (impact) yang timbul?</label>
+          <textarea style="width:100%; min-height:70px; background:var(--bg-surface); border:1px solid var(--border); color:var(--text-main); padding:10px; border-radius:var(--radius-sm); font-size:13px;" id="caseAnalysisQ3" placeholder="Analisis potensi risiko dan dampak kerugiannya..."></textarea>
+        </div>
+
+        <div style="background:var(--bg-card); padding:16px; border-radius:var(--radius-sm); border:1px solid var(--border);">
+          <label style="font-weight:600; font-size:13.5px; color:var(--text-white); display:block; margin-bottom:6px;" for="caseAnalysisQ4">4. Apa tindakan pencegahan manajerial dan teknis yang harus diambil?</label>
+          <textarea style="width:100%; min-height:70px; background:var(--bg-surface); border:1px solid var(--border); color:var(--text-main); padding:10px; border-radius:var(--radius-sm); font-size:13px;" id="caseAnalysisQ4" placeholder="Rekomendasikan kontrol, pembatasan hak akses, antivirus, update..."></textarea>
+        </div>
+      </div>
+
+      <div style="margin-top:16px; display:flex; justify-content:flex-end;">
+        <button class="btn-primary" onclick="saveCaseStudyP6()">
+          <span>💾 SIMPAN ANALISIS STUDI KASUS</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- SECTION 17: BUILD THE ATTACK CHAIN -->
+    <section id="attack-chain" class="content-section" data-section-id="attack-chain">
+      <div class="section-meta">
+        <span class="section-pill pill-risk">17 • RANTAI SERANGAN</span>
+      </div>
+      <h2 class="section-title">Build the Attack Chain: Hubungkan Rantai Serangan</h2>
+      <p class="section-desc">
+        Pilih kombinasi Threat, Vulnerability, Risk, dan Impact di bawah untuk menguji logika skenario serangan siber:
+      </p>
+
+      <div class="attack-chain-builder-box">
+        <div class="chain-step-select-row">
+          <div class="chain-select-group">
+            <label>1. THREAT (ANCAMAN)</label>
+            <select class="chain-select" id="chainThreat">
+              <option value="phishing">Phishing Email</option>
+              <option value="ransomware">Ransomware</option>
+              <option value="ddos">DDoS Traffic</option>
+            </select>
+          </div>
+
+          <div class="chain-select-group">
+            <label>2. VULNERABILITY (KERENTANAN)</label>
+            <select class="chain-select" id="chainVuln">
+              <option value="user_awareness">Kurang Edukasi & Pengguna Klik Link</option>
+              <option value="no_backup">Tidak Ada Backup Data & OS Usang</option>
+              <option value="no_bandwidth">Perlindungan Jaringan Tanpa Batas Kuota</option>
+            </select>
+          </div>
+
+          <div class="chain-select-group">
+            <label>3. RISK (RISIKO)</label>
+            <select class="chain-select" id="chainRisk">
+              <option value="credential_theft">Kredensial Akun Berhasil Dicuri</option>
+              <option value="file_encrypted">Seluruh File Terkunci & Operasional Mandek</option>
+              <option value="service_down">Server Crash & Layanan Tidak Dapat Diakses</option>
+            </select>
+          </div>
+
+          <div class="chain-select-group">
+            <label>4. IMPACT (DAMPAK)</label>
+            <select class="chain-select" id="chainImpact">
+              <option value="data_breach">Penyalahgunaan Akun Mahasiswa</option>
+              <option value="financial_loss">Kerugian Finansial & Pemerasan Tebusan</option>
+              <option value="reputation_loss">Kepanikan Civitas & Rusaknya Reputasi Kampus</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="validateAttackChain()">
+          <span>⚡ VERIFIKASI RANTAI SERANGAN</span>
+        </button>
+
+        <div id="chainValidationResult" style="display:none; margin-top:16px; padding:14px; border-radius:var(--radius-sm); font-size:13.5px;"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 18: GAME CYBER DETECTIVE -->
+    <section id="cyber-detective" class="content-section" data-section-id="cyber-detective">
+      <div class="section-meta">
+        <span class="section-pill pill-cyan">18 • CYBER DETECTIVE GAME</span>
+      </div>
+      <h2 class="section-title">Game: Cyber Detective</h2>
+      <p class="section-desc">
+        Sebagai analis investigasi forensik, tentukan Threat dan Vulnerability dari setiap barang bukti insiden:
+      </p>
+
+      <div class="detective-card">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--cyan); margin-bottom:8px;" id="detectiveCaseNum">KASUS 1 DARI 3</div>
+        <div style="font-size:16px; font-weight:700; color:var(--text-white); margin-bottom:18px; line-height:1.5;" id="detectiveScenarioText">
+          "Seorang mahasiswa menerima email yang memintanya login memverifikasi akun melalui link eksternal tidak dikenal."
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px;">
+          <div>
+            <label style="font-size:12px; font-family:'JetBrains Mono',monospace; color:var(--text-muted); display:block; margin-bottom:6px;">Deteksi Threat (Ancaman):</label>
+            <select class="chain-select" id="detectiveThreatSelect" style="width:100%;">
+              <option value="">-- Pilih Ancaman --</option>
+              <option value="phishing">Phishing</option>
+              <option value="ddos">DoS / DDoS</option>
+              <option value="password_attack">Password Attack</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:12px; font-family:'JetBrains Mono',monospace; color:var(--text-muted); display:block; margin-bottom:6px;">Deteksi Vulnerability (Celah):</label>
+            <select class="chain-select" id="detectiveVulnSelect" style="width:100%;">
+              <option value="">-- Pilih Kerentanan --</option>
+              <option value="awareness">Kurangnya Kewaspadaan Pengguna</option>
+              <option value="network">Perlindungan Jaringan Lemah</option>
+              <option value="weak_pass">Password Lemah / Reuse Password</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <button class="btn-primary" onclick="submitDetectiveAnswer()">
+            <span>🔍 INVESTIGASI KASUS</span>
+          </button>
+          <div style="font-weight:700; color:var(--cyan);" id="detectiveScoreText">Skor: 0</div>
+        </div>
+        <div id="detectiveFeedback" style="margin-top:14px; font-size:13.5px; min-height:20px;"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 19: DISKUSI KELOMPOK -->
+    <section id="diskusi-kelompok" class="content-section" data-section-id="diskusi-kelompok">
+      <div class="section-meta">
+        <span class="section-pill pill-cyan">19 • DISKUSI ARGUMENTATIF</span>
+      </div>
+      <h2 class="section-title">Diskusi Kelompok: Teknologi vs Perilaku Manusia</h2>
+      <p class="section-desc">
+        Debat Manajerial Keamanan Siber:
+      </p>
+
+      <div class="apersepsi-box" style="margin-bottom:20px;">
+        <h4 style="color:var(--text-white); font-size:16px; margin-bottom:12px;">
+          "Apakah keamanan sistem informasi lebih banyak bergantung pada kecanggihan teknologi atau perilaku manusia?"
+        </h4>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div style="background:var(--bg-surface); padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border);">
+            <strong style="color:var(--cyan);">SISI A: TEKNOLOGI</strong>
+            <p style="font-size:12.5px; color:var(--text-secondary); margin-top:4px;">Firewall otomatis, AI deteksi ancaman, dan enkripsi dapat mencegah serangan tanpa campur tangan manusia.</p>
+          </div>
+          <div style="background:var(--bg-surface); padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border);">
+            <strong style="color:var(--warning-amber);">SISI B: MANUSIA</strong>
+            <p style="font-size:12.5px; color:var(--text-secondary); margin-top:4px;">Manusia adalah mata rantai terlemah (weakest link); teknologi secanggih apa pun lumpuh jika staf membocorkan password.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:var(--bg-card); padding:20px; border-radius:var(--radius-md); border:1px solid var(--border);">
+        <label style="font-size:13.5px; font-weight:600; color:var(--text-white); display:block; margin-bottom:8px;" for="groupDiscussionArgument">
+          Argumentasi Kelompok Anda:
+        </label>
+        <textarea style="width:100%; min-height:100px; background:var(--bg-surface); border:1px solid var(--border); color:var(--text-main); padding:12px; border-radius:var(--radius-sm); font-size:13px;" id="groupDiscussionArgument" placeholder="Tuliskan argumen dan contoh pembelaan kelompok Anda..."></textarea>
+        <div style="margin-top:12px; display:flex; justify-content:flex-end;">
+          <button class="btn-primary" onclick="saveGroupArgumentP6()">
+            <span>💾 SIMPAN ARGUMEN DISKUSI</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 20: KUIS INTERAKTIF -->
+    <section id="kuis" class="content-section" data-section-id="kuis">
+      <div class="section-meta">
+        <span class="section-pill pill-cyan">20 • EVALUASI AKHIR</span>
+      </div>
+      <h2 class="section-title">Kuis Interaktif Pemahaman (10 Soal Pilihan Ganda)</h2>
+      <p class="section-desc">
+        Uji penguasaan Anda mengenai Threat, Vulnerability, Risk, Malware, Phishing, DoS, hingga Social Engineering:
+      </p>
+
+      <div class="quiz-container" id="quizContainerP6">
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="quizProgressFillP6"></div>
+        </div>
+
+        <div id="quizCardP6">
+          <div class="mono" style="color:var(--cyan); font-size:12px; margin-bottom:8px;" id="quizQNumP6">SOAL 01 / 10</div>
+          <div style="font-size:17px; font-weight:700; color:var(--text-white); margin-bottom:20px; line-height:1.5;" id="quizQuestionTextP6">Pertanyaan kuis...</div>
+
+          <div id="quizOptionsContainerP6">
+            <!-- Populated by JS -->
+          </div>
+
+          <div id="quizExpBoxP6" style="display:none; background:rgba(0,212,255,0.1); border:1px solid rgba(0,212,255,0.3); border-radius:var(--radius-md); padding:16px; margin:16px 0; font-size:13.5px; line-height:1.6;">
+            <strong style="color:var(--cyan);">Pembahasan:</strong>
+            <p id="quizExpTextP6" style="margin-top:4px;"></p>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; margin-top:16px;">
+            <button class="btn-primary" id="btnQuizNextP6" style="display:none;" onclick="nextQuizP6()">
+              <span>SOAL BERIKUTNYA →</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Result Card -->
+        <div id="quizResultCardP6" style="display:none; text-align:center; padding:30px 10px;">
+          <h3 style="font-size:22px; color:var(--text-white); margin-bottom:8px;">Hasil Kuis Selesai!</h3>
+          <div style="font-size:56px; font-weight:900; font-family:'Outfit',sans-serif; color:var(--cyan); margin-bottom:6px;" id="quizScoreTextP6">0 / 100</div>
+          <div id="quizBadgeP6" style="display:inline-block; padding:6px 18px; border-radius:999px; font-size:13px; font-weight:700; margin-bottom:16px;">Kategori Hasil</div>
+          <p id="quizMsgP6" style="color:var(--text-secondary); max-width:480px; margin:0 auto 24px; font-size:14px; line-height:1.6;"></p>
+          <button class="btn-primary" onclick="restartQuizP6()">
+            <span>↺ ULANGI KUIS</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 21: RINGKASAN MATERI -->
+    <section id="ringkasan" class="content-section" data-section-id="ringkasan">
+      <div class="section-meta">
+        <span class="section-pill pill-cyan">21 • RINGKASAN INTI</span>
+      </div>
+      <h2 class="section-title">Ringkasan Konseptual Pertemuan 6</h2>
+      <p class="section-desc">
+        Peta pemikiran ringkas yang wajib dipahami sarjana Bisnis Digital:
+      </p>
+
+      <div class="goals-grid">
+        <div class="goal-card" style="border-left:4px solid var(--danger-red);">
+          <div>
+            <h4 style="color:#fca5a5; margin-bottom:4px;">THREAT</h4>
+            <p style="font-size:13px; color:var(--text-secondary);">Potensi bahaya dari luar maupun dalam yang membahayakan sistem (Malware, Phishing, DDoS, Hacker).</p>
+          </div>
+        </div>
+        <div class="goal-card" style="border-left:4px solid var(--warning-amber);">
+          <div>
+            <h4 style="color:#fde047; margin-bottom:4px;">VULNERABILITY</h4>
+            <p style="font-size:13px; color:var(--text-secondary);">Titik kelemahan internal yang dapat dimanfaatkan (Password lemah, OS usang, ketiadaan MFA, kelalaian staf).</p>
+          </div>
+        </div>
+        <div class="goal-card" style="border-left:4px solid var(--purple-threat);">
+          <div>
+            <h4 style="color:var(--purple-threat); margin-bottom:4px;">RISK</h4>
+            <p style="font-size:13px; color:var(--text-secondary);">Peluang dan konsekuensi kerugian ketika ancaman berhasil mengeksploitasi celah kelemahan.</p>
+          </div>
+        </div>
+        <div class="goal-card" style="border-left:4px solid var(--cyan);">
+          <div>
+            <h4 style="color:var(--cyan); margin-bottom:4px;">IMPACT</h4>
+            <p style="font-size:13px; color:var(--text-secondary);">Kerusakan riil pada aset informasi, kerugian uang tebusan, downtime operasional, atau jeratan hukum.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 22: REFLEKSI -->
+    <section id="refleksi" class="content-section" data-section-id="refleksi">
+      <div class="section-meta">
+        <span class="section-pill pill-cyan">22 • REFLEKSI MAHASISWA</span>
+      </div>
+      <h2 class="section-title">Refleksi Pribadi</h2>
+      <p class="section-desc">
+        Tuliskan refleksi kritis Anda mengenai keamanan digital sehari-hari:
+      </p>
+
+      <div class="apersepsi-box">
+        <div style="margin-bottom:16px;">
+          <label style="font-size:13.5px; font-weight:600; color:var(--text-white); display:block; margin-bottom:6px;" for="reflQ1">
+            1. Ancaman siber apa yang paling sering Anda temui dalam kehidupan sehari-hari?
+          </label>
+          <input type="text" id="reflQ1" style="width:100%; background:var(--bg-surface); border:1px solid var(--border); color:var(--text-main); padding:10px; border-radius:var(--radius-sm); font-size:13px;" placeholder="Misal: SMS phishing undangan pernikahan, malware APK..." />
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <label style="font-size:13.5px; font-weight:600; color:var(--text-white); display:block; margin-bottom:6px;" for="reflQ2">
+            2. Kerentanan apa yang sering Anda atau teman Anda lakukan tanpa disadari?
+          </label>
+          <input type="text" id="reflQ2" style="width:100%; background:var(--bg-surface); border:1px solid var(--border); color:var(--text-main); padding:10px; border-radius:var(--radius-sm); font-size:13px;" placeholder="Misal: Satu password dipakai untuk semua akun medsos..." />
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <label style="font-size:13.5px; font-weight:600; color:var(--text-white); display:block; margin-bottom:6px;" for="reflQ3">
+            3. Langkah nyata apa yang akan Anda lakukan untuk mengurangi risiko tersebut?
+          </label>
+          <input type="text" id="reflQ3" style="width:100%; background:var(--bg-surface); border:1px solid var(--border); color:var(--text-main); padding:10px; border-radius:var(--radius-sm); font-size:13px;" placeholder="Misal: Mengaktifkan Google Authenticator MFA, password manager..." />
+        </div>
+
+        <div style="display:flex; justify-content:flex-end;">
+          <button class="btn-primary" onclick="saveReflectionP6()">
+            <span>💾 SIMPAN REFLEKSI PRIBADI</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 23: TUGAS PERKULIAHAN -->
+    <section id="tugas" class="content-section" data-section-id="tugas">
+      <div class="section-meta">
+        <span class="section-pill pill-cyan">23 • TUGAS MANDIRI</span>
+      </div>
+      <h2 class="section-title">TUGAS: Klasifikasi & Analisis Ancaman Siber</h2>
+      <p class="section-desc">
+        Tugas terstruktur mengacu pada RPS Pertemuan 6–7:
+      </p>
+
+      <div class="apersepsi-box" style="border-left:4px solid var(--cyan);">
+        <h3 style="color:var(--text-white); font-size:18px; margin-bottom:8px;">
+          Instruksi Penugasan:
+        </h3>
+        <p style="font-size:14px; color:var(--text-main); line-height:1.7;">
+          Buatlah sebuah <strong>Tabel Klasifikasi Ancaman Siber dan Analisis Kasus</strong> (minimal 5 jenis ancaman berbeda) dengan format kolom:
+        </p>
+
+        <div style="background:var(--bg-surface); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--border); margin:14px 0; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--cyan); overflow-x:auto;">
+          No | Nama Ancaman | Kategori | Cara Kerja | Target Utama | Dampak Kerugian | Contoh Pencegahan Nyata
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin:20px 0;">
+          <div style="background:var(--bg-surface); padding:12px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); font-size:13px;">
+            <strong style="color:var(--text-muted); display:block; font-size:11px; text-transform:uppercase;">Bentuk:</strong>
+            Individu Mandiri
+          </div>
+          <div style="background:var(--bg-surface); padding:12px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); font-size:13px;">
+            <strong style="color:var(--text-muted); display:block; font-size:11px; text-transform:uppercase;">Format:</strong>
+            Dokumen PDF Sistematis
+          </div>
+          <div style="background:var(--bg-surface); padding:12px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); font-size:13px;">
+            <strong style="color:var(--text-muted); display:block; font-size:11px; text-transform:uppercase;">Referensi:</strong>
+            Minimal 2 Sumber Resmi
+          </div>
+          <div style="background:var(--bg-surface); padding:12px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); font-size:13px;">
+            <strong style="color:var(--text-muted); display:block; font-size:11px; text-transform:uppercase;">Bobot RPS:</strong>
+            5% Nilai Akhir
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="copyTaskP6Instructions()">
+          <span>📋 SALIN INSTRUKSI TUGAS KE CLIPBOARD</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- SECTION 24: PROGRESS REKAP -->
+    <section id="progress-belajar" class="content-section" data-section-id="progress-belajar">
+      <div class="section-meta">
+        <span class="section-pill pill-cyan">24 • KEMAJUAN BELAJAR</span>
+      </div>
+      <h2 class="section-title">Rekapitulasi Modul Pembelajaran</h2>
+      <p class="section-desc">
+        Catatan interaksi dan kemajuan belajar Anda pada Pertemuan 6:
+      </p>
+
+      <div class="apersepsi-box" style="text-align:center; padding:36px 20px;">
+        <div style="font-size:42px; font-weight:900; font-family:'Outfit',sans-serif; color:var(--cyan); margin-bottom:8px;" id="summaryProgressTextP6">0%</div>
+        <div style="font-size:14.5px; color:var(--text-white); margin-bottom:16px;" id="summarySectionsCountP6">0 dari 24 bagian materi telah dipelajari.</div>
+        <div style="max-width:500px; margin:0 auto 24px;" class="progress-track">
+          <div class="progress-fill" id="summaryProgressBarP6" style="width:0%;"></div>
+        </div>
+        <div style="display:flex; justify-content:center; gap:12px;">
+          <a href="../index.html" class="btn-primary">
+            <span>🏠 KEMBALI KE PORTAL UTAMA</span>
+          </a>
+          <button class="btn-reset" onclick="resetP6All()">
+            <span>↺ Reset Progres</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FLOATING PREV / NEXT NAVIGATION -->
+    <div class="page-nav-floating">
+      <button class="btn-nav-step" id="btnPrevSection" onclick="navigateP6Step(-1)">
+        <span>← Bagian Sebelumnya</span>
+      </button>
+      <button class="btn-nav-step" id="btnNextSection" onclick="navigateP6Step(1)">
+        <span>Bagian Selanjutnya →</span>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- ========================================================
+       MODAL DETAIL ANCAMAN
+       ======================================================== -->
+  <div class="modal-overlay" id="threatDetailModal" role="dialog" aria-modal="true" aria-labelledby="threatModalTitle">
+    <div class="modal-box">
+      <button class="modal-close-btn" onclick="closeThreatModal()" aria-label="Tutup modal">✕</button>
+      <h3 id="threatModalTitle" style="color:#fca5a5; font-size:20px; margin-bottom:14px;">Detail Ancaman</h3>
+      <div id="threatModalBody" style="font-size:13.5px; color:var(--text-main); line-height:1.7;"></div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="p6Toast">
+    <span id="p6ToastIcon">✅</span>
+    <span id="p6ToastText">Aksi berhasil disimpan</span>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

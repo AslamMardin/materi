@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pertemuan 5: Analisis Penerapan Standar, Regulasi, & Tata Kelola | Cyber Security Management</title>
+  <meta name="description" content="Media Pembelajaran Interaktif Pertemuan 5: Analisis Penerapan Standar, Regulasi, dan Tata Kelola Keamanan Siber dalam Organisasi. BWP5030 - Bisnis Digital." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+</head>
+<body>
+
+  <!-- ========================================================
+       TOPBAR / HEADER
+       ======================================================== -->
+  <header class="topbar" role="banner">
+    <div class="topbar-left">
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Buka menu navigasi" aria-expanded="false">☰</button>
+      <a href="../index.html" class="topbar-brand" title="Kembali ke Portal Utama">
+        <div class="brand-icon" aria-hidden="true">🛡️</div>
+        <div>
+          <div class="brand-title">CYBER SECURITY MGMT</div>
+          <div class="brand-subtitle">PERTEMUAN 05 • BWP5030</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Progress Tracker -->
+    <div class="progress-container" aria-label="Indikator kemajuan belajar">
+      <div class="progress-header">
+        <span>PROGRESS MATERI</span>
+        <span id="topbarProgressPercent">0%</span>
+      </div>
+      <div class="progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-fill" id="topbarProgressBar"></div>
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <a href="../index.html" class="btn-portal-back" title="Kembali ke Portal Mata Kuliah">
+        <span>🏠</span> <span>Portal Utama</span>
+      </a>
+      <button class="btn-reset" id="btnResetAll" aria-label="Reset semua progres">↺ Reset</button>
+    </div>
+  </header>
+
+  <!-- ========================================================
+       SIDEBAR NAVIGATION
+       ======================================================== -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+  <nav class="sidebar" id="sidebar" aria-label="Navigasi Pertemuan 5">
+    <div class="sidebar-heading">Portal</div>
+    <a href="../index.html" class="nav-link" style="color:var(--cyan); font-weight:600; margin-bottom:12px;">
+      <span class="nav-badge-num">←</span>
+      <span>Menu Utama Portal</span>
+    </a>
+
+    <div class="sidebar-heading">01 - 06 Fondasi & Standar</div>
+    <a href="#cover" class="nav-link" data-section="cover">
+      <span class="nav-badge-num">01</span>
+      <span>Cover Perkuliahan</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#tujuan" class="nav-link" data-section="tujuan">
+      <span class="nav-badge-num">02</span>
+      <span>Tujuan Belajar</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#review" class="nav-link" data-section="review">
+      <span class="nav-badge-num">03</span>
+      <span>Review Pertemuan 4</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#kebutuhan-gov" class="nav-link" data-section="kebutuhan-gov">
+      <span class="nav-badge-num">04</span>
+      <span>Urgensi Governance</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#aturan-praktik" class="nav-link" data-section="aturan-praktik">
+      <span class="nav-badge-num">05</span>
+      <span>Aturan → Praktik</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#analisis-standar" class="nav-link" data-section="analisis-standar">
+      <span class="nav-badge-num">06</span>
+      <span>Analisis Standar</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+
+    <div class="sidebar-heading">07 - 11 Regulasi & Kontrol</div>
+    <a href="#analisis-regulasi" class="nav-link" data-section="analisis-regulasi">
+      <span class="nav-badge-num">07</span>
+      <span>Analisis Regulasi</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#analisis-gov" class="nav-link" data-section="analisis-gov">
+      <span class="nav-badge-num">08</span>
+      <span>Peta Governance</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#policy-control" class="nav-link" data-section="policy-control">
+      <span class="nav-badge-num">09</span>
+      <span>Policy → Control</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#access-control" class="nav-link" data-section="access-control">
+      <span class="nav-badge-num">10</span>
+      <span>Access Control (RBAC)</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#monitoring-eval" class="nav-link" data-section="monitoring-eval">
+      <span class="nav-badge-num">11</span>
+      <span>Monitoring & Evaluasi</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+
+    <div class="sidebar-heading">12 - 16 Kasus & Praktik</div>
+    <a href="#studi-kasus" class="nav-link" data-section="studi-kasus">
+      <span class="nav-badge-num">12</span>
+      <span>Studi Kasus Kampus</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#analisis-kasus" class="nav-link" data-section="analisis-kasus">
+      <span class="nav-badge-num">13</span>
+      <span>Matriks Analisis Kasus</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#simulasi-keputusan" class="nav-link" data-section="simulasi-keputusan">
+      <span class="nav-badge-num">14</span>
+      <span>Simulasi Keputusan</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#aktivitas-kelompok" class="nav-link" data-section="aktivitas-kelompok">
+      <span class="nav-badge-num">15</span>
+      <span>Aktivitas Kelompok</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#diskusi-kelas" class="nav-link" data-section="diskusi-kelas">
+      <span class="nav-badge-num">16</span>
+      <span>Diskusi Kelas</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+
+    <div class="sidebar-heading">17 - 20 Evaluasi & Penugasan</div>
+    <a href="#kuis-interaktif" class="nav-link" data-section="kuis-interaktif">
+      <span class="nav-badge-num">17</span>
+      <span>Kuis Interaktif (12 Soal)</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#rangkuman" class="nav-link" data-section="rangkuman">
+      <span class="nav-badge-num">18</span>
+      <span>Rangkuman Materi</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#refleksi" class="nav-link" data-section="refleksi">
+      <span class="nav-badge-num">19</span>
+      <span>Refleksi Pembelajaran</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+    <a href="#tugas" class="nav-link" data-section="tugas">
+      <span class="nav-badge-num">20</span>
+      <span>Tugas 1 (RPS Lanjutan)</span>
+      <span class="nav-status-icon">●</span>
+    </a>
+  </nav>
+
+  <!-- ========================================================
+       MAIN LEARNING CONTENT
+       ======================================================== -->
+  <main class="main-content" id="mainContent">
+
+    <!-- SECTION 1: COVER -->
+    <section id="cover" class="content-section" data-section-id="cover">
+      <div class="hero-wrapper">
+        <div class="hero-tag">
+          <span>⚡</span> CYBER SECURITY MANAGEMENT • BWP5030 • PERTEMUAN 05
+        </div>
+        <h1 class="hero-title">ANALISIS PENERAPAN STANDAR, REGULASI,<br>DAN TATA KELOLA KEAMANAN SIBER</h1>
+        <p class="hero-subtitle">
+          "Dari aturan dan standar menuju penerapan keamanan yang terstruktur dan teruji dalam organisasi bisnis dan perguruan tinggi."
+        </p>
+
+        <div class="hero-badges-row">
+          <div class="hero-meta-badge">
+            <span>📚 Program Studi:</span> <strong>Bisnis Digital</strong>
+          </div>
+          <div class="hero-meta-badge">
+            <span>🎯 Sub-CPMK 2.2:</span> <strong>Menganalisis Penerapan Standar & Regulasi Organisasi</strong>
+          </div>
+          <div class="hero-meta-badge">
+            <span>💡 Status Modul:</span> <strong>Lanjutan Pertemuan 4 (Fokus Analisis & Praktik)</strong>
+          </div>
+        </div>
+
+        <div class="hero-visual-strip">
+          <div class="visual-node">
+            <div class="visual-node-icon">🏢</div>
+            <div class="visual-node-label" style="color:var(--text-white);">ORGANISASI</div>
+          </div>
+          <div class="visual-node">
+            <div class="visual-node-icon">🛡️</div>
+            <div class="visual-node-label" style="color:var(--color-standar);">STANDAR</div>
+          </div>
+          <div class="visual-node">
+            <div class="visual-node-icon">⚖️</div>
+            <div class="visual-node-label" style="color:var(--color-regulasi);">REGULASI</div>
+          </div>
+          <div class="visual-node">
+            <div class="visual-node-icon">🏛️</div>
+            <div class="visual-node-label" style="color:var(--color-governance);">GOVERNANCE</div>
+          </div>
+          <div class="visual-node">
+            <div class="visual-node-icon">⚙️</div>
+            <div class="visual-node-label" style="color:var(--color-control);">KONTROL</div>
+          </div>
+        </div>
+
+        <a href="#tujuan" class="btn-primary">
+          <span>MULAI BELAJAR</span>
+          <span>↓</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- SECTION 2: TUJUAN PEMBELAJARAN -->
+    <section id="tujuan" class="content-section" data-section-id="tujuan">
+      <div class="section-meta">
+        <span class="section-pill pill-control">02 • TUJUAN PEMBELAJARAN</span>
+      </div>
+      <h2 class="section-title">Kompetensi Analisis yang Akan Dikuasai</h2>
+      <p class="section-desc">
+        Setelah menyelesaikan Pertemuan 5, mahasiswa diharapkan mampu:
+      </p>
+
+      <div class="goals-grid">
+        <div class="goal-card">
+          <div class="goal-check-icon">✓</div>
+          <div class="goal-text"><strong>Memahami Hubungan Konsep:</strong> Mengintegrasikan standar, regulasi, governance, dan kontrol nyata.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-check-icon">✓</div>
+          <div class="goal-text"><strong>Menganalisis Kebutuhan Organisasi:</strong> Mengidentifikasi data kritis dan kerentanan manajerial dalam proses bisnis.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-check-icon">✓</div>
+          <div class="goal-text"><strong>Menganalisis Standar & Regulasi:</strong> Menguji implementasi klausul ISO 27001 dan kepatuhan UU PDP No. 27/2022.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-check-icon">✓</div>
+          <div class="goal-text"><strong>Membedah Masalah Policy & Procedure:</strong> Merumuskan kebijakan operasional dan langkah SOP yang presisi.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-check-icon">✓</div>
+          <div class="goal-text"><strong>Menentukan Kontrol Keamanan (Control):</strong> Menerapkan kontrol pencegahan (RBAC, MFA, enkripsi) dan kontrol deteksi.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-check-icon">✓</div>
+          <div class="goal-text"><strong>Mengevaluasi & Merekomendasikan:</strong> Melakukan evaluasi berkala dan memberikan rekomendasi tata kelola solutif.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: REVIEW PERTEMUAN 4 -->
+    <section id="review" class="content-section" data-section-id="review">
+      <div class="section-meta">
+        <span class="section-pill pill-standar">03 • REVIEW MATERI SEBELUMNYA</span>
+      </div>
+      <h2 class="section-title">Kilas Balik Inti Pertemuan 4</h2>
+      <p class="section-desc">
+        Sebelum menganalisis studi kasus nyata, mari segarkan kembali pemahaman dasar:
+      </p>
+
+      <div class="concept-review-grid">
+        <div class="review-item-card" style="border-top:3px solid var(--color-standar);">
+          <span class="review-item-badge" style="background:var(--color-standar-glow); color:var(--color-standar);">STANDAR</span>
+          <p style="font-size:13.5px; color:var(--text-main); font-weight:600;">"Acuan atau Pedoman Konsisten."</p>
+          <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">Pedoman mutu dan proses terstruktur (misal ISO 27001, NIST CSF).</p>
+        </div>
+
+        <div class="review-item-card" style="border-top:3px solid var(--color-regulasi);">
+          <span class="review-item-badge" style="background:var(--color-regulasi-glow); color:var(--color-regulasi);">REGULASI</span>
+          <p style="font-size:13.5px; color:var(--text-main); font-weight:600;">"Aturan atau Ketentuan Hukum."</p>
+          <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">Kewajiban yuridis berkekuatan sanksi resmi (misal UU PDP No. 27/2022).</p>
+        </div>
+
+        <div class="review-item-card" style="border-top:3px solid var(--color-governance);">
+          <span class="review-item-badge" style="background:var(--color-governance-glow); color:var(--color-governance);">GOVERNANCE</span>
+          <p style="font-size:13.5px; color:var(--text-main); font-weight:600;">"Arah, Wewenang, & Pengawasan."</p>
+          <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">Cara manajemen puncak mengarahkan strategi dan mengawasi risiko.</p>
+        </div>
+
+        <div class="review-item-card" style="border-top:3px solid var(--color-policy);">
+          <span class="review-item-badge" style="background:var(--color-policy-glow); color:var(--color-policy);">POLICY</span>
+          <p style="font-size:13.5px; color:var(--text-main); font-weight:600;">"Apa yang Harus Dilakukan."</p>
+          <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">Pernyataan mandat prinsipil organisasi.</p>
+        </div>
+
+        <div class="review-item-card" style="border-top:3px solid var(--color-control);">
+          <span class="review-item-badge" style="background:var(--color-control-glow); color:var(--color-control);">PROCEDURE</span>
+          <p style="font-size:13.5px; color:var(--text-main); font-weight:600;">"Bagaimana Melakukannya."</p>
+          <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">Langkah-langkah teknis berurutan (SOP).</p>
+        </div>
+      </div>
+
+      <div class="apersepsi-box">
+        <h4 style="color:var(--cyan); margin-bottom:8px;">💡 Pertanyaan Penghubung Pertemuan 4 ke Pertemuan 5:</h4>
+        <p style="font-size:15px; color:var(--text-white); font-weight:600; margin-bottom:8px;">
+          "Jika Pertemuan 4 membahas 'APA ITU' standar, regulasi, dan tata kelola, maka apa fokus utama kita pada Pertemuan 5?"
+        </p>
+        <div style="background:var(--bg-surface); padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border);">
+          <span style="color:var(--color-control); font-weight:700;">Jawab:</span>
+          <span style="color:var(--text-main); font-size:13.5px;"> <strong>Menganalisis BAGAIMANA konsep-konsep tersebut diterapkan dalam organisasi nyata</strong> melalui pembentukan kontrol keamanan, pemantauan log, audit kepatuhan, dan perbaikan tata kelola.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: MENGAPA ORGANISASI MEMBUTUHKAN GOVERNANCE -->
+    <section id="kebutuhan-gov" class="content-section" data-section-id="kebutuhan-gov">
+      <div class="section-meta">
+        <span class="section-pill pill-governance">04 • URGENSI GOVERNANCE</span>
+      </div>
+      <h2 class="section-title">Mengapa Organisasi Membutuhkan Governance?</h2>
+      <p class="section-desc">
+        Di era bisnis digital modern, keamanan siber tidak cukup hanya dengan membeli teknologi keamanan mahal. Alur interaksi organisasi menciptakan titik risiko di setiap lapisan:
+      </p>
+
+      <div class="gov-need-flow">
+        <div class="gov-flow-node">
+          <div style="font-size:20px;">🏢</div>
+          <div style="font-size:12px; font-weight:700; color:var(--text-white); margin-top:4px;">ORGANISASI</div>
+        </div>
+        <div style="color:var(--text-muted); font-weight:bold;">→</div>
+        <div class="gov-flow-node">
+          <div style="font-size:20px;">🗄️</div>
+          <div style="font-size:12px; font-weight:700; color:var(--color-policy); margin-top:4px;">DATA</div>
+        </div>
+        <div style="color:var(--text-muted); font-weight:bold;">→</div>
+        <div class="gov-flow-node">
+          <div style="font-size:20px;">💻</div>
+          <div style="font-size:12px; font-weight:700; color:var(--color-standar); margin-top:4px;">SISTEM</div>
+        </div>
+        <div style="color:var(--text-muted); font-weight:bold;">→</div>
+        <div class="gov-flow-node">
+          <div style="font-size:20px;">👥</div>
+          <div style="font-size:12px; font-weight:700; color:var(--color-regulasi); margin-top:4px;">PENGGUNA</div>
+        </div>
+        <div style="color:var(--text-muted); font-weight:bold;">→</div>
+        <div class="gov-flow-node">
+          <div style="font-size:20px;">⚠️</div>
+          <div style="font-size:12px; font-weight:700; color:var(--danger); margin-top:4px;">RISIKO</div>
+        </div>
+        <div style="color:var(--text-muted); font-weight:bold;">→</div>
+        <div class="gov-flow-node" style="border-color:var(--color-control);">
+          <div style="font-size:20px;">🛡️</div>
+          <div style="font-size:12px; font-weight:700; color:var(--color-control); margin-top:4px;">KEAMANAN</div>
+        </div>
+      </div>
+
+      <div class="apersepsi-box" style="margin-top:20px;">
+        <h4 style="color:var(--color-governance); margin-bottom:8px;">⚖️ Pertanyaan Kritis Manajemen:</h4>
+        <p style="font-size:15px; color:var(--text-white); font-weight:600; margin-bottom:12px;">
+          "Jika terjadi kebocoran data pelanggan atau mahasiswa, siapa yang harus bertanggung jawab?"
+        </p>
+        <p style="font-size:13.5px; color:var(--text-secondary); line-height:1.7;">
+          <strong>Jawaban Akademik:</strong> Keamanan siber adalah <em>tanggung jawab seluruh organisasi dengan pembagian peran yang proporsional</em>. Pimpinan puncak memikul akuntabilitas yuridis dan keputusan anggaran, tim keamanan mengelola konfigurasi dan deteksi teknis, administrator menegakkan hak akses, dan pengguna akhir wajib menjaga kerahasiaan kredensial.
+        </p>
+      </div>
+    </section>
+
+    <!-- SECTION 5: DARI ATURAN MENJADI PRAKTIK -->
+    <section id="aturan-praktik" class="content-section" data-section-id="aturan-praktik">
+      <div class="section-meta">
+        <span class="section-pill pill-cyan">05 • INTEGRASI PROSES</span>
+      </div>
+      <h2 class="section-title">Dari Aturan Menjadi Praktik (8 Tahapan Terpadu)</h2>
+      <p class="section-desc">
+        Klik setiap tahapan di bawah untuk memahami bagaimana regulasi hukum ditransformasikan hingga menjadi evaluasi berkelanjutan di tempat kerja:
+      </p>
+
+      <div class="eight-step-flow">
+        <div class="flow-clickable-node" onclick="showP5FlowDetail(1)">
+          <div class="flow-node-left">
+            <div class="flow-num-circle" style="color:var(--color-regulasi);">1</div>
+            <div>
+              <strong style="color:var(--color-regulasi);">REGULASI</strong>
+              <div style="font-size:12px; color:var(--text-muted);">Ketentuan hukum yang relevan dengan organisasi (contoh: UU PDP No. 27/2022).</div>
+            </div>
+          </div>
+          <span style="color:var(--cyan); font-size:13px;">Pelajari →</span>
+        </div>
+
+        <div class="flow-clickable-node" onclick="showP5FlowDetail(2)">
+          <div class="flow-node-left">
+            <div class="flow-num-circle" style="color:var(--color-standar);">2</div>
+            <div>
+              <strong style="color:var(--color-standar);">STANDAR / FRAMEWORK</strong>
+              <div style="font-size:12px; color:var(--text-muted);">Acuan teknis dan metodologi pengelolaan keamanan (ISO 27001, NIST CSF).</div>
+            </div>
+          </div>
+          <span style="color:var(--cyan); font-size:13px;">Pelajari →</span>
+        </div>
+
+        <div class="flow-clickable-node" onclick="showP5FlowDetail(3)">
+          <div class="flow-node-left">
+            <div class="flow-num-circle" style="color:var(--color-governance);">3</div>
+            <div>
+              <strong style="color:var(--color-governance);">GOVERNANCE</strong>
+              <div style="font-size:12px; color:var(--text-muted);">Manajemen puncak mengatur arah, tanggung jawab, anggaran, dan pengawasan.</div>
+            </div>
+          </div>
+          <span style="color:var(--cyan); font-size:13px;">Pelajari →</span>
+        </div>
+
+        <div class="flow-clickable-node" onclick="showP5FlowDetail(4)">
+          <div class="flow-node-left">
+            <div class="flow-num-circle" style="color:var(--color-policy);">4</div>
+            <div>
+              <strong style="color:var(--color-policy);">POLICY (KEBIJAKAN)</strong>
+              <div style="font-size:12px; color:var(--text-muted);">Menetapkan apa yang diwajibkan dan dilarang bagi seluruh pengguna sistem.</div>
+            </div>
+          </div>
+          <span style="color:var(--cyan); font-size:13px;">Pelajari →</span>
+        </div>
+
+        <div class="flow-clickable-node" onclick="showP5FlowDetail(5)">
+          <div class="flow-node-left">
+            <div class="flow-num-circle" style="color:var(--cyan);">5</div>
+            <div>
+              <strong style="color:var(--cyan);">PROCEDURE (PROSEDUR)</strong>
+              <div style="font-size:12px; color:var(--text-muted);">SOP teknis menjelaskan urutan instruksi bagaimana cara melaksanakannya.</div>
+            </div>
+          </div>
+          <span style="color:var(--cyan); font-size:13px;">Pelajari →</span>
+        </div>
+
+        <div class="flow-clickable-node" onclick="showP5FlowDetail(6)">
+          <div class="flow-node-left">
+            <div class="flow-num-circle" style="color:var(--color-control);">6</div>
+            <div>
+              <strong style="color:var(--color-control);">CONTROL (KONTROL KEAMANAN)</strong>
+              <div style="font-size:12px; color:var(--text-muted);">Mekanisme perlindungan nyata untuk mengurangi risiko (RBAC, MFA, Enkripsi).</div>
+            </div>
+          </div>
+          <span style="color:var(--cyan); font-size:13px;">Pelajari →</span>
+        </div>
+
+        <div class="flow-clickable-node" onclick="showP5FlowDetail(7)">
+          <div class="flow-node-left">
+            <div class="flow-num-circle" style="color:var(--warning);">7</div>
+            <div>
+              <strong style="color:var(--warning);">MONITORING</strong>
+              <div style="font-size:12px; color:var(--text-muted);">Memantau pelaksanaan dan mencatat log kejadian sistem secara realtime.</div>
+            </div>
+          </div>
+          <span style="color:var(--cyan); font-size:13px;">Pelajari →</span>
+        </div>
+
+        <div class="flow-clickable-node" onclick="showP5FlowDetail(8)">
+          <div class="flow-node-left">
+            <div class="flow-num-circle" style="color:var(--color-evaluation);">8</div>
+            <div>
+              <strong style="color:var(--color-evaluation);">EVALUATION (EVALUASI)</strong>
+              <div style="font-size:12px; color:var(--text-muted);">Menilai efektivitas kontrol, audit berkala, dan merumuskan perbaikan berkelanjutan.</div>
+            </div>
+          </div>
+          <span style="color:var(--cyan); font-size:13px;">Pelajari →</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: ANALISIS PENERAPAN STANDAR -->
+    <section id="analisis-standar" class="content-section" data-section-id="analisis-standar">
+      <div class="section-meta">
+        <span class="section-pill pill-standar">06 • CHECKLIST ANALISIS</span>
+      </div>
+      <h2 class="section-title">Bagaimana Menganalisis Penerapan Standar?</h2>
+      <p class="section-desc">
+        Sebagai sarjana Bisnis Digital, Anda tidak cukup hanya menyebut <em>"Organisasi kami menerapkan ISO 27001"</em>. Anda harus mampu memverifikasi 7 pilar analisis penerapan di bawah. Klik setiap poin untuk menandai verifikasi:
+      </p>
+
+      <div class="checklist-container" id="standardsChecklist">
+        <div class="check-item-row" onclick="toggleCheckItem(this)">
+          <div class="check-box-custom">✓</div>
+          <div style="font-size:13.5px; color:var(--text-main);">
+            <strong>1. Apakah organisasi memiliki dokumen kebijakan tertulis yang disahkan direksi/rektorat?</strong>
+            <div style="font-size:12px; color:var(--text-muted);">Harus ada dokumen formal, bukan sekadar instruksi lisan antar karyawan.</div>
+          </div>
+        </div>
+
+        <div class="check-item-row" onclick="toggleCheckItem(this)">
+          <div class="check-box-custom">✓</div>
+          <div style="font-size:13.5px; color:var(--text-main);">
+            <strong>2. Apakah risiko keamanan informasi telah diidentifikasi dan dinilai secara sistematis?</strong>
+            <div style="font-size:12px; color:var(--text-muted);">Memiliki matriks profil risiko aset data dan skenario ancaman terbesar.</div>
+          </div>
+        </div>
+
+        <div class="check-item-row" onclick="toggleCheckItem(this)">
+          <div class="check-box-custom">✓</div>
+          <div style="font-size:13.5px; color:var(--text-main);">
+            <strong>3. Apakah pembagian peran dan tanggung jawab telah ditetapkan secara tegas?</strong>
+            <div style="font-size:12px; color:var(--text-muted);">Tidak ada ketidakjelasan siapa yang berhak memberi izin akses database.</div>
+          </div>
+        </div>
+
+        <div class="check-item-row" onclick="toggleCheckItem(this)">
+          <div class="check-box-custom">✓</div>
+          <div style="font-size:13.5px; color:var(--text-main);">
+            <strong>4. Apakah kontrol keamanan teknis, manajerial, dan fisik telah diimplementasikan?</strong>
+            <div style="font-size:12px; color:var(--text-muted);">Menerapkan autentikasi berlapis, pencadangan data berkala, dan enkripsi.</div>
+          </div>
+        </div>
+
+        <div class="check-item-row" onclick="toggleCheckItem(this)">
+          <div class="check-box-custom">✓</div>
+          <div style="font-size:13.5px; color:var(--text-main);">
+            <strong>5. Apakah pelaksanaan kontrol keamanan dipantau (monitoring) secara berkala?</strong>
+            <div style="font-size:12px; color:var(--text-muted);">Log aktivitas sistem dipelihara dan diperiksa terhadap anomali serangan.</div>
+          </div>
+        </div>
+
+        <div class="check-item-row" onclick="toggleCheckItem(this)">
+          <div class="check-box-custom">✓</div>
+          <div style="font-size:13.5px; color:var(--text-main);">
+            <strong>6. Apakah dilakukan audit dan evaluasi independen terhadap efektivitas kontrol?</strong>
+            <div style="font-size:12px; color:var(--text-muted);">Peninjauan kepatuhan secara berkala minimal satu tahun sekali.</div>
+          </div>
+        </div>
+
+        <div class="check-item-row" onclick="toggleCheckItem(this)">
+          <div class="check-box-custom">✓</div>
+          <div style="font-size:13.5px; color:var(--text-main);">
+            <strong>7. Apakah terdapat mekanisme perbaikan berkelanjutan (Continual Improvement)?</strong>
+            <div style="font-size:12px; color:var(--text-muted);">Menindaklanjuti temuan kelemahan sistem sebelum dimanfaatkan peretas.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: ANALISIS PENERAPAN REGULASI -->
+    <section id="analisis-regulasi" class="content-section" data-section-id="analisis-regulasi">
+      <div class="section-meta">
+        <span class="section-pill pill-regulasi">07 • ANALISIS REGULASI</span>
+      </div>
+      <h2 class="section-title">Bagaimana Menganalisis Penerapan Regulasi?</h2>
+      <p class="section-desc">
+        Untuk memenuhi kepatuhan hukum perlindungan data, gunakan alur analisis yuridis-organisasional berikut:
+      </p>
+
+      <div class="gov-need-flow" style="margin-bottom:24px;">
+        <div class="gov-flow-node">
+          <div style="font-size:11px; font-family:'JetBrains Mono',monospace; color:var(--color-regulasi);">1. DATA</div>
+        </div>
+        <div style="color:var(--text-muted);">→</div>
+        <div class="gov-flow-node">
+          <div style="font-size:11px; font-family:'JetBrains Mono',monospace; color:var(--color-regulasi);">2. KETENTUAN</div>
+        </div>
+        <div style="color:var(--text-muted);">→</div>
+        <div class="gov-flow-node">
+          <div style="font-size:11px; font-family:'JetBrains Mono',monospace; color:var(--color-regulasi);">3. KEWAJIBAN</div>
+        </div>
+        <div style="color:var(--text-muted);">→</div>
+        <div class="gov-flow-node">
+          <div style="font-size:11px; font-family:'JetBrains Mono',monospace; color:var(--color-regulasi);">4. KEBIJAKAN</div>
+        </div>
+        <div style="color:var(--text-muted);">→</div>
+        <div class="gov-flow-node">
+          <div style="font-size:11px; font-family:'JetBrains Mono',monospace; color:var(--color-regulasi);">5. PROSEDUR</div>
+        </div>
+        <div style="color:var(--text-muted);">→</div>
+        <div class="gov-flow-node">
+          <div style="font-size:11px; font-family:'JetBrains Mono',monospace; color:var(--color-regulasi);">6. IMPLEMENTASI</div>
+        </div>
+        <div style="color:var(--text-muted);">→</div>
+        <div class="gov-flow-node">
+          <div style="font-size:11px; font-family:'JetBrains Mono',monospace; color:var(--color-regulasi);">7. EVALUASI</div>
+        </div>
+      </div>
+
+      <div class="context-cards-row">
+        <div class="context-card">
+          <h4 style="color:var(--text-white); margin-bottom:8px;">🏫 Konteks: Kampus</h4>
+          <p style="font-size:13px; color:var(--text-secondary); line-height:1.6;">
+            Mengelola data NIK, nomor HP mahasiswa, nilai transkrip, slip gaji dosen, dan data beasiswa. Wajib mematuhi UU PDP dalam retensi dokumen dan notifikasi insiden.
+          </p>
+        </div>
+
+        <div class="context-card">
+          <h4 style="color:var(--text-white); margin-bottom:8px;">🛒 Konteks: Toko Online / E-Commerce</h4>
+          <p style="font-size:13px; color:var(--text-secondary); line-height:1.6;">
+            Mengelola riwayat transaksi kartu, alamat rumah pembeli, dan email. Wajib enkripsi data in transit dan in rest serta standar PCI-DSS.
+          </p>
+        </div>
+
+        <div class="context-card">
+          <h4 style="color:var(--text-white); margin-bottom:8px;">🏢 Konteks: Perusahaan Digital / Startup</h4>
+          <p style="font-size:13px; color:var(--text-secondary); line-height:1.6;">
+            Mengelola basis data pengguna SaaS, IP address, dan rahasia dagang. Membutuhkan klausul Non-Disclosure Agreement (NDA) dan kepatuhan sistem elektronik Kominfo.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 8: ANALISIS TATA KELOLA -->
+    <section id="analisis-gov" class="content-section" data-section-id="analisis-gov">
+      <div class="section-meta">
+        <span class="section-pill pill-governance">08 • PETA TATA KELOLA</span>
+      </div>
+      <h2 class="section-title">Peta Analisis Tata Kelola (Governance Map)</h2>
+      <p class="section-desc">
+        Klik setiap elemen tata kelola di bawah untuk melihat rincian tanggung jawab dan instrumennya:
+      </p>
+
+      <div class="gov-map-grid">
+        <div class="gov-map-item" onclick="showGovMapDetail('pimpinan')">
+          <div class="gov-map-header">
+            <span>👔</span> 1. PIMPINAN
+          </div>
+          <p style="font-size:12.5px; color:var(--text-muted);">Menetapkan visi, arah strategis, dan pengesahan anggaran keamanan.</p>
+        </div>
+
+        <div class="gov-map-item" onclick="showGovMapDetail('kebijakan')">
+          <div class="gov-map-header">
+            <span>📜</span> 2. KEBIJAKAN
+          </div>
+          <p style="font-size:12.5px; color:var(--text-muted);">Menetapkan aturan formal mengenai apa yang diizinkan dan dilarang.</p>
+        </div>
+
+        <div class="gov-map-item" onclick="showGovMapDetail('peran')">
+          <div class="gov-map-header">
+            <span>👥</span> 3. PERAN & WEWENANG
+          </div>
+          <p style="font-size:12.5px; color:var(--text-muted);">Menentukan siapa yang boleh mengakses data dan siapa pelaksana teknis.</p>
+        </div>
+
+        <div class="gov-map-item" onclick="showGovMapDetail('risiko')">
+          <div class="gov-map-header">
+            <span>⚖️</span> 4. MANAJEMEN RISIKO
+          </div>
+          <p style="font-size:12.5px; color:var(--text-muted);">Mengidentifikasi dan memitigasi dampak ancaman terhadap aset kritis.</p>
+        </div>
+
+        <div class="gov-map-item" onclick="showGovMapDetail('kontrol')">
+          <div class="gov-map-header">
+            <span>🛡️</span> 5. KONTROL KEAMANAN
+          </div>
+          <p style="font-size:12.5px; color:var(--text-muted);">Menerapkan mekanisme proteksi teknis, administratif, dan fisik.</p>
+        </div>
+
+        <div class="gov-map-item" onclick="showGovMapDetail('monitoring')">
+          <div class="gov-map-header">
+            <span>📡</span> 6. MONITORING
+          </div>
+          <p style="font-size:12.5px; color:var(--text-muted);">Memantau integritas log sistem dan mendeteksi anomali akses.</p>
+        </div>
+
+        <div class="gov-map-item" onclick="showGovMapDetail('evaluasi')">
+          <div class="gov-map-header">
+            <span>🔄</span> 7. EVALUASI
+          </div>
+          <p style="font-size:12.5px; color:var(--text-muted);">Menilai efektivitas kontrol secara berkala dan melakukan perbaikan.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 9: POLICY -> PROCEDURE -> CONTROL -->
+    <section id="policy-control" class="content-section" data-section-id="policy-control">
+      <div class="section-meta">
+        <span class="section-pill pill-policy">09 • ALUR KONTROL</span>
+      </div>
+      <h2 class="section-title">Dari Policy Menuju Kontrol Nyata</h2>
+      <p class="section-desc">
+        Lihat bagaimana satu mandat kebijakan diturunkan secara hierarkis hingga menjadi evaluasi berkala:
+      </p>
+
+      <div class="ppc-stepper" id="ppcStepper">
+        <button class="ppc-step-btn active" data-step="1">1. POLICY (Kebijakan)</button>
+        <button class="ppc-step-btn" data-step="2">2. PROCEDURE (SOP)</button>
+        <button class="ppc-step-btn" data-step="3">3. CONTROL (Kontrol)</button>
+        <button class="ppc-step-btn" data-step="4">4. MONITORING (Pemantauan)</button>
+        <button class="ppc-step-btn" data-step="5">5. EVALUATION (Evaluasi)</button>
+      </div>
+
+      <div class="ppc-display-card" id="ppcDisplayCard">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+          <span class="section-pill pill-policy" id="ppcStagePill">TAHAP 1 • POLICY</span>
+          <span style="font-size:13px; color:var(--text-muted);" id="ppcStageDesc">Mandat Tingkat Tinggi</span>
+        </div>
+        <p style="font-size:15px; font-weight:600; color:var(--text-white); margin-bottom:8px;" id="ppcTitle">
+          "Data pelanggan dan data pribadi mahasiswa wajib dilindungi kerahasiaannya dari akses yang tidak berwenang."
+        </p>
+        <p style="font-size:13.5px; color:var(--text-secondary); line-height:1.6;" id="ppcBody">
+          Kebijakan menetapkan tujuan strategis yang disahkan pimpinan. Kebijakan ini mengikat seluruh divisi tanpa kecuali.
+        </p>
+      </div>
+    </section>
+
+    <!-- SECTION 10: ACCESS CONTROL DALAM ORGANISASI (RBAC) -->
+    <section id="access-control" class="content-section" data-section-id="access-control">
+      <div class="section-meta">
+        <span class="section-pill pill-control">10 • SIMULASI RBAC</span>
+      </div>
+      <h2 class="section-title">Penerapan Access Control dalam Organisasi</h2>
+      <p class="section-desc">
+        Pilihlah salah satu peran pengguna di bawah untuk melihat bagaimana prinsip <strong>Role-Based Access Control (RBAC)</strong> dan <strong>Least Privilege</strong> membatasi izin akses ke sumber daya sistem:
+      </p>
+
+      <div class="rbac-simulator-box">
+        <div class="rbac-roles-grid" id="rbacRolesGrid">
+          <button class="rbac-role-btn active" data-role="cs">🎧 CUSTOMER SERVICE</button>
+          <button class="rbac-role-btn" data-role="marketing">📊 MARKETING</button>
+          <button class="rbac-role-btn" data-role="finance">💰 FINANCE</button>
+          <button class="rbac-role-btn" data-role="it">💻 IT / SYSADMIN</button>
+          <button class="rbac-role-btn" data-role="umum">👥 PEGAWAI UMUM</button>
+        </div>
+
+        <div class="rbac-matrix-grid" id="rbacMatrixGrid">
+          <!-- Populated by JS -->
+        </div>
+
+        <div style="margin-top:20px; padding:12px 16px; background:rgba(0,0,0,0.3); border-radius:var(--radius-sm); border-left:3px solid var(--color-control);">
+          <span style="font-size:13px; color:#bbf7d0;">
+            <strong>Prinsip Kunci:</strong> Akses diberikan berdasarkan <em>kebutuhan pekerjaan dan kewenangan resmi</em>, bukan otomatis dibuka untuk seluruh pegawai!
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 11: MONITORING DAN EVALUATION -->
+    <section id="monitoring-eval" class="content-section" data-section-id="monitoring-eval">
+      <div class="section-meta">
+        <span class="section-pill pill-evaluation">11 • PERBANDINGAN</span>
+      </div>
+      <h2 class="section-title">Monitoring vs Evaluation</h2>
+      <p class="section-desc">
+        Banyak praktisi mencampuradukkan kedua istilah ini. Mari pelajari perbedaan fungsi operasionalnya:
+      </p>
+
+      <div class="compare-two-box">
+        <div class="apersepsi-box" style="border-top:3px solid var(--warning);">
+          <span class="section-pill" style="background:rgba(245,158,11,0.15); color:var(--warning); margin-bottom:12px;">MONITORING (PEMANTAUAN)</span>
+          <h3 style="font-size:17px; margin-bottom:8px; color:var(--text-white);">"Apakah Proses Sedang Berjalan?"</h3>
+          <p style="font-size:13.5px; color:var(--text-secondary); line-height:1.6; margin-bottom:14px;">
+            Aktivitas realtime/berkala untuk mengamati operasional dan mencatat status sistem.
+          </p>
+          <ul style="font-size:13px; color:var(--text-main); margin-left:18px; line-height:1.7;">
+            <li>Memantau trafik jaringan 24/7.</li>
+            <li>Memeriksa log upaya login yang gagal (failed attempts).</li>
+            <li>Mengecek ketersediaan server database (uptime).</li>
+            <li>Memverifikasi berjalannya backup otomatis setiap malam.</li>
+          </ul>
+        </div>
+
+        <div class="apersepsi-box" style="border-top:3px solid var(--color-evaluation);">
+          <span class="section-pill pill-evaluation" style="margin-bottom:12px;">EVALUATION (EVALUASI)</span>
+          <h3 style="font-size:17px; margin-bottom:8px; color:var(--text-white);">"Apakah Proses Tersebut Efektif?"</h3>
+          <p style="font-size:13.5px; color:var(--text-secondary); line-height:1.6; margin-bottom:14px;">
+            Penilaian berkala untuk menguji apakah kontrol berhasil menekan risiko dan apa yang perlu diperbaiki.
+          </p>
+          <ul style="font-size:13px; color:var(--text-main); margin-left:18px; line-height:1.7;">
+            <li>Melakukan audit internal kepatuhan kebijakan semesteran.</li>
+            <li>Meninjau apakah password policy masih relevan atau perlu pengetatan.</li>
+            <li>Menguji pemulihan cadangan data (backup restore drill).</li>
+            <li>Mengevaluasi insiden masa lalu untuk mencegah pengulangan.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Cycle Animation -->
+      <div class="cycle-diagram">
+        <div class="cycle-node" style="color:var(--color-control);">1. IMPLEMENTASI</div>
+        <div style="color:var(--text-muted); font-weight:bold;">→</div>
+        <div class="cycle-node" style="color:var(--warning);">2. MONITORING</div>
+        <div style="color:var(--text-muted); font-weight:bold;">→</div>
+        <div class="cycle-node" style="color:var(--color-evaluation);">3. EVALUATION</div>
+        <div style="color:var(--text-muted); font-weight:bold;">→</div>
+        <div class="cycle-node" style="color:var(--cyan);">4. IMPROVEMENT</div>
+        <div style="color:var(--text-muted); font-weight:bold;">→</div>
+        <div class="cycle-node" style="color:var(--color-control);">SIKLUS BERULANG</div>
+      </div>
+    </section>
+
+    <!-- SECTION 12: STUDI KASUS KAMPUS -->
+    <section id="studi-kasus" class="content-section" data-section-id="studi-kasus">
+      <div class="section-meta">
+        <span class="section-pill pill-regulasi">12 • STUDI KASUS UTAMA</span>
+      </div>
+      <h2 class="section-title">Studi Kasus: Sistem Informasi Akademik Kampus</h2>
+      <p class="section-desc">
+        Sebuah perguruan tinggi mengelola data mahasiswa, transkrip nilai, data KRS, data dosen, dan riwayat pembayaran kuliah. Hasil audit menemukan 6 masalah kritis:
+      </p>
+
+      <div class="problem-card-grid">
+        <div class="case-card-p5">
+          <span style="color:var(--danger); font-weight:bold; font-size:13px;">🚨 TEMUAN 1</span>
+          <p style="margin-top:6px;"><strong>Akses Database Tidak Dibatasi:</strong> Seluruh staf operasional fakultas memegang akun root langsung ke server database tanpa pembagian wewenang.</p>
+        </div>
+
+        <div class="case-card-p5">
+          <span style="color:var(--danger); font-weight:bold; font-size:13px;">🚨 TEMUAN 2</span>
+          <p style="margin-top:6px;"><strong>Ketiadaan Kebijakan Password:</strong> Pengguna bebas membuat kata sandi sederhana seperti "123456" tanpa kewajiban masa kedaluwarsa.</p>
+        </div>
+
+        <div class="case-card-p5">
+          <span style="color:var(--danger); font-weight:bold; font-size:13px;">🚨 TEMUAN 3</span>
+          <p style="margin-top:6px;"><strong>Tidak Ada Kewajiban MFA:</strong> Akun administrator pengubah nilai mahasiswa tidak menggunakan Multi-Factor Authentication.</p>
+        </div>
+
+        <div class="case-card-p5">
+          <span style="color:var(--danger); font-weight:bold; font-size:13px;">🚨 TEMUAN 4</span>
+          <p style="margin-top:6px;"><strong>Nihil Pemeriksaan Akses Berkala:</strong> Akun staf yang telah berhenti atau mutasi kerja masih aktif dan dapat login dari luar jaringan kampus.</p>
+        </div>
+
+        <div class="case-card-p5">
+          <span style="color:var(--danger); font-weight:bold; font-size:13px;">🚨 TEMUAN 5</span>
+          <p style="margin-top:6px;"><strong>Tanpa SOP Penanganan Insiden:</strong> Tidak ada pedoman tertulis mengenai langkah pelaporan dan penanganan hukum jika terjadi kebocoran data mahasiswa.</p>
+        </div>
+
+        <div class="case-card-p5">
+          <span style="color:var(--danger); font-weight:bold; font-size:13px;">🚨 TEMUAN 6</span>
+          <p style="margin-top:6px;"><strong>Log Aktivitas Tidak Terdokumentasi:</strong> Server tidak mencatat riwayat perubahan data nilai, sehingga pelaku manipulasi data tidak dapat dilacak.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 13: ANALISIS STUDI KASUS -->
+    <section id="analisis-kasus" class="content-section" data-section-id="analisis-kasus">
+      <div class="section-meta">
+        <span class="section-pill pill-control">13 • MATRIKS SOLUSI</span>
+      </div>
+      <h2 class="section-title">Matriks Analisis: Temuan → Risiko → Solusi</h2>
+      <p class="section-desc">
+        Tabel komprehensif analisis tata kelola untuk menjawab keenam temuan masalah kampus di atas:
+      </p>
+
+      <div class="matrix-table-wrap">
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th style="width:20%;">Temuan Masalah</th>
+              <th style="width:20%;">Risiko Dampak</th>
+              <th style="width:20%;">Kebijakan (Policy)</th>
+              <th style="width:20%;">Kontrol (Control)</th>
+              <th style="width:20%;">Evaluasi Berkala</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1. Akses Database Terbuka Luas</strong></td>
+              <td style="color:#fca5a5;">Penyalahgunaan data, kebocoran NIK/IPK mahasiswa</td>
+              <td style="color:var(--cyan);">Akses database hanya untuk DBA tersertifikasi</td>
+              <td style="color:var(--color-control);">Penerapan RBAC ketat dan pembatasan IP address</td>
+              <td style="color:var(--color-evaluation);">Tinjau hak akses akun admin setiap awal semester</td>
+            </tr>
+            <tr>
+              <td><strong>2. Password Lemah</strong></td>
+              <td style="color:#fca5a5;">Serangan brute force dan pembajakan akun staf</td>
+              <td style="color:var(--cyan);">Standar kompleksitas kata sandi minimum 12 karakter</td>
+              <td style="color:var(--color-control);">Validasi otomatis password checker di formulir login</td>
+              <td style="color:var(--color-evaluation);">Audit password hash dan rotasi berkala tiap 90 hari</td>
+            </tr>
+            <tr>
+              <td><strong>3. Tidak Ada MFA</strong></td>
+              <td style="color:#fca5a5;">Pengambilalihan akun sensitif jika password bocor</td>
+              <td style="color:var(--cyan);">Kewajiban autentikasi 2 faktor untuk seluruh admin</td>
+              <td style="color:var(--color-control);">Implementasi TOTP Authenticator App</td>
+              <td style="color:var(--color-evaluation);">Pemantauan persentase kepatuhan aktivasi MFA staf</td>
+            </tr>
+            <tr>
+              <td><strong>4. Akun Mantan Staf Masih Aktif</strong></td>
+              <td style="color:#fca5a5;">Akses ilegal mantan pegawai (insider threat)</td>
+              <td style="color:var(--cyan);">SOP offboarding dan penonaktifan akun instan</td>
+              <td style="color:var(--color-control);">Otomatisasi pencabutan izin akun saat mutasi</td>
+              <td style="color:var(--color-evaluation);">Rekonsiliasi berkala data kepegawaian dengan direktori akun</td>
+            </tr>
+            <tr>
+              <td><strong>5. Tanpa SOP Insiden</strong></td>
+              <td style="color:#fca5a5;">Kepanikan saat diserang, denda hukum UU PDP</td>
+              <td style="color:var(--cyan);">Pembentukan Tim Tanggap Insiden Siber (CSIRT)</td>
+              <td style="color:var(--color-control);">Buku panduan isolasi server dan format notifikasi</td>
+              <td style="color:var(--color-evaluation);">Simulasi latihan penanganan insiden darurat tahunan</td>
+            </tr>
+            <tr>
+              <td><strong>6. Nihil Audit Trail</strong></td>
+              <td style="color:#fca5a5;">Tidak dapat dilakukan investigasi forensik</td>
+              <td style="color:var(--cyan);">Kewajiban pencatatan log permanen dan tak terhapus</td>
+              <td style="color:var(--color-control);">Server Syslog terpusat dengan integritas hash</td>
+              <td style="color:var(--color-evaluation);">Pemeriksaan log berkala mingguan oleh auditor IT</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 14: SIMULASI PENGAMBILAN KEPUTUSAN -->
+    <section id="simulasi-keputusan" class="content-section" data-section-id="simulasi-keputusan">
+      <div class="section-meta">
+        <span class="section-pill pill-control">14 • SIMULASI KEPUTUSAN</span>
+      </div>
+      <h2 class="section-title">Simulasi: Pengambilan Keputusan Manajer Keamanan</h2>
+      <p class="section-desc">
+        Posisikan diri Anda sebagai Kepala Divisi Keamanan Sistem Informasi Kampus. Tentukan tindakan terbaik untuk 5 skenario tantangan nyata berikut:
+      </p>
+
+      <div id="decisionScenariosContainer">
+        <!-- Skenario 1 -->
+        <div class="decision-scenario-card" data-scenario="1">
+          <div class="scenario-title">Skenario 1: Semua staf operasional memiliki akses langsung ke database produksi.</div>
+          <div class="decision-options">
+            <button class="decision-opt-btn" onclick="checkDecision(1, 'A', false)">A. Biarkan saja, karena seluruh staf merupakan pegawai internal yang dapat dipercaya.</button>
+            <button class="decision-opt-btn" onclick="checkDecision(1, 'B', true)">B. Terapkan prinsip Role-Based Access Control (RBAC) dan batasi hak akses database hanya bagi DBA.</button>
+            <button class="decision-opt-btn" onclick="checkDecision(1, 'C', false)">C. Hapus seluruh database agar tidak ada staf yang bisa mengaksesnya.</button>
+            <button class="decision-opt-btn" onclick="checkDecision(1, 'D', false)">D. Matikan sistem SIAKAD selamanya.</button>
+          </div>
+          <div class="decision-feedback" style="display:none; padding:14px; border-radius:var(--radius-sm); font-size:13.5px; margin-top:12px;"></div>
+        </div>
+
+        <!-- Skenario 2 -->
+        <div class="decision-scenario-card" data-scenario="2">
+          <div class="scenario-title">Skenario 2: Ditemukan 70% staf kampus menggunakan kata sandi sederhana seperti tanggal lahir.</div>
+          <div class="decision-options">
+            <button class="decision-opt-btn" onclick="checkDecision(2, 'A', false)">A. Mengirim pesan santai di grup WhatsApp tanpa membuat kebijakan resmi.</button>
+            <button class="decision-opt-btn" onclick="checkDecision(2, 'B', true)">B. Menerbitkan Kebijakan Kata Sandi Formal, mewajibkan panjang min. 12 karakter + MFA, serta mereset paksa password lemah.</button>
+            <button class="decision-opt-btn" onclick="checkDecision(2, 'C', false)">C. Menghilangkan fungsi password dan membiarkan login tanpa autentikasi.</button>
+            <button class="decision-opt-btn" onclick="checkDecision(2, 'D', false)">D. Memecat seluruh staf tanpa memberi pelatihan keamanan.</button>
+          </div>
+          <div class="decision-feedback" style="display:none; padding:14px; border-radius:var(--radius-sm); font-size:13.5px; margin-top:12px;"></div>
+        </div>
+
+        <!-- Skenario 3 -->
+        <div class="decision-scenario-card" data-scenario="3">
+          <div class="scenario-title">Skenario 3: Terjadi indikasi kebocoran file transkrip nilai mahasiswa di forum daring.</div>
+          <div class="decision-options">
+            <button class="decision-opt-btn" onclick="checkDecision(3, 'A', false)">A. Menyembunyikan kejadian dari rektorat dan berpura-pura tidak tahu.</button>
+            <button class="decision-opt-btn" onclick="checkDecision(3, 'B', false)">B. Langsung memformat harddisk server tanpa mengamankan bukti log forensik.</button>
+            <button class="decision-opt-btn" onclick="checkDecision(3, 'C', true)">C. Jalankan Prosedur Tanggap Darurat Insiden: isolasi server, preservasi log bukti forensik, dan laporkan secara transparan ke otoritas berwenang sesuai UU PDP.</button>
+            <button class="decision-opt-btn" onclick="checkDecision(3, 'D', false)">D. Membayar uang tebusan kepada akun forum tanpa memeriksa integritas data.</button>
+          </div>
+          <div class="decision-feedback" style="display:none; padding:14px; border-radius:var(--radius-sm); font-size:13.5px; margin-top:12px;"></div>
+        </div>
+
+        <!-- Skenario 4 -->
+        <div class="decision-scenario-card" data-scenario="4">
+          <div class="scenario-title">Skenario 4: Hak akses akun karyawan yang telah mengundurkan diri 6 bulan lalu masih aktif.</div>
+          <div class="decision-options">
+            <button class="decision-opt-btn" onclick="checkDecision(4, 'A', true)">B. Segera nonaktifkan akun, audit jejak aktivitas terakhir akun tersebut, dan perbaiki integrasi SOP HRD dengan IT.</button>
+            <button class="decision-opt-btn" onclick="checkDecision(4, 'B', false)">B. Biarkan tetap aktif untuk berjaga-jaga jika mantan karyawan tersebut ingin membantu pekerjaan sukarela.</button>
+            <button class="decision-opt-btn" onclick="checkDecision(4, 'C', false)">C. Mengganti nama akun menjadi akun umum tanpa mengubah password.</button>
+          </div>
+          <div class="decision-feedback" style="display:none; padding:14px; border-radius:var(--radius-sm); font-size:13.5px; margin-top:12px;"></div>
+        </div>
+
+        <!-- Skenario 5 -->
+        <div class="decision-scenario-card" data-scenario="5">
+          <div class="scenario-title">Skenario 5: Manajemen menolak anggaran monitoring log sistem karena dianggap tidak menghasilkan keuntungan finansial langsung.</div>
+          <div class="decision-options">
+            <button class="decision-opt-btn" onclick="checkDecision(5, 'A', false)">A. Pasrah dan membiarkan sistem berjalan tanpa monitoring sama sekali.</button>
+            <button class="decision-opt-btn" onclick="checkDecision(5, 'B', true)">B. Sajikan Analisis Dampak Risiko Finansial & Hukum: bandingkan biaya pemantauan log dengan potensi sanksi denda UU PDP dan kerugian rusaknya reputasi institusi.</button>
+            <button class="decision-opt-btn" onclick="checkDecision(5, 'C', false)">C. Mengundurkan diri seketika tanpa memberikan penjelasan profesional.</button>
+          </div>
+          <div class="decision-feedback" style="display:none; padding:14px; border-radius:var(--radius-sm); font-size:13.5px; margin-top:12px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 15: AKTIVITAS KELOMPOK -->
+    <section id="aktivitas-kelompok" class="content-section" data-section-id="aktivitas-kelompok">
+      <div class="section-meta">
+        <span class="section-pill pill-cyan">15 • KERJA KELOMPOK</span>
+      </div>
+      <h2 class="section-title">Aktivitas Kelompok: Analisis Penerapan Organisasi</h2>
+      <p class="section-desc">
+        Pilihlah salah satu jenis organisasi di bawah, lalu diskusikan dan rumuskan 9 komponen rancangan tata kelolanya. Jawaban otomatis tersimpan di browser:
+      </p>
+
+      <div class="org-selector-tabs" id="orgSelectorTabs">
+        <button class="org-tab-btn active" data-org="kampus">🏫 KAMPUS</button>
+        <button class="org-tab-btn" data-org="toko">🛒 TOKO ONLINE</button>
+        <button class="org-tab-btn" data-org="umkm">🏪 UMKM DIGITAL</button>
+        <button class="org-tab-btn" data-org="startup">🚀 PERUSAHAAN STARTUP</button>
+      </div>
+
+      <div class="group-form-grid">
+        <div class="form-field-block">
+          <label class="field-label" for="groupQ1">1. Aset dan Data Kritis yang Perlu Dilindungi</label>
+          <textarea class="form-textarea" id="groupQ1" placeholder="Data apa saja yang dikelola..."></textarea>
+        </div>
+
+        <div class="form-field-block">
+          <label class="field-label" for="groupQ2">2. Risiko Keamanan yang Paling Mungkin Terjadi</label>
+          <textarea class="form-textarea" id="groupQ2" placeholder="Ancaman kebocoran, insider threat, dll..."></textarea>
+        </div>
+
+        <div class="form-field-block">
+          <label class="field-label" for="groupQ3">3. Regulasi Hukum yang Relevan</label>
+          <textarea class="form-textarea" id="groupQ3" placeholder="UU PDP No. 27/2022, UU ITE, dll..."></textarea>
+        </div>
+
+        <div class="form-field-block">
+          <label class="field-label" for="groupQ4">4. Standar / Framework yang Menjadi Acuan</label>
+          <textarea class="form-textarea" id="groupQ4" placeholder="ISO/IEC 27001, NIST CSF 2.0..."></textarea>
+        </div>
+
+        <div class="form-field-block">
+          <label class="field-label" for="groupQ5">5. Kebijakan Keamanan (Policy) yang Wajib Diterbitkan</label>
+          <textarea class="form-textarea" id="groupQ5" placeholder="Kebijakan akses, password, data sharing..."></textarea>
+        </div>
+
+        <div class="form-field-block">
+          <label class="field-label" for="groupQ6">6. Pembagian Peran dan Wewenang (Governance)</label>
+          <textarea class="form-textarea" id="groupQ6" placeholder="Tanggung jawab pimpinan, IT, dan pengguna..."></textarea>
+        </div>
+
+        <div class="form-field-block">
+          <label class="field-label" for="groupQ7">7. Kontrol Keamanan (Control) yang Diterapkan</label>
+          <textarea class="form-textarea" id="groupQ7" placeholder="RBAC, MFA, Enkripsi, Backup..."></textarea>
+        </div>
+
+        <div class="form-field-block">
+          <label class="field-label" for="groupQ8">8. Mekanisme Monitoring yang Dilakukan</label>
+          <textarea class="form-textarea" id="groupQ8" placeholder="Pencatatan log, pemantauan trafik..."></textarea>
+        </div>
+
+        <div class="form-field-block" style="grid-column:1 / -1;">
+          <label class="field-label" for="groupQ9">9. Mekanisme Evaluasi dan Perbaikan Berkelanjutan</label>
+          <textarea class="form-textarea" id="groupQ9" placeholder="Audit semesteran, peninjauan kebijakan tahunan..."></textarea>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end;">
+        <button class="btn-primary" onclick="saveGroupAnalysis()">
+          <span>💾 SIMPAN ANALISIS KELOMPOK</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- SECTION 16: DISKUSI KELAS -->
+    <section id="diskusi-kelas" class="content-section" data-section-id="diskusi-kelas">
+      <div class="section-meta">
+        <span class="section-pill pill-cyan">16 • DEBAT & DISKUSI</span>
+      </div>
+      <h2 class="section-title">Diskusi Kelas: Pertanyaan Kritis Manajerial</h2>
+      <p class="section-desc">
+        Diskusikan 5 topik argumentatif ini bersama dosen dan rekan kelompok Anda:
+      </p>
+
+      <div class="apersepsi-box" style="margin-bottom:20px;">
+        <ol style="font-size:14px; color:var(--text-main); line-height:1.8; padding-left:20px;">
+          <li><strong>Apakah organisasi skala kecil (UMKM) juga perlu menerapkan tata kelola keamanan siber?</strong> (Mengapa perlindungan data tetap penting bagi UMKM?)</li>
+          <li><strong>Apakah semua pegawai internal boleh memiliki akses database perusahaan?</strong> (Mengapa kepercayaan personal tidak boleh menggantikan prinsip Least Privilege?)</li>
+          <li><strong>Jika perusahaan sudah membeli firewall dan antivirus termahal namun tidak memiliki prosedur SOP keamanan, apakah pengelolaannya sudah memadai? Jelaskan!</strong></li>
+          <li><strong>Apakah mengantongi sertifikat standar internasional (seperti ISO 27001) secara otomatis menjamin sebuah organisasi 100% aman dari peretasan?</strong></li>
+          <li><strong>Siapa yang pada akhirnya memikul tanggung jawab hukum dan etika terhadap keamanan data pelanggan?</strong></li>
+        </ol>
+      </div>
+
+      <div class="form-field-block">
+        <label class="field-label" for="classDiscussionNotes">Catatan Ringkasan Hasil Diskusi Kelas:</label>
+        <textarea class="form-textarea" id="classDiscussionNotes" style="min-height:110px;" placeholder="Tuliskan intisari kesimpulan diskusi kelompok dan kelas Anda di sini..."></textarea>
+        <div style="margin-top:12px; display:flex; justify-content:flex-end;">
+          <button class="btn-primary" onclick="saveDiscussionNotes()">
+            <span>💾 CATAT HASIL DISKUSI</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 17: KUIS INTERAKTIF -->
+    <section id="kuis-interaktif" class="content-section" data-section-id="kuis-interaktif">
+      <div class="section-meta">
+        <span class="section-pill pill-control">17 • EVALUASI AKHIR</span>
+      </div>
+      <h2 class="section-title">Kuis Interaktif Pemahaman (12 Soal Pilihan Ganda)</h2>
+      <p class="section-desc">
+        Uji ketajaman analisis Anda mengenai Standar, Regulasi, Governance, Policy, Procedure, Control, Monitoring, dan Evaluasi:
+      </p>
+
+      <div class="quiz-container" id="quizContainerP5">
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="quizProgressFillP5"></div>
+        </div>
+
+        <div id="quizCardP5">
+          <div class="mono" style="color:var(--color-control); font-size:12px; margin-bottom:8px;" id="quizQNumP5">SOAL 01 / 12</div>
+          <div style="font-size:17px; font-weight:700; color:var(--text-white); margin-bottom:20px; line-height:1.5;" id="quizQuestionTextP5">Pertanyaan kuis...</div>
+
+          <div id="quizOptionsContainerP5">
+            <!-- Populated by JS -->
+          </div>
+
+          <div id="quizExpBoxP5" style="display:none; background:rgba(74,222,128,0.1); border:1px solid rgba(74,222,128,0.3); border-radius:var(--radius-md); padding:16px; margin:16px 0; font-size:13.5px; line-height:1.6;">
+            <strong style="color:var(--color-control);">Pembahasan:</strong>
+            <p id="quizExpTextP5" style="margin-top:4px;"></p>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; margin-top:16px;">
+            <button class="btn-primary" id="btnQuizNextP5" style="display:none;" onclick="nextQuizP5()">
+              <span>SOAL BERIKUTNYA →</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Result Card -->
+        <div id="quizResultCardP5" style="display:none; text-align:center; padding:30px 10px;">
+          <h3 style="font-size:22px; color:var(--text-white); margin-bottom:8px;">Evaluasi Kuis Selesai!</h3>
+          <div style="font-size:56px; font-weight:900; font-family:'Outfit',sans-serif; color:var(--color-control); margin-bottom:6px;" id="quizScoreTextP5">0 / 100</div>
+          <div id="quizBadgeP5" style="display:inline-block; padding:6px 18px; border-radius:999px; font-size:13px; font-weight:700; margin-bottom:16px;">Kategori</div>
+          <p id="quizMsgP5" style="color:var(--text-secondary); max-width:480px; margin:0 auto 24px; font-size:14px; line-height:1.6;"></p>
+          <button class="btn-primary" onclick="restartQuizP5()">
+            <span>↺ ULANGI KUIS</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 18: RANGKUMAN -->
+    <section id="rangkuman" class="content-section" data-section-id="rangkuman">
+      <div class="section-meta">
+        <span class="section-pill pill-cyan">18 • RANGKUMAN UTAMA</span>
+      </div>
+      <h2 class="section-title">Rangkuman Alur Penerapan Keamanan Siber</h2>
+      <p class="section-desc">
+        Peta konseptual terpadu dari aturan yuridis hingga perbaikan berkelanjutan di organisasi:
+      </p>
+
+      <div class="eight-step-flow">
+        <div class="flow-clickable-node" style="border-left:4px solid var(--color-regulasi);">
+          <div><strong style="color:var(--color-regulasi);">REGULASI</strong> → Menetapkan ketentuan kepatuhan yang relevan secara hukum (UU PDP No. 27/2022).</div>
+        </div>
+        <div class="flow-clickable-node" style="border-left:4px solid var(--color-standar);">
+          <div><strong style="color:var(--color-standar);">STANDAR / FRAMEWORK</strong> → Acuan metodologi dan tolok ukur pengelolaan (ISO 27001 & NIST CSF).</div>
+        </div>
+        <div class="flow-clickable-node" style="border-left:4px solid var(--color-governance);">
+          <div><strong style="color:var(--color-governance);">GOVERNANCE</strong> → Pengarahan manajemen puncak, penetapan akuntabilitas, dan pengawasan.</div>
+        </div>
+        <div class="flow-clickable-node" style="border-left:4px solid var(--color-policy);">
+          <div><strong style="color:var(--color-policy);">POLICY</strong> → Pernyataan formal mengenai apa yang wajib dan dilarang dilakukan.</div>
+        </div>
+        <div class="flow-clickable-node" style="border-left:4px solid var(--cyan);">
+          <div><strong style="color:var(--cyan);">PROCEDURE</strong> → Langkah-langkah teknis berurutan (SOP operasional).</div>
+        </div>
+        <div class="flow-clickable-node" style="border-left:4px solid var(--color-control);">
+          <div><strong style="color:var(--color-control);">CONTROL</strong> → Mekanisme perlindungan nyata untuk mengurangi risiko (RBAC, MFA, Enkripsi).</div>
+        </div>
+        <div class="flow-clickable-node" style="border-left:4px solid var(--warning);">
+          <div><strong style="color:var(--warning);">MONITORING</strong> → Memantau penerapan sistem dan memelihara catatan log realtime.</div>
+        </div>
+        <div class="flow-clickable-node" style="border-left:4px solid var(--color-evaluation);">
+          <div><strong style="color:var(--color-evaluation);">EVALUATION</strong> → Menilai efektivitas kontrol secara berkala dan melakukan perbaikan (improvement).</div>
+        </div>
+      </div>
+
+      <div class="apersepsi-box" style="margin-top:24px; text-align:center;">
+        <h4 style="color:var(--text-white); font-size:16px;">Pesan Utama Perkuliahan:</h4>
+        <p style="font-size:15px; color:var(--text-secondary); max-width:760px; margin:8px auto 0; line-height:1.7;">
+          <em>"Keamanan siber bukan hanya masalah teknologi, melainkan sinergi harmonis antara Manusia, Proses, Kebijakan, Tata Kelola, dan Pengawasan."</em>
+        </p>
+      </div>
+    </section>
+
+    <!-- SECTION 19: REFLEKSI -->
+    <section id="refleksi" class="content-section" data-section-id="refleksi">
+      <div class="section-meta">
+        <span class="section-pill pill-cyan">19 • REFLEKSI PRIBADI</span>
+      </div>
+      <h2 class="section-title">Refleksi Pribadi Mahasiswa</h2>
+      <p class="section-desc">
+        Kaitkan pemahaman Anda dengan tanggung jawab manajerial di masa depan:
+      </p>
+
+      <div class="apersepsi-box">
+        <div style="font-size:16px; font-weight:600; color:var(--text-white); margin-bottom:14px; line-height:1.6;">
+          "Jika Anda menjadi pengelola sistem informasi sebuah kampus atau perusahaan, kebijakan keamanan apa yang akan Anda buat terlebih dahulu? Jelaskan alasannya secara komprehensif."
+        </div>
+        <textarea class="form-textarea" id="studentReflectionP5" style="min-height:120px;" placeholder="Tuliskan gagasan dan argumentasi profesional Anda..."></textarea>
+        <div style="margin-top:14px; display:flex; justify-content:flex-end;">
+          <button class="btn-primary" onclick="saveReflectionP5()">
+            <span>💾 SIMPAN REFLEKSI</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 20: TUGAS -->
+    <section id="tugas" class="content-section" data-section-id="tugas">
+      <div class="section-meta">
+        <span class="section-pill pill-control">20 • TUGAS TERSTRUKTUR</span>
+      </div>
+      <h2 class="section-title">TUGAS 1 (RPS Rangkaian Pertemuan 4–5)</h2>
+      <p class="section-desc">
+        Penugasan terstruktur sesuai Rencana Pembelajaran Semester mata kuliah Cyber Security Management:
+      </p>
+
+      <div class="apersepsi-box" style="border-left:4px solid var(--color-control);">
+        <h3 style="color:var(--text-white); font-size:18px; margin-bottom:8px;">
+          TUGAS 1: Ringkasan Standar, Regulasi, dan Tata Kelola Keamanan Siber
+        </h3>
+        <p style="font-size:14px; color:var(--text-main); line-height:1.7;">
+          Buatlah sebuah <strong>Ringkasan Analisis Akademik (minimal 2 halaman)</strong> yang menguraikan:
+        </p>
+
+        <ul style="font-size:13.5px; color:var(--text-secondary); margin:12px 0 14px 20px; line-height:1.7;">
+          <li>1. Pengertian standar keamanan siber dan urgensinya dalam operasional bisnis.</li>
+          <li>2. Pengertian regulasi keamanan data dan contoh undang-undang yang berlaku di Indonesia (UU PDP No. 27/2022).</li>
+          <li>3. Pengertian tata kelola keamanan siber (governance) dan fungsi kepemimpinan.</li>
+          <li>4. Perbedaan mendasar antara standar dan regulasi.</li>
+          <li>5. Contoh standar/framework keamanan siber (ISO/IEC 27001 dan NIST CSF 2.0).</li>
+          <li>6. Contoh regulasi yang relevan di Indonesia dan internasional.</li>
+          <li>7. Contoh penerapan kontrol (access control, monitoring, evaluasi) pada organisasi nyata.</li>
+          <li>8. Kesimpulan dan saran manajerial.</li>
+        </ul>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin:20px 0;">
+          <div style="background:var(--bg-surface); padding:12px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); font-size:13px;">
+            <strong style="color:var(--text-muted); display:block; font-size:11px; text-transform:uppercase;">Bentuk:</strong>
+            Individu Mandiri
+          </div>
+          <div style="background:var(--bg-surface); padding:12px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); font-size:13px;">
+            <strong style="color:var(--text-muted); display:block; font-size:11px; text-transform:uppercase;">Format:</strong>
+            PDF (Min. 2 Halaman, TNR 12, Spasi 1.5, A4)
+          </div>
+          <div style="background:var(--bg-surface); padding:12px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); font-size:13px;">
+            <strong style="color:var(--text-muted); display:block; font-size:11px; text-transform:uppercase;">Referensi:</strong>
+            Minimal 2 Sumber Ilmiah / Resmi
+          </div>
+          <div style="background:var(--bg-surface); padding:12px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); font-size:13px;">
+            <strong style="color:var(--text-muted); display:block; font-size:11px; text-transform:uppercase;">Bobot RPS:</strong>
+            5% terhadap Nilai Akhir
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="copyTaskP5Instructions()">
+          <span>📋 SALIN INSTRUKSI TUGAS KE CLIPBOARD</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- FLOATING PREV / NEXT NAVIGATION -->
+    <div class="page-nav-floating">
+      <button class="btn-nav-step" id="btnPrevSection" onclick="navigateP5Step(-1)">
+        <span>← Bagian Sebelumnya</span>
+      </button>
+      <button class="btn-nav-step" id="btnNextSection" onclick="navigateP5Step(1)">
+        <span>Bagian Selanjutnya →</span>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- ========================================================
+       MODALS & TOAST
+       ======================================================== -->
+  <div class="modal-overlay" id="p5Modal" role="dialog" aria-modal="true" aria-labelledby="p5ModalTitle">
+    <div class="modal-box">
+      <button class="modal-close-btn" onclick="closeP5Modal()" aria-label="Tutup modal">✕</button>
+      <h3 id="p5ModalTitle" style="color:var(--color-control); font-size:18px; margin-bottom:12px;">Detail Informasi</h3>
+      <div id="p5ModalContent" style="font-size:14px; color:var(--text-main); line-height:1.7;"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="p5Toast">
+    <span id="p5ToastIcon">✅</span>
+    <span id="p5ToastText">Aksi berhasil disimpan</span>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
