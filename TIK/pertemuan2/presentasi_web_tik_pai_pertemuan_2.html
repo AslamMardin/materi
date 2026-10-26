@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-slate-900">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ruang Lingkup, Tujuan, dan Fungsi Administrasi Pembelajaran PAI - TIK Pertemuan 2</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0284c7',
+              600: '#0369a1',
+              800: '#1e3a8a',
+              900: '#0f172a',
+            },
+            emerald: {
+              500: '#10b981',
+              600: '#059669',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(51, 65, 85, 0.8);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(100, 116, 139, 1);
+    }
+
+    /* Presentation Slide Stage Scale Container */
+    #presentation-stage {
+      aspect-ratio: 16 / 9;
+      width: 100%;
+      max-width: 1280px;
+      max-height: 720px;
+      position: relative;
+    }
+
+    /* Slide Transition */
+    .slide-item {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+      transform: scale(0.98);
+      width: 100%;
+      height: 100%;
+    }
+    .slide-item.active {
+      display: flex;
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Printable Slide Styling */
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+        overflow: visible !important;
+      }
+      #app-header, #app-controls, #sidebar-drawer, #grid-modal, #help-modal {
+        display: none !important;
+      }
+      #presentation-stage {
+        max-width: none !important;
+        max-height: none !important;
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: auto !important;
+        box-shadow: none !important;
+      }
+      .slide-item {
+        display: flex !important;
+        opacity: 1 !important;
+        transform: none !important;
+        page-break-after: always;
+        break-after: page;
+        margin-bottom: 2rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 12px;
+        height: 720px !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="h-full font-sans text-slate-100 bg-slate-950 flex flex-col overflow-hidden select-none">
+
+  <!-- TOP APP NAVIGATION BAR -->
+  <header id="app-header" class="h-14 bg-slate-900 border-b border-slate-800 px-4 flex items-center justify-between z-30 shrink-0">
+    <div class="flex items-center gap-3">
+      <button id="btn-toggle-sidebar" class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition" title="Daftar Slide (S)">
+        <i class="fa-solid fa-bars text-lg"></i>
+      </button>
+      <div class="flex items-center gap-2">
+        <span class="bg-brand-500/20 text-brand-400 border border-brand-500/30 text-xs font-bold px-2.5 py-1 rounded-md uppercase tracking-wider">PAI Semester 1</span>
+        <h1 class="text-sm font-semibold text-slate-200 hidden sm:block truncate max-w-md">TIK Pertemuan 2: Administrasi Pembelajaran PAI</h1>
+      </div>
+    </div>
+
+    <!-- Center Timer & Lecture Tools -->
+    <div class="flex items-center gap-3 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
+      <i class="fa-solid fa-clock text-brand-400 text-xs"></i>
+      <span id="timer-display" class="font-mono text-xs font-bold text-slate-300">00:00</span>
+      <button id="btn-timer-toggle" class="text-xs text-slate-400 hover:text-emerald-400 transition ml-1" title="Mulai / Pause Waktu Perkuliahan">
+        <i class="fa-solid fa-play" id="timer-icon"></i>
+      </button>
+      <button id="btn-timer-reset" class="text-xs text-slate-500 hover:text-slate-300 transition" title="Reset Waktu">
+        <i class="fa-solid fa-rotate-right"></i>
+      </button>
+    </div>
+
+    <!-- Right Header Controls -->
+    <div class="flex items-center gap-2">
+      <button id="btn-grid-view" class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition" title="Tampilan Grid Overview (M)">
+        <i class="fa-solid fa-border-all text-lg"></i>
+      </button>
+      <button id="btn-help" class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition" title="Bantuan Pintasan Keyboard (?)">
+        <i class="fa-solid fa-circle-question text-lg"></i>
+      </button>
+      <button id="btn-fullscreen" class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition" title="Layar Penuh (F)">
+        <i class="fa-solid fa-expand text-lg"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN PRESENTATION AREA -->
+  <div class="flex-1 flex overflow-hidden relative">
+
+    <!-- SIDEBAR THUMBNAILS DRAWER -->
+    <aside id="sidebar-drawer" class="w-72 bg-slate-900 border-r border-slate-800 flex flex-col transition-all duration-300 z-20 absolute lg:relative h-full -translate-x-full lg:translate-x-0 shadow-2xl lg:shadow-none">
+      <div class="p-3 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+          <i class="fa-solid fa-list-check text-brand-400"></i> Alur Pertemuan (12 Slide)
+        </span>
+        <button id="btn-close-sidebar" class="text-slate-400 hover:text-white lg:hidden p-1">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div id="thumbnail-list" class="flex-1 overflow-y-auto p-3 space-y-2.5">
+        <!-- Thumbnail items populated dynamically by JS -->
+      </div>
+    </aside>
+
+    <!-- STAGE CANVAS WRAPPER -->
+    <main class="flex-1 bg-slate-950 p-2 sm:p-4 md:p-6 flex flex-col items-center justify-center relative overflow-hidden">
+      
+      <div id="presentation-stage" class="bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 overflow-hidden flex flex-col relative transition-all">
+
+        <!-- SLIDE 1: COVER (Dark Ground) -->
+        <div class="slide-item active" id="slide-1">
+          <div class="w-full h-full bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950 p-8 md:p-12 flex flex-col justify-between relative overflow-hidden">
+            <!-- Decorative Accent Blur -->
+            <div class="absolute -top-20 -right-20 w-80 h-80 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-20 -left-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="flex justify-between items-center z-10">
+              <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-full px-4 py-1.5 flex items-center gap-2">
+                <i class="fa-solid fa-graduation-cap text-emerald-400 text-sm"></i>
+                <span contenteditable="true" class="text-xs font-bold text-emerald-300 uppercase tracking-wider">Program Studi Pendidikan Agama Islam</span>
+              </div>
+              <p contenteditable="true" class="text-xs font-semibold text-slate-400">Semester 1 • Pertemuan 2</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center my-auto z-10">
+              <div class="md:col-span-7 space-y-4">
+                <p contenteditable="true" class="text-sm font-bold text-sky-400 uppercase tracking-widest flex items-center gap-2">
+                  <i class="fa-solid fa-laptop-code"></i> Mata Kuliah: TIK dalam Pembelajaran PAI
+                </p>
+                <h1 contenteditable="true" class="text-3xl lg:text-4xl font-extrabold text-white leading-tight">
+                  Ruang Lingkup, Tujuan, & Fungsi Administrasi Pembelajaran PAI
+                </h1>
+                <p contenteditable="true" class="text-base text-slate-300 leading-relaxed">
+                  Pengelolaan dokumen, data, dan informasi pembelajaran berbasis Teknologi Informasi untuk Guru PAI Modern yang profesional.
+                </p>
+              </div>
+              <div class="md:col-span-5 h-64 lg:h-72 rounded-2xl overflow-hidden border-2 border-slate-700/60 shadow-2xl bg-slate-800 relative group">
+                <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1000&auto=format&fit=crop" 
+                     alt="Guru PAI dan Teknologi Digital" 
+                     class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                <div class="absolute bottom-3 left-3 right-3 text-xs text-slate-300 bg-slate-900/80 backdrop-blur px-3 py-1.5 rounded-lg border border-slate-700">
+                  <i class="fa-solid fa-chalkboard-user text-sky-400 mr-1.5"></i> Integrasi TIK & Administrasi Digital
+                </div>
+              </div>
+            </div>
+
+            <div class="border-t border-slate-800/80 pt-4 flex items-center justify-between text-xs text-slate-400 z-10">
+              <span contenteditable="true" class="flex items-center gap-2 font-medium">
+                <i class="fa-solid fa-circle-check text-emerald-400"></i> Capaian Pembelajaran: Mampu Menjelaskan Konsep, Ruang Lingkup, Tujuan & Fungsi Administrasi PAI
+              </span>
+              <span class="text-slate-500">Dosen Pengampu / Tim Kurikulum</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 2: PERTANYAAN PEMANTIK (Light Ground) -->
+        <div class="slide-item" id="slide-2">
+          <div class="w-full h-full bg-slate-50 p-8 md:p-12 flex flex-col justify-between text-slate-900">
+            <div>
+              <p contenteditable="true" class="text-xs font-bold text-sky-600 uppercase tracking-widest mb-1">Refleksi Awal Perkuliahan</p>
+              <h2 contenteditable="true" class="text-2xl md:text-3xl font-extrabold text-slate-900">
+                “Menurut Anda, Apa yang Harus Disiapkan Guru Sebelum Mengajar?”
+              </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto">
+              <div class="bg-white rounded-xl p-5 border border-slate-200 border-l-4 border-l-sky-500 shadow-sm flex items-start gap-4">
+                <div class="bg-sky-100 text-sky-600 p-3 rounded-xl shrink-0">
+                  <i class="fa-solid fa-person-chalkboard text-xl"></i>
+                </div>
+                <div>
+                  <h3 contenteditable="true" class="font-bold text-slate-900 text-base mb-1">Kehadiran Fisik & Mental</h3>
+                  <p contenteditable="true" class="text-sm text-slate-600">Apakah seorang guru PAI cukup sekadar datang ke kelas dan menyampaikan ceramah?</p>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-xl p-5 border border-slate-200 border-l-4 border-l-emerald-500 shadow-sm flex items-start gap-4">
+                <div class="bg-emerald-100 text-emerald-600 p-3 rounded-xl shrink-0">
+                  <i class="fa-solid fa-file-signature text-xl"></i>
+                </div>
+                <div>
+                  <h3 contenteditable="true" class="font-bold text-slate-900 text-base mb-1">Dokumen Perencanaan</h3>
+                  <p contenteditable="true" class="text-sm text-slate-600">Dokumen dan pedoman apa saja yang perlu disiapkan secara terstruktur sebelum masuk kelas?</p>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-xl p-5 border border-slate-200 border-l-4 border-l-sky-500 shadow-sm flex items-start gap-4">
+                <div class="bg-sky-100 text-sky-600 p-3 rounded-xl shrink-0">
+                  <i class="fa-solid fa-clipboard-user text-xl"></i>
+                </div>
+                <div>
+                  <h3 contenteditable="true" class="font-bold text-slate-900 text-base mb-1">Pencatatan Presensi</h3>
+                  <p contenteditable="true" class="text-sm text-slate-600">Bagaimana cara guru mencatat dan memantau kedisiplinan serta kehadiran peserta didik?</p>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-xl p-5 border border-slate-200 border-l-4 border-l-emerald-500 shadow-sm flex items-start gap-4">
+                <div class="bg-emerald-100 text-emerald-600 p-3 rounded-xl shrink-0">
+                  <i class="fa-solid fa-chart-line text-xl"></i>
+                </div>
+                <div>
+                  <h3 contenteditable="true" class="font-bold text-slate-900 text-base mb-1">Pengelolaan Nilai & Rekam Jejak</h3>
+                  <p contenteditable="true" class="text-sm text-slate-600">Bagaimana mengelola nilai tugas, harian, dan akhlak siswa secara tertata dan adil?</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-slate-200/70 p-3 rounded-xl text-xs text-slate-700 flex items-center justify-between">
+              <span contenteditable="true"><i class="fa-solid fa-lightbulb text-amber-500 mr-2"></i> Diskusi Singkat: Mengapa semua kegiatan tersebut wajib didokumentasikan dengan rapi?</span>
+              <span class="text-slate-500 font-semibold">Slide 2 / 12</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 3: PENGERTIAN ADMINISTRASI PEMBELAJARAN (Light Ground) -->
+        <div class="slide-item" id="slide-3">
+          <div class="w-full h-full bg-white p-8 md:p-12 flex flex-col justify-between text-slate-900">
+            <div>
+              <p contenteditable="true" class="text-xs font-bold text-sky-600 uppercase tracking-widest mb-1">Konsep Dasar</p>
+              <h2 contenteditable="true" class="text-2xl md:text-3xl font-extrabold text-slate-900">
+                Pengertian Administrasi Pembelajaran
+              </h2>
+            </div>
+
+            <div class="my-auto space-y-6">
+              <div class="bg-gradient-to-r from-sky-50 via-blue-50 to-emerald-50 p-6 md:p-8 rounded-2xl border border-sky-100 shadow-sm">
+                <p contenteditable="true" class="text-lg md:text-xl font-medium text-slate-800 leading-relaxed text-center">
+                  “<strong class="text-brand-800 font-extrabold">Administrasi Pembelajaran</strong> adalah proses pengelolaan kegiatan, dokumen, data, dan informasi yang berkaitan dengan pembelajaran agar proses belajar mengajar berlangsung secara <span class="text-sky-700 font-bold">terencana, tertib, sistematis, efektif</span>, dan <span class="text-emerald-700 font-bold">terdokumentasi</span>.”
+                </p>
+              </div>
+
+              <div>
+                <p contenteditable="true" class="text-xs font-bold text-slate-500 uppercase tracking-widest text-center mb-3">5 Kata Kunci Utama</p>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                  <div class="bg-brand-800 text-white p-4 rounded-xl text-center shadow-md flex flex-col items-center">
+                    <i class="fa-solid fa-compass text-sky-300 text-xl mb-2"></i>
+                    <span contenteditable="true" class="text-xs font-extrabold tracking-wider">PERENCANAAN</span>
+                  </div>
+                  <div class="bg-sky-600 text-white p-4 rounded-xl text-center shadow-md flex flex-col items-center">
+                    <i class="fa-solid fa-list-check text-sky-200 text-xl mb-2"></i>
+                    <span contenteditable="true" class="text-xs font-extrabold tracking-wider">PENGELOLAAN</span>
+                  </div>
+                  <div class="bg-teal-700 text-white p-4 rounded-xl text-center shadow-md flex flex-col items-center">
+                    <i class="fa-solid fa-box-archive text-teal-200 text-xl mb-2"></i>
+                    <span contenteditable="true" class="text-xs font-extrabold tracking-wider">DOKUMENTASI</span>
+                  </div>
+                  <div class="bg-emerald-600 text-white p-4 rounded-xl text-center shadow-md flex flex-col items-center">
+                    <i class="fa-solid fa-square-poll-vertical text-emerald-200 text-xl mb-2"></i>
+                    <span contenteditable="true" class="text-xs font-extrabold tracking-wider">PENILAIAN</span>
+                  </div>
+                  <div class="bg-emerald-800 text-white p-4 rounded-xl text-center shadow-md flex flex-col items-center col-span-2 md:col-span-1">
+                    <i class="fa-solid fa-chart-line text-emerald-300 text-xl mb-2"></i>
+                    <span contenteditable="true" class="text-xs font-extrabold tracking-wider">EVALUASI</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center text-xs text-slate-500 border-t border-slate-100 pt-3">
+              <span>Landasan Tata Kelola Kelas Berbasis TIK</span>
+              <span>Slide 3 / 12</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 4: MENGAPA ADMINISTRASI PEMBELAJARAN PENTING? -->
+        <div class="slide-item" id="slide-4">
+          <div class="w-full h-full bg-slate-50 p-8 md:p-12 flex flex-col justify-between text-slate-900">
+            <div>
+              <p contenteditable="true" class="text-xs font-bold text-sky-600 uppercase tracking-widest mb-1">Urgensi & Manfaat</p>
+              <h2 contenteditable="true" class="text-2xl md:text-3xl font-extrabold text-slate-900">
+                Mengapa Administrasi Pembelajaran Penting?
+              </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-auto">
+              <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2 hover:border-sky-300 transition">
+                <div class="w-10 h-10 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center font-bold">
+                  <i class="fa-solid fa-calendar-check text-lg"></i>
+                </div>
+                <h3 contenteditable="true" class="font-bold text-slate-900 text-base">1. Perencanaan Terarah</h3>
+                <p contenteditable="true" class="text-xs text-slate-600 leading-relaxed">Membantu guru menyusun alur pengajaran PAI yang terstruktur dan sesuai target kurikulum.</p>
+              </div>
+
+              <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2 hover:border-emerald-300 transition">
+                <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                  <i class="fa-solid fa-folder-tree text-lg"></i>
+                </div>
+                <h3 contenteditable="true" class="font-bold text-slate-900 text-base">2. Ketertiban Berkas</h3>
+                <p contenteditable="true" class="text-xs text-slate-600 leading-relaxed">Membuat seluruh berkas dan administrasi mengajar tertata rapi secara profesional.</p>
+              </div>
+
+              <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2 hover:border-sky-300 transition">
+                <div class="w-10 h-10 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center font-bold">
+                  <i class="fa-solid fa-database text-lg"></i>
+                </div>
+                <h3 contenteditable="true" class="font-bold text-slate-900 text-base">3. Kemudahan Data</h3>
+                <p contenteditable="true" class="text-xs text-slate-600 leading-relaxed">Memudahkan pencarian dan pencatatan perkembangan karakter dan akademis siswa.</p>
+              </div>
+
+              <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2 hover:border-emerald-300 transition">
+                <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                  <i class="fa-solid fa-file-shield text-lg"></i>
+                </div>
+                <h3 contenteditable="true" class="font-bold text-slate-900 text-base">4. Bukti Otentik</h3>
+                <p contenteditable="true" class="text-xs text-slate-600 leading-relaxed">Menjadi dokumen rekam jejak resmi akuntabilitas pelaksanaan Tugas Guru.</p>
+              </div>
+
+              <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2 hover:border-sky-300 transition">
+                <div class="w-10 h-10 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center font-bold">
+                  <i class="fa-solid fa-square-check text-lg"></i>
+                </div>
+                <h3 contenteditable="true" class="font-bold text-slate-900 text-base">5. Akurasi Penilaian</h3>
+                <p contenteditable="true" class="text-xs text-slate-600 leading-relaxed">Memudahkan penyusunan laporan hasil belajar dan rapor secara konsisten.</p>
+              </div>
+
+              <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2 hover:border-emerald-300 transition">
+                <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                  <i class="fa-solid fa-chart-pie text-lg"></i>
+                </div>
+                <h3 contenteditable="true" class="font-bold text-slate-900 text-base">6. Evaluasi Mutu</h3>
+                <p contenteditable="true" class="text-xs text-slate-600 leading-relaxed">Menjadi bahan acuan refleksi untuk perbaikan mutu pembelajaran PAI berikutnya.</p>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center text-xs text-slate-500 border-t border-slate-200 pt-3">
+              <span>6 Manfaat Utama Administrasi Guru</span>
+              <span>Slide 4 / 12</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 5: RUANG LINGKUP ADMINISTRASI PEMBELAJARAN -->
+        <div class="slide-item" id="slide-5">
+          <div class="w-full h-full bg-white p-8 md:p-12 flex flex-col justify-between text-slate-900">
+            <div>
+              <p contenteditable="true" class="text-xs font-bold text-sky-600 uppercase tracking-widest mb-1">Alur Kerja Sistematis</p>
+              <h2 contenteditable="true" class="text-2xl md:text-3xl font-extrabold text-slate-900">
+                Ruang Lingkup Administrasi Pembelajaran
+              </h2>
+            </div>
+
+            <div class="my-auto py-4">
+              <div class="grid grid-cols-2 md:grid-cols-6 gap-3 items-stretch">
+                
+                <div class="bg-slate-50 border-t-4 border-t-brand-800 border-x border-b border-slate-200 rounded-xl p-3 text-center flex flex-col justify-between shadow-sm">
+                  <div>
+                    <i class="fa-solid fa-compass text-brand-800 text-2xl mb-2"></i>
+                    <h3 contenteditable="true" class="font-bold text-xs text-slate-900 mb-1">PERENCANAAN</h3>
+                    <p contenteditable="true" class="text-[11px] text-slate-600">Penetapan tujuan, materi & strategi</p>
+                  </div>
+                  <span class="mt-3 text-[10px] font-bold text-brand-800 bg-brand-50 rounded py-0.5">Tahap 1</span>
+                </div>
+
+                <div class="bg-slate-50 border-t-4 border-t-sky-600 border-x border-b border-slate-200 rounded-xl p-3 text-center flex flex-col justify-between shadow-sm">
+                  <div>
+                    <i class="fa-solid fa-chalkboard-user text-sky-600 text-2xl mb-2"></i>
+                    <h3 contenteditable="true" class="font-bold text-xs text-slate-900 mb-1">PELAKSANAAN</h3>
+                    <p contenteditable="true" class="text-[11px] text-slate-600">Jurnal harian & presensi kelas</p>
+                  </div>
+                  <span class="mt-3 text-[10px] font-bold text-sky-600 bg-sky-50 rounded py-0.5">Tahap 2</span>
+                </div>
+
+                <div class="bg-slate-50 border-t-4 border-t-emerald-600 border-x border-b border-slate-200 rounded-xl p-3 text-center flex flex-col justify-between shadow-sm">
+                  <div>
+                    <i class="fa-solid fa-pen-to-square text-emerald-600 text-2xl mb-2"></i>
+                    <h3 contenteditable="true" class="font-bold text-xs text-slate-900 mb-1">PENILAIAN</h3>
+                    <p contenteditable="true" class="text-[11px] text-slate-600">Pengukuran proses & hasil belajar</p>
+                  </div>
+                  <span class="mt-3 text-[10px] font-bold text-emerald-600 bg-emerald-50 rounded py-0.5">Tahap 3</span>
+                </div>
+
+                <div class="bg-slate-50 border-t-4 border-t-teal-700 border-x border-b border-slate-200 rounded-xl p-3 text-center flex flex-col justify-between shadow-sm">
+                  <div>
+                    <i class="fa-solid fa-file-export text-teal-700 text-2xl mb-2"></i>
+                    <h3 contenteditable="true" class="font-bold text-xs text-slate-900 mb-1">PELAPORAN</h3>
+                    <p contenteditable="true" class="text-[11px] text-slate-600">Rekap nilai & rapor siswa</p>
+                  </div>
+                  <span class="mt-3 text-[10px] font-bold text-teal-700 bg-teal-50 rounded py-0.5">Tahap 4</span>
+                </div>
+
+                <div class="bg-slate-50 border-t-4 border-t-sky-700 border-x border-b border-slate-200 rounded-xl p-3 text-center flex flex-col justify-between shadow-sm">
+                  <div>
+                    <i class="fa-solid fa-box-archive text-sky-700 text-2xl mb-2"></i>
+                    <h3 contenteditable="true" class="font-bold text-xs text-slate-900 mb-1">PENGARSIPAN</h3>
+                    <p contenteditable="true" class="text-[11px] text-slate-600">Penyimpanan fisik / digital cloud</p>
+                  </div>
+                  <span class="mt-3 text-[10px] font-bold text-sky-700 bg-sky-50 rounded py-0.5">Tahap 5</span>
+                </div>
+
+                <div class="bg-slate-50 border-t-4 border-t-brand-800 border-x border-b border-slate-200 rounded-xl p-3 text-center flex flex-col justify-between shadow-sm">
+                  <div>
+                    <i class="fa-solid fa-arrows-rotate text-brand-800 text-2xl mb-2"></i>
+                    <h3 contenteditable="true" class="font-bold text-xs text-slate-900 mb-1">EVALUASI</h3>
+                    <p contenteditable="true" class="text-[11px] text-slate-600">Refleksi & perbaikan mutlak</p>
+                  </div>
+                  <span class="mt-3 text-[10px] font-bold text-brand-800 bg-brand-50 rounded py-0.5">Tahap 6</span>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center text-xs text-slate-500 border-t border-slate-100 pt-3">
+              <span>Siklus Kontinu Administrasi Guru PAI</span>
+              <span>Slide 5 / 12</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 6: ADMINISTRASI PERENCANAAN -->
+        <div class="slide-item" id="slide-6">
+          <div class="w-full h-full bg-slate-50 p-8 md:p-12 flex flex-col justify-between text-slate-900">
+            <div>
+              <p contenteditable="true" class="text-xs font-bold text-sky-600 uppercase tracking-widest mb-1">Dokumen Pengarah</p>
+              <h2 contenteditable="true" class="text-2xl md:text-3xl font-extrabold text-slate-900">
+                1. Administrasi Perencanaan Pembelajaran
+              </h2>
+            </div>
+
+            <div class="my-auto space-y-4">
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 text-center shadow-sm">
+                  <div class="w-12 h-12 bg-sky-100 text-sky-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <i class="fa-solid fa-calendar-days text-xl"></i>
+                  </div>
+                  <h3 contenteditable="true" class="font-bold text-slate-900 text-sm mb-1">PROTA</h3>
+                  <p contenteditable="true" class="text-xs text-slate-600">Program Tahunan: pengalokasian waktu 1 tahun ajaran.</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-slate-200 text-center shadow-sm">
+                  <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <i class="fa-solid fa-calendar-week text-xl"></i>
+                  </div>
+                  <h3 contenteditable="true" class="font-bold text-slate-900 text-sm mb-1">PROMES</h3>
+                  <p contenteditable="true" class="text-xs text-slate-600">Program Semester: pemetaan materi per bulan & minggu.</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-slate-200 text-center shadow-sm">
+                  <div class="w-12 h-12 bg-sky-100 text-sky-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <i class="fa-solid fa-book-bookmark text-xl"></i>
+                  </div>
+                  <h3 contenteditable="true" class="font-bold text-slate-900 text-sm mb-1">SILABUS</h3>
+                  <p contenteditable="true" class="text-xs text-slate-600">Rencana pembelajaran pada kelompok mata pelajaran.</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-slate-200 text-center shadow-sm">
+                  <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <i class="fa-solid fa-file-lines text-xl"></i>
+                  </div>
+                  <h3 contenteditable="true" class="font-bold text-slate-900 text-sm mb-1">RPP / MODUL AJAR</h3>
+                  <p contenteditable="true" class="text-xs text-slate-600">Rencana Pelaksanaan Pembelajaran kegiatan harian.</p>
+                </div>
+              </div>
+
+              <div class="bg-sky-50 border border-sky-200 rounded-xl p-4 flex items-center gap-3 text-sky-900 text-xs">
+                <i class="fa-solid fa-circle-info text-sky-600 text-lg shrink-0"></i>
+                <p contenteditable="true">
+                  <strong>Catatan Perkuliahan:</strong> Dokumen perencanaan ini berfungsi menentukan arah dan kegiatan mengajar. Pembahasan mendalam penyusunan Prota, Promes, Silabus, dan RPP akan dikaji khusus pada <strong>Pertemuan 3</strong>.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center text-xs text-slate-500 border-t border-slate-200 pt-3">
+              <span>Fokus Integrasi TIK Perencanaan</span>
+              <span>Slide 6 / 12</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 7: ADMINISTRASI PELAKSANAAN -->
+        <div class="slide-item" id="slide-7">
+          <div class="w-full h-full bg-white p-8 md:p-12 flex flex-col justify-between text-slate-900">
+            <div>
+              <p contenteditable="true" class="text-xs font-bold text-sky-600 uppercase tracking-widest mb-1">Dokumentasi Kelas Real-time</p>
+              <h2 contenteditable="true" class="text-2xl md:text-3xl font-extrabold text-slate-900">
+                2. Administrasi Pelaksanaan Pembelajaran
+              </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 my-auto items-center">
+              <div class="md:col-span-7 space-y-3">
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 border-l-4 border-l-brand-800">
+                  <h3 contenteditable="true" class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-book-open text-brand-800"></i> Jurnal Mengajar Harian
+                  </h3>
+                  <p contenteditable="true" class="text-xs text-slate-600 mt-1">Mencatat materi yang telah diajarkan, jam pelajaran, hambatan kelas, dan respon siswa secara rinci.</p>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 border-l-4 border-l-sky-600">
+                  <h3 contenteditable="true" class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-check text-sky-600"></i> Daftar Hadir Peserta Didik
+                  </h3>
+                  <p contenteditable="true" class="text-xs text-slate-600 mt-1">Pencatatan status kehadiran (Hadir, Izin, Sakit, Alpa) sebagai kontrol kedisiplinan siswa PAI.</p>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 border-l-4 border-l-emerald-600">
+                  <h3 contenteditable="true" class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-note-sticky text-emerald-600"></i> Catatan Pelaksanaan & Perilaku
+                  </h3>
+                  <p contenteditable="true" class="text-xs text-slate-600 mt-1">Merekam perkembangan sikap akhlak, keaktifan diskusi, atau catatan pembiasaan ibadah harian.</p>
+                </div>
+              </div>
+
+              <div class="md:col-span-5 bg-slate-900 text-white rounded-2xl p-5 border border-slate-800 space-y-3">
+                <div class="flex items-center justify-between text-xs border-b border-slate-800 pb-2">
+                  <span class="font-bold text-sky-400"><i class="fa-solid fa-desktop mr-1"></i> Contoh Jurnal Kelas TIK</span>
+                  <span class="text-slate-400">Pendidikan Agama Islam</span>
+                </div>
+                <div class="text-xs space-y-2 text-slate-300 font-mono">
+                  <p><strong class="text-slate-100">Materi:</strong> Akhlak Terpuji (Jujur & Amanah)</p>
+                  <p><strong class="text-slate-100">Presensi:</strong> 32 Hadir, 1 Sakit</p>
+                  <p><strong class="text-slate-100">Catatan:</strong> Siswa aktif berdiskusi kasus kuis berbasis Google Form.</p>
+                </div>
+                <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-2.5 text-[11px] text-emerald-300">
+                  <i class="fa-solid fa-circle-check mr-1"></i> Terkoneksi otomatis dengan Google Classroom & Spreadsheets
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center text-xs text-slate-500 border-t border-slate-100 pt-3">
+              <span>Pencatatan Harian Berbasis TIK</span>
+              <span>Slide 7 / 12</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 8: ADMINISTRASI PENILAIAN DAN PELAPORAN -->
+        <div class="slide-item" id="slide-8">
+          <div class="w-full h-full bg-slate-50 p-8 md:p-12 flex flex-col justify-between text-slate-900">
+            <div>
+              <p contenteditable="true" class="text-xs font-bold text-sky-600 uppercase tracking-widest mb-1">Pengolahan Data Belajar</p>
+              <h2 contenteditable="true" class="text-2xl md:text-3xl font-extrabold text-slate-900">
+                3. Administrasi Penilaian & Pelaporan
+              </h2>
+            </div>
+
+            <div class="my-auto space-y-6">
+              <!-- Flow diagram -->
+              <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <p contenteditable="true" class="text-xs font-bold text-slate-500 uppercase tracking-widest text-center mb-4">Diagram Alur Pengolahan Nilai PAI</p>
+                <div class="flex flex-col md:flex-row gap-3 items-center justify-between">
+                  
+                  <div class="bg-sky-50 border border-sky-300 rounded-xl p-3 text-center flex-1 w-full">
+                    <i class="fa-solid fa-book text-sky-600 text-lg mb-1"></i>
+                    <h4 contenteditable="true" class="font-extrabold text-xs text-sky-900">DATA NILAI</h4>
+                    <p contenteditable="true" class="text-[11px] text-slate-600">Tugas, Harian, UTS, UAS</p>
+                  </div>
+
+                  <i class="fa-solid fa-arrow-right text-sky-400 hidden md:block"></i>
+                  <i class="fa-solid fa-arrow-down text-sky-400 md:hidden"></i>
+
+                  <div class="bg-blue-50 border border-blue-300 rounded-xl p-3 text-center flex-1 w-full">
+                    <i class="fa-solid fa-calculator text-blue-600 text-lg mb-1"></i>
+                    <h4 contenteditable="true" class="font-extrabold text-xs text-blue-900">PENGOLAHAN</h4>
+                    <p contenteditable="true" class="text-[11px] text-slate-600">Bobot & Rata-rata Nilai</p>
+                  </div>
+
+                  <i class="fa-solid fa-arrow-right text-sky-400 hidden md:block"></i>
+                  <i class="fa-solid fa-arrow-down text-sky-400 md:hidden"></i>
+
+                  <div class="bg-emerald-50 border border-emerald-300 rounded-xl p-3 text-center flex-1 w-full">
+                    <i class="fa-solid fa-table-list text-emerald-600 text-lg mb-1"></i>
+                    <h4 contenteditable="true" class="font-extrabold text-xs text-emerald-900">REKAPITULASI</h4>
+                    <p contenteditable="true" class="text-[11px] text-slate-600">Buku Nilai & Leger Kelas</p>
+                  </div>
+
+                  <i class="fa-solid fa-arrow-right text-sky-400 hidden md:block"></i>
+                  <i class="fa-solid fa-arrow-down text-sky-400 md:hidden"></i>
+
+                  <div class="bg-teal-50 border border-teal-300 rounded-xl p-3 text-center flex-1 w-full">
+                    <i class="fa-solid fa-file-invoice text-teal-600 text-lg mb-1"></i>
+                    <h4 contenteditable="true" class="font-extrabold text-xs text-teal-900">LAPORAN</h4>
+                    <p contenteditable="true" class="text-[11px] text-slate-600">Rapor & Laporan Hasil</p>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-3">
+                  <i class="fa-solid fa-database text-sky-600 text-xl"></i>
+                  <p contenteditable="true" class="text-xs text-slate-700"><strong class="text-slate-900">Hasil Evaluasi:</strong> Menyimpan analisis ketuntasan belajar (KKM) dan pemetaan pencapaian kompetensi siswa.</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-3">
+                  <i class="fa-solid fa-chart-pie text-emerald-600 text-xl"></i>
+                  <p contenteditable="true" class="text-xs text-slate-700"><strong class="text-slate-900">Transparansi Nilai:</strong> Memudahkan guru memberikan umpan balik tepat waktu kepada siswa & orang tua.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center text-xs text-slate-500 border-t border-slate-200 pt-3">
+              <span>Akuntabilitas Pengolahan Nilai PAI</span>
+              <span>Slide 8 / 12</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 9: TUJUAN ADMINISTRASI PEMBELAJARAN -->
+        <div class="slide-item" id="slide-9">
+          <div class="w-full h-full bg-white p-8 md:p-12 flex flex-col justify-between text-slate-900">
+            <div>
+              <p contenteditable="true" class="text-xs font-bold text-sky-600 uppercase tracking-widest mb-1">Target Kualitas Pembelajaran</p>
+              <h2 contenteditable="true" class="text-2xl md:text-3xl font-extrabold text-slate-900">
+                Tujuan Administrasi Pembelajaran
+              </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-auto">
+              <div class="bg-slate-50 border-t-4 border-t-brand-800 border-x border-b border-slate-200 rounded-xl p-5 shadow-sm">
+                <h3 contenteditable="true" class="font-extrabold text-brand-800 text-base mb-1">1. TERENCANA</h3>
+                <p contenteditable="true" class="text-xs text-slate-600 leading-relaxed">Memastikan seluruh proses pembelajaran memiliki arah dan target pencapaian yang jelas.</p>
+              </div>
+
+              <div class="bg-slate-50 border-t-4 border-t-sky-600 border-x border-b border-slate-200 rounded-xl p-5 shadow-sm">
+                <h3 contenteditable="true" class="font-extrabold text-sky-600 text-base mb-1">2. SISTEMATIS</h3>
+                <p contenteditable="true" class="text-xs text-slate-600 leading-relaxed">Menjamin langkah-langkah pengajaran tersusun secara logis, runtut, dan terstruktur.</p>
+              </div>
+
+              <div class="bg-slate-50 border-t-4 border-t-emerald-600 border-x border-b border-slate-200 rounded-xl p-5 shadow-sm">
+                <h3 contenteditable="true" class="font-extrabold text-emerald-600 text-base mb-1">3. TERTIB</h3>
+                <p contenteditable="true" class="text-xs text-slate-600 leading-relaxed">Mewujudkan tata kelola dokumen pembelajaran yang rapi dan mudah diakses sewaktu-waktu.</p>
+              </div>
+
+              <div class="bg-slate-50 border-t-4 border-t-teal-700 border-x border-b border-slate-200 rounded-xl p-5 shadow-sm">
+                <h3 contenteditable="true" class="font-extrabold text-teal-700 text-base mb-1">4. EFEKTIF</h3>
+                <p contenteditable="true" class="text-xs text-slate-600 leading-relaxed">Meningkatkan efisiensi alokasi waktu mengajar dan efektivitas penggunaan media pembelajaran.</p>
+              </div>
+
+              <div class="bg-slate-50 border-t-4 border-t-sky-700 border-x border-b border-slate-200 rounded-xl p-5 shadow-sm">
+                <h3 contenteditable="true" class="font-extrabold text-sky-700 text-base mb-1">5. TERDOKUMENTASI</h3>
+                <p contenteditable="true" class="text-xs text-slate-600 leading-relaxed">Menyimpan rekam jejak aktivitas pengajaran sebagai bukti fisik akuntabilitas guru.</p>
+              </div>
+
+              <div class="bg-slate-50 border-t-4 border-t-brand-800 border-x border-b border-slate-200 rounded-xl p-5 shadow-sm">
+                <h3 contenteditable="true" class="font-extrabold text-brand-800 text-base mb-1">6. MUDAH DIEVALUASI</h3>
+                <p contenteditable="true" class="text-xs text-slate-600 leading-relaxed">Memudahkan analisis kekurangan untuk perbaikan mutu pengajaran secara berkelanjutan.</p>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center text-xs text-slate-500 border-t border-slate-100 pt-3">
+              <span>6 Pilar Tujuan Administrasi Guru</span>
+              <span>Slide 9 / 12</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 10: FUNGSI ADMINISTRASI PEMBELAJARAN -->
+        <div class="slide-item" id="slide-10">
+          <div class="w-full h-full bg-slate-50 p-8 md:p-12 flex flex-col justify-between text-slate-900">
+            <div>
+              <p contenteditable="true" class="text-xs font-bold text-sky-600 uppercase tracking-widest mb-1">Siklus Pengelolaan</p>
+              <h2 contenteditable="true" class="text-2xl md:text-3xl font-extrabold text-slate-900">
+                6 Fungsi Utama Administrasi Pembelajaran
+              </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-auto">
+              <div class="bg-white p-5 rounded-xl border border-slate-200 flex items-start gap-3 shadow-sm">
+                <div class="w-8 h-8 rounded-full bg-brand-800 text-white flex items-center justify-center font-extrabold text-xs shrink-0">1</div>
+                <div>
+                  <h3 contenteditable="true" class="font-bold text-slate-900 text-sm mb-1">Fungsi Perencanaan</h3>
+                  <p contenteditable="true" class="text-xs text-slate-600">Merumuskan tujuan, strategi, dan alokasi waktu pengajaran.</p>
+                </div>
+              </div>
+
+              <div class="bg-white p-5 rounded-xl border border-slate-200 flex items-start gap-3 shadow-sm">
+                <div class="w-8 h-8 rounded-full bg-sky-600 text-white flex items-center justify-center font-extrabold text-xs shrink-0">2</div>
+                <div>
+                  <h3 contenteditable="true" class="font-bold text-slate-900 text-sm mb-1">Fungsi Pengorganisasian</h3>
+                  <p contenteditable="true" class="text-xs text-slate-600">Menata instrumen, sumber belajar, dan sarana secara terstruktur.</p>
+                </div>
+              </div>
+
+              <div class="bg-white p-5 rounded-xl border border-slate-200 flex items-start gap-3 shadow-sm">
+                <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-extrabold text-xs shrink-0">3</div>
+                <div>
+                  <h3 contenteditable="true" class="font-bold text-slate-900 text-sm mb-1">Fungsi Pelaksanaan</h3>
+                  <p contenteditable="true" class="text-xs text-slate-600">Mengaktualisasikan rencana pembelajaran di dalam kelas real.</p>
+                </div>
+              </div>
+
+              <div class="bg-white p-5 rounded-xl border border-slate-200 flex items-start gap-3 shadow-sm">
+                <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-extrabold text-xs shrink-0">4</div>
+                <div>
+                  <h3 contenteditable="true" class="font-bold text-slate-900 text-sm mb-1">Fungsi Penilaian</h3>
+                  <p contenteditable="true" class="text-xs text-slate-600">Mengukur ketercapaian kompetensi dan capaian belajar siswa.</p>
+                </div>
+              </div>
+
+              <div class="bg-white p-5 rounded-xl border border-slate-200 flex items-start gap-3 shadow-sm">
+                <div class="w-8 h-8 rounded-full bg-sky-600 text-white flex items-center justify-center font-extrabold text-xs shrink-0">5</div>
+                <div>
+                  <h3 contenteditable="true" class="font-bold text-slate-900 text-sm mb-1">Fungsi Pelaporan</h3>
+                  <p contenteditable="true" class="text-xs text-slate-600">Menyampaikan rekap kemajuan belajar secara tertulis & transparan.</p>
+                </div>
+              </div>
+
+              <div class="bg-white p-5 rounded-xl border border-slate-200 flex items-start gap-3 shadow-sm">
+                <div class="w-8 h-8 rounded-full bg-brand-800 text-white flex items-center justify-center font-extrabold text-xs shrink-0">6</div>
+                <div>
+                  <h3 contenteditable="true" class="font-bold text-slate-900 text-sm mb-1">Fungsi Evaluasi</h3>
+                  <p contenteditable="true" class="text-xs text-slate-600">Menganalisis kendala untuk perbaikan siklus pembelajaran lanjutan.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center text-xs text-slate-500 border-t border-slate-200 pt-3">
+              <span>Siklus Fungsi Berkelanjutan</span>
+              <span>Slide 10 / 12</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 11: ADMINISTRASI PEMBELAJARAN DALAM KONTEKS PAI -->
+        <div class="slide-item" id="slide-11">
+          <div class="w-full h-full bg-white p-8 md:p-12 flex flex-col justify-between text-slate-900">
+            <div>
+              <p contenteditable="true" class="text-xs font-bold text-sky-600 uppercase tracking-widest mb-1">Aplikasi Nyata Pembelajaran PAI</p>
+              <h2 contenteditable="true" class="text-2xl md:text-3xl font-extrabold text-slate-900">
+                Studi Kasus Pembelajaran PAI
+              </h2>
+            </div>
+
+            <div class="my-auto space-y-4">
+              <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center gap-3 text-emerald-900">
+                <i class="fa-solid fa-chalkboard-user text-emerald-600 text-2xl shrink-0"></i>
+                <p contenteditable="true" class="text-sm font-bold">
+                  Skenario Kasus: “Seorang Guru PAI akan mengajarkan materi ‘Akhlak Terpuji (Jujur & Amanah)’ di Kelas VIII.”
+                </p>
+              </div>
+
+              <!-- Alur langkah -->
+              <div class="grid grid-cols-2 md:grid-cols-7 gap-2 text-center text-[11px] font-bold">
+                <div class="bg-slate-100 p-2.5 rounded-lg border border-slate-200 text-brand-800">1. Siapkan RPP</div>
+                <div class="bg-slate-100 p-2.5 rounded-lg border border-slate-200 text-sky-600">2. Mengajar</div>
+                <div class="bg-slate-100 p-2.5 rounded-lg border border-slate-200 text-emerald-600">3. Presensi</div>
+                <div class="bg-slate-100 p-2.5 rounded-lg border border-slate-200 text-teal-700">4. Penilaian Praktik</div>
+                <div class="bg-slate-100 p-2.5 rounded-lg border border-slate-200 text-sky-700">5. Rekap Nilai</div>
+                <div class="bg-slate-100 p-2.5 rounded-lg border border-slate-200 text-brand-800">6. Arsip Dokumen</div>
+                <div class="bg-slate-100 p-2.5 rounded-lg border border-slate-200 text-emerald-600 col-span-2 md:col-span-1">7. Evaluasi</div>
+              </div>
+
+              <!-- Pertanyaan Diskusi Kunci -->
+              <div class="bg-gradient-to-r from-brand-900 to-sky-900 text-white rounded-2xl p-6 text-center space-y-2 shadow-lg">
+                <i class="fa-solid fa-laptop-code text-sky-400 text-2xl"></i>
+                <h3 contenteditable="true" class="text-base font-extrabold text-sky-200">Pertanyaan Diskusi Kasus:</h3>
+                <p contenteditable="true" class="text-sm text-slate-200 max-w-2xl mx-auto">
+                  “Pada tahap alur yang mana keberadaan <span class="text-emerald-400 font-bold">Teknologi Informasi dan Komunikasi (TIK)</span> paling krusial membantu tugas guru PAI?”
+                </p>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center text-xs text-slate-500 border-t border-slate-100 pt-3">
+              <span>Studi Praktis Guru PAI Modern</span>
+              <span>Slide 11 / 12</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 12: KESIMPULAN DAN DISKUSI (Dark Ground) -->
+        <div class="slide-item" id="slide-12">
+          <div class="w-full h-full bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950 p-8 md:p-12 flex flex-col justify-between text-white">
+            <div>
+              <p contenteditable="true" class="text-xs font-bold text-sky-400 uppercase tracking-widest mb-1">Rangkuman & Penutup</p>
+              <h2 contenteditable="true" class="text-2xl md:text-3xl font-extrabold text-white">
+                Kesimpulan & Diskusi Kelas
+              </h2>
+            </div>
+
+            <div class="my-auto space-y-6">
+              <div class="bg-white/10 backdrop-blur border border-white/20 p-6 rounded-2xl text-center">
+                <p contenteditable="true" class="text-base md:text-lg font-medium text-slate-100 leading-relaxed">
+                  “Administrasi pembelajaran bukan sekadar mengelola dokumen fisik, melainkan <span class="text-emerald-400 font-extrabold">fondasi pengelolaan pembelajaran PAI</span> agar terencana, tertib, sistematis, terdokumentasi, dan dapat dievaluasi secara berkelanjutan.”
+                </p>
+              </div>
+
+              <div>
+                <p contenteditable="true" class="text-xs font-bold text-slate-400 uppercase tracking-widest text-center mb-3">4 Pertanyaan Diskusi Mahasiswa</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 flex items-center gap-3">
+                    <i class="fa-solid fa-comments text-sky-400 text-lg shrink-0"></i>
+                    <p contenteditable="true" class="text-xs text-slate-200">1. Mengapa guru PAI sangat membutuhkan administrasi pembelajaran yang rapi?</p>
+                  </div>
+
+                  <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 flex items-center gap-3">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-400 text-lg shrink-0"></i>
+                    <p contenteditable="true" class="text-xs text-slate-200">2. Apa akibatnya jika administrasi kelas tidak tertata dengan baik?</p>
+                  </div>
+
+                  <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 flex items-center gap-3">
+                    <i class="fa-solid fa-cloud-arrow-up text-emerald-400 text-lg shrink-0"></i>
+                    <p contenteditable="true" class="text-xs text-slate-200">3. Apa saja keunggulan dan manfaat administrasi pembelajaran digital?</p>
+                  </div>
+
+                  <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 flex items-center gap-3">
+                    <i class="fa-solid fa-laptop-medical text-sky-400 text-lg shrink-0"></i>
+                    <p contenteditable="true" class="text-xs text-slate-200">4. Bagaimana integrasi TIK dapat mempermudah peran & beban kerja guru PAI?</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center text-xs text-slate-400 border-t border-slate-800 pt-3">
+              <span>Selesai - Sesi Tanya Jawab</span>
+              <span>Slide 12 / 12</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- BOTTOM TOOLBAR CONTROLS -->
+  <footer id="app-controls" class="h-16 bg-slate-900 border-t border-slate-800 px-4 flex items-center justify-between z-30 shrink-0">
+    <div class="flex items-center gap-2">
+      <button id="btn-first" class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition" title="Slide Pertama">
+        <i class="fa-solid fa-backward-step"></i>
+      </button>
+      <button id="btn-prev" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs rounded-lg transition flex items-center gap-2" title="Slide Sebelumnya (←)">
+        <i class="fa-solid fa-chevron-left"></i>
+        <span class="hidden sm:inline">Sebelumnya</span>
+      </button>
+    </div>
+
+    <!-- Center Counter and Progress -->
+    <div class="flex items-center gap-4 flex-1 max-w-md mx-4">
+      <span id="slide-counter" class="text-xs font-bold text-slate-300 shrink-0 font-mono">1 / 12</span>
+      <div class="flex-1 bg-slate-800 h-2 rounded-full overflow-hidden">
+        <div id="slide-progress" class="bg-brand-500 h-full w-1/12 transition-all duration-300"></div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button id="btn-next" class="px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold text-xs rounded-lg transition flex items-center gap-2" title="Slide Selanjutnya (→ atau Space)">
+        <span class="hidden sm:inline">Selanjutnya</span>
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+      <button id="btn-last" class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition" title="Slide Terakhir">
+        <i class="fa-solid fa-forward-step"></i>
+      </button>
+    </div>
+  </footer>
+
+  <!-- GRID VIEW OVERLAY MODAL -->
+  <div id="grid-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex-col p-6 hidden">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-lg font-bold text-white flex items-center gap-2">
+        <i class="fa-solid fa-border-all text-brand-400"></i> Tampilan Seluruh Slide
+      </h2>
+      <button id="btn-close-grid" class="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-900 border border-slate-800">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+    </div>
+    <div id="grid-container" class="flex-1 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-2">
+      <!-- Grid Cards injected dynamically -->
+    </div>
+  </div>
+
+  <!-- HELP KEYBOARD SHORTCUTS MODAL -->
+  <div id="help-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 items-center justify-center hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-keyboard text-brand-400"></i> Pintasan Navigasi Keyboard
+        </h3>
+        <button id="btn-close-help" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="space-y-2 text-xs text-slate-300">
+        <div class="flex justify-between py-1 border-b border-slate-800/50"><span>Slide Selanjutnya</span> <kbd class="px-2 py-0.5 bg-slate-800 rounded text-slate-200">→</kbd> atau <kbd class="px-2 py-0.5 bg-slate-800 rounded text-slate-200">Space</kbd></div>
+        <div class="flex justify-between py-1 border-b border-slate-800/50"><span>Slide Sebelumnya</span> <kbd class="px-2 py-0.5 bg-slate-800 rounded text-slate-200">←</kbd></div>
+        <div class="flex justify-between py-1 border-b border-slate-800/50"><span>Layar Penuh (Fullscreen)</span> <kbd class="px-2 py-0.5 bg-slate-800 rounded text-slate-200">F</kbd></div>
+        <div class="flex justify-between py-1 border-b border-slate-800/50"><span>Tampilan Grid Overview</span> <kbd class="px-2 py-0.5 bg-slate-800 rounded text-slate-200">M</kbd></div>
+        <div class="flex justify-between py-1 border-b border-slate-800/50"><span>Buka / Tutup Daftar Slide</span> <kbd class="px-2 py-0.5 bg-slate-800 rounded text-slate-200">S</kbd></div>
+      </div>
+      <button id="btn-dismiss-help" class="w-full py-2 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-lg text-xs transition">Tutup Bantuan</button>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APPLICATION CONTROLLER -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const TOTAL_SLIDES = 12;
+      let currentSlide = 1;
+
+      // Titles for Navigation Drawer
+      const slideTitles = [
+        "Cover Utama Perkuliahan",
+        "Pertanyaan Pemantik Kelas",
+        "Pengertian Administrasi",
+        "Urgensi & Manfaat",
+        "Ruang Lingkup (Alur)",
+        "Administrasi Perencanaan",
+        "Administrasi Pelaksanaan",
+        "Penilaian & Pelaporan",
+        "Tujuan Administrasi",
+        "Fungsi Administrasi",
+        "Studi Kasus Pembelajaran PAI",
+        "Kesimpulan & Diskusi Kelas"
+      ];
+
+      // DOM Elements
+      const slides = document.querySelectorAll('.slide-item');
+      const counterDisplay = document.getElementById('slide-counter');
+      const progressDisplay = document.getElementById('slide-progress');
+      const thumbnailList = document.getElementById('thumbnail-list');
+      const gridContainer = document.getElementById('grid-container');
+      const sidebarDrawer = document.getElementById('sidebar-drawer');
+      
+      // Control Buttons
+      const btnNext = document.getElementById('btn-next');
+      const btnPrev = document.getElementById('btn-prev');
+      const btnFirst = document.getElementById('btn-first');
+      const btnLast = document.getElementById('btn-last');
+      const btnToggleSidebar = document.getElementById('btn-toggle-sidebar');
+      const btnCloseSidebar = document.getElementById('btn-close-sidebar');
+      const btnGridView = document.getElementById('btn-grid-view');
+      const btnCloseGrid = document.getElementById('btn-close-grid');
+      const gridModal = document.getElementById('grid-modal');
+      const btnFullscreen = document.getElementById('btn-fullscreen');
+      const btnHelp = document.getElementById('btn-help');
+      const helpModal = document.getElementById('help-modal');
+      const btnCloseHelp = document.getElementById('btn-close-help');
+      const btnDismissHelp = document.getElementById('btn-dismiss-help');
+
+      // Lecture Timer Logic
+      let timerSeconds = 0;
+      let timerInterval = null;
+      let isTimerRunning = false;
+      const timerDisplay = document.getElementById('timer-display');
+      const btnTimerToggle = document.getElementById('btn-timer-toggle');
+      const btnTimerReset = document.getElementById('btn-timer-reset');
+      const timerIcon = document.getElementById('timer-icon');
+
+      function updateTimerDisplay() {
+        const mins = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
+        const secs = (timerSeconds % 60).toString().padStart(2, '0');
+        timerDisplay.textContent = `${mins}:${secs}`;
+      }
+
+      function startTimer() {
+        if (!isTimerRunning) {
+          isTimerRunning = true;
+          timerIcon.className = 'fa-solid fa-pause';
+          timerInterval = setInterval(() => {
+            timerSeconds++;
+            updateTimerDisplay();
+          }, 1000);
+        }
+      }
+
+      function pauseTimer() {
+        if (isTimerRunning) {
+          isTimerRunning = false;
+          timerIcon.className = 'fa-solid fa-play';
+          clearInterval(timerInterval);
+        }
+      }
+
+      btnTimerToggle.addEventListener('click', () => {
+        if (isTimerRunning) pauseTimer();
+        else startTimer();
+      });
+
+      btnTimerReset.addEventListener('click', () => {
+        pauseTimer();
+        timerSeconds = 0;
+        updateTimerDisplay();
+      });
+
+      function renderThumbnails() {
+        thumbnailList.innerHTML = '';
+        gridContainer.innerHTML = '';
+
+        slideTitles.forEach((title, idx) => {
+          const slideNum = idx + 1;
+          const isActive = slideNum === currentSlide;
+
+          // Sidebar item
+          const thumb = document.createElement('button');
+          thumb.className = `w-full text-left p-2.5 rounded-xl transition flex items-center gap-3 border ${
+            isActive 
+              ? 'bg-brand-500/20 border-brand-500/50 text-white font-bold' 
+              : 'bg-slate-950/40 border-slate-800/80 text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+          }`;
+          thumb.innerHTML = `
+            <span class="w-6 h-6 rounded-lg ${isActive ? 'bg-brand-500 text-white' : 'bg-slate-800 text-slate-400'} flex items-center justify-center text-xs shrink-0 font-mono">${slideNum}</span>
+            <span class="text-xs truncate">${title}</span>
+          `;
+          thumb.addEventListener('click', () => {
+            goToSlide(slideNum);
+            if (window.innerWidth < 1024) sidebarDrawer.classList.add('-translate-x-full');
+          });
+          thumbnailList.appendChild(thumb);
+
+          // Grid Card item
+          const card = document.createElement('div');
+          card.className = `p-4 rounded-xl border cursor-pointer transition flex flex-col justify-between ${
+            isActive 
+              ? 'bg-brand-500/20 border-brand-500 text-white ring-2 ring-brand-500/50' 
+              : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-800'
+          }`;
+          card.innerHTML = `
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-300">Slide ${slideNum}</span>
+              ${isActive ? '<i class="fa-solid fa-circle-check text-brand-400 text-xs"></i>' : ''}
+            </div>
+            <p class="text-xs font-bold leading-snug line-clamp-2">${title}</p>
+          `;
+          card.addEventListener('click', () => {
+            goToSlide(slideNum);
+            gridModal.classList.add('hidden');
+            gridModal.classList.remove('flex');
+          });
+          gridContainer.appendChild(card);
+        });
+      }
+
+      function goToSlide(slideIndex) {
+        if (slideIndex < 1 || slideIndex > TOTAL_SLIDES) return;
+
+        slides.forEach(s => s.classList.remove('active'));
+        currentSlide = slideIndex;
+        
+        const activeSlide = document.getElementById(`slide-${currentSlide}`);
+        if (activeSlide) activeSlide.classList.add('active');
+
+        // Update Counter and Progress Bar
+        counterDisplay.textContent = `${currentSlide} / ${TOTAL_SLIDES}`;
+        progressDisplay.style.width = `${(currentSlide / TOTAL_SLIDES) * 100}%`;
+
+        // Update Thumbnails
+        renderThumbnails();
+      }
+
+      btnNext.addEventListener('click', () => goToSlide(currentSlide + 1));
+      btnPrev.addEventListener('click', () => goToSlide(currentSlide - 1));
+      btnFirst.addEventListener('click', () => goToSlide(1));
+      btnLast.addEventListener('click', () => goToSlide(TOTAL_SLIDES));
+
+      btnToggleSidebar.addEventListener('click', () => {
+        sidebarDrawer.classList.toggle('-translate-x-full');
+      });
+      if (btnCloseSidebar) {
+        btnCloseSidebar.addEventListener('click', () => {
+          sidebarDrawer.classList.add('-translate-x-full');
+        });
+      }
+
+      btnGridView.addEventListener('click', () => {
+        gridModal.classList.remove('hidden');
+        gridModal.classList.add('flex');
+      });
+      btnCloseGrid.addEventListener('click', () => {
+        gridModal.classList.add('hidden');
+        gridModal.classList.remove('flex');
+      });
+
+      btnHelp.addEventListener('click', () => {
+        helpModal.classList.remove('hidden');
+        helpModal.classList.add('flex');
+      });
+      const hideHelp = () => {
+        helpModal.classList.add('hidden');
+        helpModal.classList.remove('flex');
+      };
+      btnCloseHelp.addEventListener('click', hideHelp);
+      btnDismissHelp.addEventListener('click', hideHelp);
+
+      // Fullscreen Controller
+      btnFullscreen.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(err => console.log(err));
+        } else {
+          document.exitFullscreen().catch(err => console.log(err));
+        }
+      });
+
+      // Keyboard Arrow & Hotkey Control
+      document.addEventListener('keydown', (e) => {
+        // Ignore keydowns inside editable fields
+        if (e.target.isContentEditable) return;
+
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+          e.preventDefault();
+          goToSlide(currentSlide + 1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          e.preventDefault();
+          goToSlide(currentSlide - 1);
+        } else if (e.key === 'Home') {
+          goToSlide(1);
+        } else if (e.key === 'End') {
+          goToSlide(TOTAL_SLIDES);
+        } else if (e.key.toLowerCase() === 'f') {
+          btnFullscreen.click();
+        } else if (e.key.toLowerCase() === 'm') {
+          if (gridModal.classList.contains('hidden')) {
+            btnGridView.click();
+          } else {
+            btnCloseGrid.click();
+          }
+        } else if (e.key.toLowerCase() === 's') {
+          sidebarDrawer.classList.toggle('-translate-x-full');
+        } else if (e.key === 'Escape') {
+          gridModal.classList.add('hidden');
+          gridModal.classList.remove('flex');
+          hideHelp();
+        }
+      });
+
+      // Touch / Swipe Navigation Support
+      let touchStartX = 0;
+      let touchEndX = 0;
+      const stage = document.getElementById('presentation-stage');
+
+      stage.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, false);
+
+      stage.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      }, false);
+
+      function handleSwipe() {
+        if (touchEndX < touchStartX - 50) goToSlide(currentSlide + 1);
+        if (touchEndX > touchStartX + 50) goToSlide(currentSlide - 1);
+      }
+
+      // Initial Render
+      goToSlide(1);
+    });
+  </script>
+</body>
+</html>

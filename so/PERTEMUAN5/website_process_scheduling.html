@@ -1,0 +1,1846 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Scheduling - Media Pembelajaran Interaktif Sistem Operasi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Custom scrollbar and dynamic animations */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
+        ::-webkit-scrollbar-thumb { background: rgba(100,116,139,0.4); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(100,116,139,0.6); }
+        
+        .pulse-queue { animation: pulseBorder 2s infinite; }
+        @keyframes pulseBorder {
+            0%, 100% { border-color: rgba(59, 130, 246, 0.4); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+            50% { border-color: rgba(59, 130, 246, 0.9); box-shadow: 0 0 12px 2px rgba(59, 130, 246, 0.3); }
+        }
+
+        .process-chip {
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 font-sans antialiased min-h-screen transition-colors duration-200">
+
+    <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <button id="toggleSidebarMobile" class="lg:hidden p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+                <div class="flex items-center space-x-2">
+                    <span class="bg-blue-600 text-white font-black px-2.5 py-1 rounded-lg text-sm shadow-md">P5</span>
+                    <div>
+                        <h1 class="text-xs font-bold text-blue-600 dark:text-blue-400 tracking-wider uppercase">Sistem Operasi</h1>
+                        <p class="text-sm font-extrabold text-slate-900 dark:text-white leading-none">Process Scheduling</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Tracker -->
+            <div class="hidden md:flex items-center space-x-4 flex-1 max-w-xs mx-6">
+                <div class="w-full">
+                    <div class="flex justify-between text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">
+                        <span>Progress Belajar</span>
+                        <span id="progressText">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
+                        <div id="progressBar" class="bg-gradient-to-r from-blue-500 to-indigo-600 h-full w-0 transition-all duration-500 rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex items-center space-x-3">
+                <button id="themeToggle" class="p-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition">
+                    <i id="themeIcon" class="fa-solid fa-moon text-lg"></i>
+                </button>
+                <a href="#lab" class="hidden sm:inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-lg shadow transition">
+                    <i class="fa-solid fa-flask"></i>
+                    <span>Lab Simulator</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex">
+        
+        <aside id="sidebar" class="fixed lg:sticky top-16 left-0 z-30 w-72 h-[calc(100vh-4rem)] bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 p-4 space-y-1">
+            <div class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">Modul Pembelajaran</div>
+            
+            <nav class="space-y-1 text-sm font-medium" id="navMenu">
+                <a href="#pembuka" class="nav-item active flex items-center justify-between px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                    <span class="flex items-center"><i class="fa-solid fa-circle-play w-6 text-blue-500"></i>1. Halaman Pembuka</span>
+                    <i class="fa-solid fa-check text-xs text-green-500 hidden status-check"></i>
+                </a>
+                <a href="#cerita" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                    <span class="flex items-center"><i class="fa-solid fa-store w-6 text-amber-500"></i>2. Analogi Kasir</span>
+                    <i class="fa-solid fa-check text-xs text-green-500 hidden status-check"></i>
+                </a>
+                <a href="#pertemuan4" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                    <span class="flex items-center"><i class="fa-solid fa-link w-6 text-emerald-500"></i>3. Hubungan P4 vs P5</span>
+                    <i class="fa-solid fa-check text-xs text-green-500 hidden status-check"></i>
+                </a>
+                <a href="#definisi" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                    <span class="flex items-center"><i class="fa-solid fa-book-open w-6 text-purple-500"></i>4. Definisi Scheduling</span>
+                    <i class="fa-solid fa-check text-xs text-green-500 hidden status-check"></i>
+                </a>
+                <a href="#readyqueue" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                    <span class="flex items-center"><i class="fa-solid fa-list-check w-6 text-indigo-500"></i>5. Ready Queue</span>
+                    <i class="fa-solid fa-check text-xs text-green-500 hidden status-check"></i>
+                </a>
+                <a href="#scheduler" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                    <span class="flex items-center"><i class="fa-solid fa-user-gear w-6 text-cyan-500"></i>6. Scheduler</span>
+                    <i class="fa-solid fa-check text-xs text-green-500 hidden status-check"></i>
+                </a>
+                <a href="#fcfs" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                    <span class="flex items-center"><i class="fa-solid fa-arrow-down-1-9 w-6 text-rose-500"></i>7. Algoritma FCFS</span>
+                    <i class="fa-solid fa-check text-xs text-green-500 hidden status-check"></i>
+                </a>
+                <a href="#sjf" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                    <span class="flex items-center"><i class="fa-solid fa-ruler-horizontal w-6 text-orange-500"></i>8. Algoritma SJF</span>
+                    <i class="fa-solid fa-check text-xs text-green-500 hidden status-check"></i>
+                </a>
+                <a href="#roundrobin" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                    <span class="flex items-center"><i class="fa-solid fa-rotate w-6 text-teal-500"></i>9. Algoritma Round Robin</span>
+                    <i class="fa-solid fa-check text-xs text-green-500 hidden status-check"></i>
+                </a>
+                <a href="#preemptive" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                    <span class="flex items-center"><i class="fa-solid fa-hand w-6 text-red-500"></i>10. Preemptive vs Non</span>
+                    <i class="fa-solid fa-check text-xs text-green-500 hidden status-check"></i>
+                </a>
+                <a href="#bursttime" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                    <span class="flex items-center"><i class="fa-solid fa-stopwatch w-6 text-yellow-500"></i>11. Burst Time & Chart</span>
+                    <i class="fa-solid fa-check text-xs text-green-500 hidden status-check"></i>
+                </a>
+                <a href="#rumus" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                    <span class="flex items-center"><i class="fa-solid fa-calculator w-6 text-blue-600"></i>12. Perhitungan & Rumus</span>
+                    <i class="fa-solid fa-check text-xs text-green-500 hidden status-check"></i>
+                </a>
+                <a href="#lab" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 font-bold text-blue-600 dark:text-blue-400">
+                    <span class="flex items-center"><i class="fa-solid fa-microchip w-6 text-blue-600"></i>13. LAB SCHEDULER</span>
+                    <i class="fa-solid fa-check text-xs text-green-500 hidden status-check"></i>
+                </a>
+                <a href="#training" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                    <span class="flex items-center"><i class="fa-solid fa-brain w-6 text-violet-500"></i>14. Training Pemahaman</span>
+                    <i class="fa-solid fa-check text-xs text-green-500 hidden status-check"></i>
+                </a>
+                <a href="#challenge" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                    <span class="flex items-center"><i class="fa-solid fa-trophy w-6 text-amber-500"></i>15. Challenge Scheduler</span>
+                    <i class="fa-solid fa-check text-xs text-green-500 hidden status-check"></i>
+                </a>
+                <a href="#studikasus" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                    <span class="flex items-center"><i class="fa-solid fa-laptop-code w-6 text-pink-500"></i>16. Studi Kasus & Refleksi</span>
+                    <i class="fa-solid fa-check text-xs text-green-500 hidden status-check"></i>
+                </a>
+                <a href="#tugas" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                    <span class="flex items-center"><i class="fa-solid fa-pen-to-square w-6 text-blue-500"></i>17. Tugas & Rangkuman</span>
+                    <i class="fa-solid fa-check text-xs text-green-500 hidden status-check"></i>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <main class="flex-1 py-8 lg:px-8 space-y-16 overflow-x-hidden">
+
+            <section id="pembuka" class="min-h-[85vh] flex flex-col justify-center items-center text-center space-y-6 pt-4 border-b border-slate-200 dark:border-slate-800 pb-12">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full text-xs font-semibold">
+                    <span>SISTEM OPERASI — PERTEMUAN 5</span>
+                </div>
+                <h1 class="text-4xl sm:text-6xl font-black text-slate-900 dark:text-white tracking-tight">
+                    PROCESS SCHEDULING
+                </h1>
+                <p class="text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-400 italic max-w-2xl">
+                    “Siapa yang mendapatkan CPU terlebih dahulu?”
+                </p>
+                <p class="max-w-2xl text-slate-600 dark:text-slate-300 leading-relaxed text-sm sm:text-base">
+                    Dalam sebuah komputer, banyak proses dapat meminta CPU pada waktu yang hampir bersamaan. Sistem operasi harus menentukan proses mana yang mendapatkan kesempatan menggunakan CPU secara efisien.
+                </p>
+
+                <!-- Visual Animation Container -->
+                <div class="w-full max-w-3xl bg-slate-900 text-white p-6 rounded-2xl shadow-2xl space-y-6 my-4 border border-slate-700">
+                    <div class="text-xs font-mono text-slate-400 flex justify-between border-b border-slate-800 pb-2">
+                        <span>VISUALISASI ALUR UTAMA</span>
+                        <span class="text-green-400 animate-pulse">● LIVE CPU PIPELINE</span>
+                    </div>
+
+                    <div id="heroAnimationBox" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                        <!-- Ready Queue -->
+                        <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700 text-center space-y-3">
+                            <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">1. READY QUEUE</span>
+                            <div id="heroQueue" class="flex justify-center space-x-2 min-h-[50px] items-center">
+                                <span class="process-chip bg-blue-600 text-white px-3 py-2 rounded-lg font-mono font-bold text-sm shadow">P1</span>
+                                <span class="process-chip bg-emerald-600 text-white px-3 py-2 rounded-lg font-mono font-bold text-sm shadow">P2</span>
+                                <span class="process-chip bg-purple-600 text-white px-3 py-2 rounded-lg font-mono font-bold text-sm shadow">P3</span>
+                                <span class="process-chip bg-rose-600 text-white px-3 py-2 rounded-lg font-mono font-bold text-sm shadow">P4</span>
+                            </div>
+                        </div>
+
+                        <!-- Scheduler -->
+                        <div class="flex flex-col items-center justify-center p-3">
+                            <i class="fa-solid fa-chevron-right text-slate-500 text-xl hidden md:block my-1"></i>
+                            <i class="fa-solid fa-chevron-down text-slate-500 text-xl md:hidden my-1"></i>
+                            <div class="bg-blue-900/60 border border-blue-500/40 p-3 rounded-xl text-center w-full">
+                                <i class="fa-solid fa-user-gear text-blue-400 text-2xl mb-1"></i>
+                                <div class="text-xs font-bold text-blue-200">SCHEDULER</div>
+                                <div class="text-[10px] text-slate-400">Memilih Algoritma</div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-slate-500 text-xl hidden md:block my-1"></i>
+                            <i class="fa-solid fa-chevron-down text-slate-500 text-xl md:hidden my-1"></i>
+                        </div>
+
+                        <!-- CPU -->
+                        <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700 text-center space-y-3">
+                            <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">2. CPU (RUNNING)</span>
+                            <div id="heroCpu" class="flex justify-center items-center min-h-[50px] bg-slate-950 rounded-lg border border-slate-800 p-2">
+                                <span class="text-xs text-slate-500 italic">Menunggu Proses...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center space-x-3 pt-2">
+                        <button id="btnStartHeroAnim" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-lg hover:shadow-blue-500/25 transition flex items-center space-x-2">
+                            <i class="fa-solid fa-play"></i>
+                            <span>Putar Animasi Alur</span>
+                        </button>
+                    </div>
+                </div>
+
+                <a href="#cerita" class="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-8 py-4 rounded-2xl shadow-xl hover:shadow-blue-500/20 transition transform hover:-translate-y-0.5">
+                    <span>MULAI BELAJAR</span>
+                    <i class="fa-solid fa-arrow-down"></i>
+                </a>
+            </section>
+
+            <section id="cerita" class="space-y-6 pt-8 border-b border-slate-200 dark:border-slate-800 pb-12">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300 font-mono font-bold px-3 py-1 rounded-lg text-sm">BAGIAN 1</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Analogi Sederhana: Antrean Kasir</h2>
+                </div>
+
+                <div class="bg-amber-50/50 dark:bg-slate-800/50 border border-amber-200 dark:border-slate-700 rounded-2xl p-6 space-y-4">
+                    <p class="text-lg font-medium text-slate-800 dark:text-slate-200">
+                        <i class="fa-solid fa-quote-left text-amber-500 mr-2"></i>
+                        Bayangkan ada <strong>satu kasir supermarket</strong> dan banyak pelanggan yang ingin membayar belanjaan mereka.
+                    </p>
+
+                    <!-- Analogi Graphics -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+                        <!-- Kasir Supermarket -->
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-3">
+                            <h3 class="font-bold text-amber-600 dark:text-amber-400 text-sm uppercase tracking-wide flex items-center">
+                                <i class="fa-solid fa-store mr-2"></i> Di Supermarket
+                            </h3>
+                            <div class="flex items-center justify-between bg-slate-50 dark:bg-slate-800 p-3 rounded-lg">
+                                <div class="text-xs">
+                                    <p class="font-semibold text-slate-700 dark:text-slate-300">Pelanggan Menunggu:</p>
+                                    <div class="flex space-x-2 mt-2">
+                                        <span class="bg-slate-200 dark:bg-slate-700 px-2 py-1 rounded text-xs">Ani</span>
+                                        <span class="bg-slate-200 dark:bg-slate-700 px-2 py-1 rounded text-xs">Budi</span>
+                                        <span class="bg-slate-200 dark:bg-slate-700 px-2 py-1 rounded text-xs">Citra</span>
+                                        <span class="bg-slate-200 dark:bg-slate-700 px-2 py-1 rounded text-xs">Doni</span>
+                                    </div>
+                                </div>
+                                <div class="text-center px-4 py-2 bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 rounded-lg border border-amber-300 dark:border-amber-700">
+                                    <i class="fa-solid fa-cash-register text-2xl"></i>
+                                    <div class="text-[10px] font-bold mt-1">KASIR</div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">
+                                Hanya 1 pelanggan yang dilayani pada satu waktu. Siapa yang harus dilayani lebih dulu?
+                            </p>
+                        </div>
+
+                        <!-- Komputer & CPU -->
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-3">
+                            <h3 class="font-bold text-blue-600 dark:text-blue-400 text-sm uppercase tracking-wide flex items-center">
+                                <i class="fa-solid fa-microchip mr-2"></i> Di Dalam Komputer
+                            </h3>
+                            <div class="flex items-center justify-between bg-slate-50 dark:bg-slate-800 p-3 rounded-lg">
+                                <div class="text-xs">
+                                    <p class="font-semibold text-slate-700 dark:text-slate-300">Ready Queue (Proses):</p>
+                                    <div class="flex space-x-2 mt-2">
+                                        <span class="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 px-2 py-1 rounded text-xs font-mono">P1</span>
+                                        <span class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200 px-2 py-1 rounded text-xs font-mono">P2</span>
+                                        <span class="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 px-2 py-1 rounded text-xs font-mono">P3</span>
+                                        <span class="bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-200 px-2 py-1 rounded text-xs font-mono">P4</span>
+                                    </div>
+                                </div>
+                                <div class="text-center px-4 py-2 bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200 rounded-lg border border-blue-300 dark:border-blue-700">
+                                    <i class="fa-solid fa-microchip text-2xl"></i>
+                                    <div class="text-[10px] font-bold mt-1">CPU</div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">
+                                CPU seperti kasir! Banyak proses menunggu, tetapi CPU menjalankan 1 proses pada satu waktu.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Pertanyaan Interaktif 1 -->
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
+                        <p class="font-bold text-slate-900 dark:text-white text-sm flex items-center">
+                            <i class="fa-solid fa-circle-question text-blue-500 mr-2"></i> Pertanyaan Interaktif:
+                        </p>
+                        <p class="text-sm text-slate-700 dark:text-slate-300">
+                            “Kalau P1 datang lebih dulu di antrean, apakah P1 pasti dijalankan lebih dulu oleh CPU?”
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                            <button onclick="checkQuiz1('A')" class="quiz1-btn text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-sm transition">
+                                A. Selalu dijalankan lebih dulu
+                            </button>
+                            <button onclick="checkQuiz1('B')" class="quiz1-btn text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-sm transition">
+                                B. Tergantung aturan scheduling
+                            </button>
+                        </div>
+                        <div id="quiz1Feedback" class="hidden p-4 rounded-lg text-sm font-medium"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="pertemuan4" class="space-y-6 pt-8 border-b border-slate-200 dark:border-slate-800 pb-12">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300 font-mono font-bold px-3 py-1 rounded-lg text-sm">BAGIAN 2</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Hubungan dengan Pertemuan 4</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-slate-100 dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-2.5 py-1 rounded">PERTEMUAN 4</span>
+                            <span class="text-xs font-semibold text-slate-500">Manajemen Proses</span>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-300">
+                            Anda telah mempelajari <strong>Process States</strong> (Keadaan Proses):
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="bg-slate-200 dark:bg-slate-700 text-xs px-2.5 py-1 rounded-md font-mono">NEW</span>
+                            <span class="bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 text-xs px-2.5 py-1 rounded-md font-mono font-bold border border-amber-300 dark:border-amber-700">READY</span>
+                            <span class="bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 text-xs px-2.5 py-1 rounded-md font-mono font-bold border border-emerald-300 dark:border-emerald-700">RUNNING</span>
+                            <span class="bg-slate-200 dark:bg-slate-700 text-xs px-2.5 py-1 rounded-md font-mono">WAITING</span>
+                            <span class="bg-slate-200 dark:bg-slate-700 text-xs px-2.5 py-1 rounded-md font-mono">TERMINATED</span>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 italic pt-2">
+                            Pertemuan 4 fokus pada status dan daur hidup sebuah proses secara garis besar.
+                        </p>
+                    </div>
+
+                    <div class="bg-blue-50 dark:bg-blue-950/40 p-5 rounded-2xl border border-blue-200 dark:border-blue-800/60 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold bg-blue-600 text-white px-2.5 py-1 rounded">PERTEMUAN 5</span>
+                            <span class="text-xs font-semibold text-blue-600 dark:text-blue-400">Process Scheduling</span>
+                        </div>
+                        <p class="text-xs text-slate-700 dark:text-slate-200">
+                            Fokus Pertemuan 5 adalah transisi spesifik:
+                        </p>
+                        <div class="flex items-center justify-center space-x-2 bg-white dark:bg-slate-900 p-3 rounded-xl border border-blue-100 dark:border-slate-700 font-mono text-xs">
+                            <span class="px-2 py-1 bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 rounded font-bold">READY</span>
+                            <i class="fa-solid fa-arrow-right text-blue-500"></i>
+                            <span class="px-2 py-1 bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200 rounded font-bold">SCHEDULER</span>
+                            <i class="fa-solid fa-arrow-right text-blue-500"></i>
+                            <span class="px-2 py-1 bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200 rounded font-bold">RUNNING (CPU)</span>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-300">
+                            <strong>Pertanyaan Kunci:</strong> Jika ada 4 proses berada di status <code>READY</code>, siapa yang berhak masuk ke status <code>RUNNING</code>?
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="definisi" class="space-y-6 pt-8 border-b border-slate-200 dark:border-slate-800 pb-12">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300 font-mono font-bold px-3 py-1 rounded-lg text-sm">BAGIAN 3</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Apa itu Process Scheduling?</h2>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-4">
+                    <div class="p-4 bg-purple-50 dark:bg-purple-950/30 border-l-4 border-purple-500 rounded-r-xl">
+                        <p class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100">
+                            "Process Scheduling adalah mekanisme sistem operasi untuk menentukan proses mana yang berhak mendapatkan giliran menggunakan CPU."
+                        </p>
+                    </div>
+
+                    <h3 class="font-bold text-sm text-slate-700 dark:text-slate-300 pt-2">Contoh Nyata di Laptop / HP Anda:</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                        Saat ini Anda mungkin sedang membuka aplikasi berikut secara bersamaan:
+                    </p>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-4">
+                        <div class="p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center space-x-3">
+                            <i class="fa-brands fa-chrome text-2xl text-red-500"></i>
+                            <div>
+                                <p class="text-xs font-bold">Google Chrome</p>
+                                <p class="text-[10px] text-slate-400">Browsing Web</p>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center space-x-3">
+                            <i class="fa-solid fa-file-word text-2xl text-blue-500"></i>
+                            <div>
+                                <p class="text-xs font-bold">MS Word</p>
+                                <p class="text-[10px] text-slate-400">Ketik Tugas</p>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center space-x-3">
+                            <i class="fa-solid fa-code text-2xl text-sky-500"></i>
+                            <div>
+                                <p class="text-xs font-bold">VS Code</p>
+                                <p class="text-[10px] text-slate-400">Coding Python</p>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center space-x-3">
+                            <i class="fa-brands fa-spotify text-2xl text-emerald-500"></i>
+                            <div>
+                                <p class="text-xs font-bold">Spotify</p>
+                                <p class="text-[10px] text-slate-400">Putar Musik</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-slate-100 dark:bg-slate-900/80 rounded-xl border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                        <strong class="text-blue-600 dark:text-blue-400">Apakah semua aplikasi tersebut mengeksekusi perintah di CPU secara persis bersamaan?</strong><br>
+                        Tidak pada satu inti (core) CPU! CPU berganti-ganti mengeksekusi instruksi dari tiap aplikasi dalam satuan milidetik sehingga tampak seolah-olah berjalan serentak.
+                    </div>
+                </div>
+            </section>
+
+            <section id="readyqueue" class="space-y-6 pt-8 border-b border-slate-200 dark:border-slate-800 pb-12">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 font-mono font-bold px-3 py-1 rounded-lg text-sm">BAGIAN 4</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Ready Queue</h2>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-4">
+                    <p class="text-sm sm:text-base text-slate-700 dark:text-slate-300">
+                        <strong>Ready Queue</strong> adalah tempat penampungan sementara (antrean) bagi proses-proses yang sudah siap dieksekusi oleh CPU.
+                    </p>
+
+                    <!-- Interactive Ready Queue Moving Box -->
+                    <div class="bg-slate-900 p-6 rounded-2xl border border-slate-700 text-white space-y-6 my-4">
+                        <div class="flex justify-between items-center text-xs font-mono text-slate-400 border-b border-slate-800 pb-2">
+                            <span>INTERAKTIF: READY QUEUE MENGIRIM PROSES</span>
+                            <span class="text-indigo-400"><i class="fa-solid fa-list-ol mr-1"></i>ANTREAN MEMORY</span>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                            <!-- Queue container -->
+                            <div class="w-full md:w-2/3 bg-slate-800/90 p-4 rounded-xl border border-slate-700">
+                                <p class="text-xs font-bold text-amber-400 mb-2">READY QUEUE (Antrean)</p>
+                                <div id="readyQueueContainer" class="flex space-x-3 overflow-x-auto p-2 bg-slate-900/80 rounded-lg min-h-[60px] items-center">
+                                    <div id="rq-chrome" class="bg-red-600 text-white font-mono font-bold text-xs px-3 py-2 rounded-lg shadow flex items-center space-x-1">
+                                        <i class="fa-brands fa-chrome"></i><span>CHROME</span>
+                                    </div>
+                                    <div id="rq-word" class="bg-blue-600 text-white font-mono font-bold text-xs px-3 py-2 rounded-lg shadow flex items-center space-x-1">
+                                        <i class="fa-solid fa-file-word"></i><span>WORD</span>
+                                    </div>
+                                    <div id="rq-vscode" class="bg-sky-600 text-white font-mono font-bold text-xs px-3 py-2 rounded-lg shadow flex items-center space-x-1">
+                                        <i class="fa-solid fa-code"></i><span>VSCode</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-xl text-slate-500">
+                                <i class="fa-solid fa-arrow-right hidden md:block"></i>
+                                <i class="fa-solid fa-arrow-down md:hidden"></i>
+                            </div>
+
+                            <!-- CPU box -->
+                            <div class="w-full md:w-1/3 bg-slate-800/90 p-4 rounded-xl border border-slate-700 text-center">
+                                <p class="text-xs font-bold text-emerald-400 mb-2">CPU (EKSEKUSI)</p>
+                                <div id="rqCpuTarget" class="flex items-center justify-center p-3 bg-slate-950 rounded-lg border border-slate-800 min-h-[60px]">
+                                    <span class="text-xs text-slate-500 italic">Kosong</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-center space-x-3 pt-2">
+                            <button id="btnDispatchRQ" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition">
+                                <i class="fa-solid fa-play mr-1"></i> Geser Proses Depan ke CPU
+                            </button>
+                            <button id="btnResetRQ" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition">
+                                Reset Antrean
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Question -->
+                    <div class="p-4 bg-amber-50 dark:bg-slate-900 border border-amber-200 dark:border-slate-700 rounded-xl space-y-2">
+                        <p class="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-200">
+                            <i class="fa-solid fa-circle-question text-amber-500 mr-1"></i> Pertanyaan Cepat:
+                        </p>
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                            "Apakah proses yang berada di Ready Queue sedang rusak / bermasalah?"
+                        </p>
+                        <button onclick="alert('Benar sekali! Proses di Ready Queue dalam kondisi sehat & siap jalan, hanya saja sedang menunggu giliran CPU yang masih dipakai proses lain.')" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow transition">
+                            Lihat Jawaban
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="scheduler" class="space-y-6 pt-8 border-b border-slate-200 dark:border-slate-800 pb-12">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-cyan-100 text-cyan-700 dark:bg-cyan-900/50 dark:text-cyan-300 font-mono font-bold px-3 py-1 rounded-lg text-sm">BAGIAN 5</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Scheduler (Petugas Antrean)</h2>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-4">
+                    <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6 p-4 bg-cyan-50 dark:bg-cyan-950/30 rounded-xl border border-cyan-200 dark:border-cyan-800">
+                        <div class="p-4 bg-cyan-500 text-white rounded-2xl shadow-lg text-3xl">
+                            <i class="fa-solid fa-user-gear"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h3 class="font-bold text-slate-900 dark:text-white text-base">Peran Scheduler</h3>
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                                <strong>Scheduler</strong> adalah komponen Sistem Operasi yang bertindak seperti petugas lalu lintas. Ia bertugas memilih proses mana dari <i>Ready Queue</i> yang dialokasikan ke <i>CPU</i> berdasarkan aturan algoritma.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="fcfs" class="space-y-6 pt-8 border-b border-slate-200 dark:border-slate-800 pb-12">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300 font-mono font-bold px-3 py-1 rounded-lg text-sm">BAGIAN 6</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Algoritma 1 — FCFS (First Come First Serve)</h2>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-4">
+                    <div class="p-4 bg-rose-50 dark:bg-rose-950/30 border-l-4 border-rose-500 rounded-r-xl">
+                        <h3 class="font-bold text-rose-700 dark:text-rose-300 text-base">Prinsip FCFS:</h3>
+                        <p class="text-sm text-slate-700 dark:text-slate-200 mt-1">
+                            “Siapa yang datang lebih dahulu, dilayani lebih dahulu.” Sederhana dan persis seperti antrean loket tiket/bank!
+                        </p>
+                    </div>
+
+                    <!-- Simulasi Sederhana FCFS -->
+                    <div class="bg-slate-900 p-5 rounded-xl text-white space-y-4 border border-slate-700">
+                        <div class="flex justify-between items-center text-xs font-mono text-slate-400">
+                            <span>SIMULASI FCFS ANTREAN</span>
+                            <span class="text-rose-400">P1 (Datang t=0) → P2 (t=1) → P3 (t=2)</span>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                            <div id="fcfsQueueBox" class="flex space-x-2 bg-slate-800 p-3 rounded-lg border border-slate-700 w-full sm:w-1/2 min-h-[50px] items-center">
+                                <span id="fcfs-p1" class="bg-blue-600 px-3 py-1.5 rounded font-mono font-bold text-xs">P1</span>
+                                <span id="fcfs-p2" class="bg-emerald-600 px-3 py-1.5 rounded font-mono font-bold text-xs">P2</span>
+                                <span id="fcfs-p3" class="bg-purple-600 px-3 py-1.5 rounded font-mono font-bold text-xs">P3</span>
+                            </div>
+                            <div class="text-slate-500"><i class="fa-solid fa-arrow-right"></i></div>
+                            <div id="fcfsCpuBox" class="bg-slate-950 p-3 rounded-lg border border-slate-800 w-full sm:w-1/2 min-h-[50px] flex items-center justify-center font-mono text-xs">
+                                <span class="text-slate-500 italic">CPU Idle</span>
+                            </div>
+                        </div>
+
+                        <div id="fcfsStatusText" class="text-xs text-amber-300 font-mono min-h-[20px]">
+                            Klik "Jalankan FCFS" untuk melihat urutan eksekusi.
+                        </div>
+
+                        <div class="flex space-x-3">
+                            <button id="btnRunFcfsDemo" class="bg-rose-600 hover:bg-rose-500 text-white px-4 py-2 rounded-lg text-xs font-bold transition">
+                                <i class="fa-solid fa-play mr-1"></i> JALANKAN FCFS
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Latihan Tanpa Rumus FCFS -->
+                    <div class="bg-slate-50 dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
+                        <h4 class="font-bold text-xs uppercase text-slate-500 tracking-wider">Latihan Cepat FCFS (Tanpa Rumus)</h4>
+                        <p class="text-sm text-slate-800 dark:text-slate-200">
+                            Urutan kedatangan proses: <strong>P1 $\rightarrow$ P2 $\rightarrow$ P3</strong>. Siapa yang mendapatkan CPU paling pertama?
+                        </p>
+                        <div class="flex space-x-3">
+                            <button onclick="checkFcfsPractice('P1')" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 px-4 py-2 rounded-lg text-xs font-bold hover:bg-blue-50 dark:hover:bg-blue-900/30">P1</button>
+                            <button onclick="checkFcfsPractice('P2')" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 px-4 py-2 rounded-lg text-xs font-bold hover:bg-blue-50 dark:hover:bg-blue-900/30">P2</button>
+                            <button onclick="checkFcfsPractice('P3')" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 px-4 py-2 rounded-lg text-xs font-bold hover:bg-blue-50 dark:hover:bg-blue-900/30">P3</button>
+                        </div>
+                        <div id="fcfsPracticeFeedback" class="hidden text-xs font-semibold p-2 rounded"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sjf" class="space-y-6 pt-8 border-b border-slate-200 dark:border-slate-800 pb-12">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-300 font-mono font-bold px-3 py-1 rounded-lg text-sm">BAGIAN 7</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Algoritma 2 — SJF (Shortest Job First)</h2>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-4">
+                    <div class="p-4 bg-orange-50 dark:bg-orange-950/30 border-l-4 border-orange-500 rounded-r-xl">
+                        <h3 class="font-bold text-orange-700 dark:text-orange-300 text-base">Prinsip SJF:</h3>
+                        <p class="text-sm text-slate-700 dark:text-slate-200 mt-1">
+                            “Proses dengan waktu pekerjaan CPU (Burst Time) paling pendek diprioritaskan terlebih dahulu.”
+                        </p>
+                    </div>
+
+                    <!-- Visual Comparison Bars -->
+                    <div class="bg-slate-900 p-5 rounded-xl text-white space-y-4 border border-slate-700">
+                        <p class="text-xs font-mono text-slate-400">CONTOH DURASI PEKERJAAN (BURST TIME):</p>
+
+                        <div class="space-y-2">
+                            <div class="flex items-center space-x-3">
+                                <span class="w-8 font-mono text-xs text-slate-300">P1</span>
+                                <div class="bg-rose-500 h-6 rounded px-2 text-xs flex items-center font-bold" style="width: 80%;">8 detik</div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="w-8 font-mono text-xs text-slate-300">P2</span>
+                                <div class="bg-emerald-500 h-6 rounded px-2 text-xs flex items-center font-bold" style="width: 30%;">3 detik (Terpendek!)</div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="w-8 font-mono text-xs text-slate-300">P3</span>
+                                <div class="bg-purple-500 h-6 rounded px-2 text-xs flex items-center font-bold" style="width: 50%;">5 detik</div>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-slate-800 rounded-lg border border-slate-700 text-xs text-amber-300">
+                            <strong>Hasil Urutan Eksekusi SJF:</strong> P2 (3s) $\rightarrow$ P3 (5s) $\rightarrow$ P1 (8s)
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-amber-50 dark:bg-slate-900 border border-amber-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                        <i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> <strong>Analogi Fotokopi:</strong> Di tempat fotokopi, orang yang hanya akan fotokopi 2 lembar dipersilakan maju duluan daripada orang yang sedang fotokopi 100 lembar buku.
+                    </div>
+                </div>
+            </section>
+
+            <section id="roundrobin" class="space-y-6 pt-8 border-b border-slate-200 dark:border-slate-800 pb-12">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-teal-100 text-teal-700 dark:bg-teal-900/50 dark:text-teal-300 font-mono font-bold px-3 py-1 rounded-lg text-sm">BAGIAN 8</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Algoritma 3 — Round Robin (RR)</h2>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-4">
+                    <div class="p-4 bg-teal-50 dark:bg-teal-950/30 border-l-4 border-teal-500 rounded-r-xl">
+                        <h3 class="font-bold text-teal-700 dark:text-teal-300 text-base">Prinsip Round Robin:</h3>
+                        <p class="text-sm text-slate-700 dark:text-slate-200 mt-1">
+                            Setiap proses diberikan jatah waktu CPU yang sama secara bergiliran. Jatah waktu ini disebut <strong>Time Quantum</strong>.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+                        <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
+                            <h4 class="font-bold text-xs text-teal-600 uppercase">Analogi Mikrofon Rapat</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-300">
+                                4 Mahasiswa ingin berbicara dengan 1 mikrofon. Agar adil, tiap orang hanya boleh bicara 2 menit (Time Quantum = 2 min). Jika belum selesai bicara, mikrofon harus digilir ke orang berikutnya!
+                            </p>
+                        </div>
+                        <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
+                            <h4 class="font-bold text-xs text-teal-600 uppercase">Perilaku di CPU</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-300">
+                                Jika Time Quantum habis dan proses belum selesai, proses dihentikan sementara (preempted) dan dipindahkan kembali ke **belakang Ready Queue**.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="preemptive" class="space-y-6 pt-8 border-b border-slate-200 dark:border-slate-800 pb-12">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300 font-mono font-bold px-3 py-1 rounded-lg text-sm">BAGIAN 9</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Preemptive vs Non-Preemptive</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Non-preemptive -->
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3">
+                        <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-md">NON-PREEMPTIVE</span>
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white">Tidak Bisa Diinterupsi</h3>
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                            Sekali CPU diberikan kepada suatu proses, proses tersebut akan memegang CPU sampai tugasnya **selesai sepenuhnya** atau melakukan I/O request.
+                        </p>
+                        <div class="p-3 bg-slate-100 dark:bg-slate-900 rounded-lg text-xs font-mono text-slate-600 dark:text-slate-400">
+                            Contoh: FCFS, SJF Standar
+                        </div>
+                    </div>
+
+                    <!-- Preemptive -->
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3">
+                        <span class="bg-red-100 text-red-800 text-xs font-bold px-2.5 py-1 rounded-md">PREEMPTIVE</span>
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white">Dapat Diinterupsi Paket Waktu</h3>
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                            Sistem Operasi dapat menyela proses yang sedang berjalan di CPU di tengah jalan jika waktunya (quantum) habis atau ada proses baru berkategori prioritas lebih tinggi.
+                        </p>
+                        <div class="p-3 bg-slate-100 dark:bg-slate-900 rounded-lg text-xs font-mono text-slate-600 dark:text-slate-400">
+                            Contoh: Round Robin, SRTF
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="bursttime" class="space-y-6 pt-8 border-b border-slate-200 dark:border-slate-800 pb-12">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300 font-mono font-bold px-3 py-1 rounded-lg text-sm">BAGIAN 10</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Istilah Penting: Burst Time & Gantt Chart</h2>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1">
+                            <h4 class="font-bold text-sm text-amber-600"><i class="fa-solid fa-stopwatch mr-1"></i> Burst Time (BT)</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-300">
+                                Total durasi waktu eksekusi CPU yang dibutuhkan oleh suatu proses untuk menyelesaikan tugasnya (biasanya dihitung dalam milidetik/ms).
+                            </p>
+                        </div>
+                        <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1">
+                            <h4 class="font-bold text-sm text-blue-600"><i class="fa-solid fa-chart-gantt mr-1"></i> Gantt Chart</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-300">
+                                Diagram batang horizontal garis waktu yang menggambarkan urutan serta durasi proses yang sedang menempati CPU dari detik ke detik.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Example Gantt Chart Visualization -->
+                    <div class="space-y-2">
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Contoh Diagram Gantt (FCFS: P1=5ms, P2=3ms, P3=2ms):</p>
+                        
+                        <div class="bg-slate-900 p-4 rounded-xl overflow-x-auto border border-slate-700">
+                            <div class="flex min-w-[320px]">
+                                <!-- P1 -->
+                                <div class="bg-blue-600 text-white font-mono text-center text-xs py-3 border-r border-slate-900 font-bold" style="width: 50%;">
+                                    P1 (5ms)
+                                </div>
+                                <!-- P2 -->
+                                <div class="bg-emerald-600 text-white font-mono text-center text-xs py-3 border-r border-slate-900 font-bold" style="width: 30%;">
+                                    P2 (3ms)
+                                </div>
+                                <!-- P3 -->
+                                <div class="bg-purple-600 text-white font-mono text-center text-xs py-3 font-bold" style="width: 20%;">
+                                    P3 (2ms)
+                                </div>
+                            </div>
+                            <!-- Time Axis -->
+                            <div class="flex text-[10px] font-mono text-slate-400 mt-1 min-w-[320px] justify-between px-1">
+                                <span>0</span>
+                                <span style="margin-left: 40%;">5</span>
+                                <span style="margin-left: 20%;">8</span>
+                                <span>10</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="rumus" class="space-y-6 pt-8 border-b border-slate-200 dark:border-slate-800 pb-12">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 font-mono font-bold px-3 py-1 rounded-lg text-sm">BAGIAN 11</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Perhitungan & Rumus Dasar</h2>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Turnaround Time -->
+                        <div class="p-5 bg-blue-50 dark:bg-blue-950/40 rounded-xl border border-blue-200 dark:border-blue-800 space-y-2">
+                            <span class="text-xs font-extrabold text-blue-600 dark:text-blue-400 uppercase">TURNAROUND TIME (TAT)</span>
+                            <div class="p-3 bg-white dark:bg-slate-900 font-mono font-bold text-sm text-slate-800 dark:text-slate-100 rounded border border-blue-100 dark:border-slate-700">
+                                TAT = Completion Time (CT) - Arrival Time (AT)
+                            </div>
+                            <p class="text-xs text-slate-600 dark:text-slate-300">
+                                Total waktu interval dari saat proses pertama kali **datang (AT)** sampai proses **selesai total (CT)**.
+                            </p>
+                        </div>
+
+                        <!-- Waiting Time -->
+                        <div class="p-5 bg-indigo-50 dark:bg-indigo-950/40 rounded-xl border border-indigo-200 dark:border-indigo-800 space-y-2">
+                            <span class="text-xs font-extrabold text-indigo-600 dark:text-indigo-400 uppercase">WAITING TIME (WT)</span>
+                            <div class="p-3 bg-white dark:bg-slate-900 font-mono font-bold text-sm text-slate-800 dark:text-slate-100 rounded border border-indigo-100 dark:border-slate-700">
+                                WT = Turnaround Time (TAT) - Burst Time (BT)
+                            </div>
+                            <p class="text-xs text-slate-600 dark:text-slate-300">
+                                Durasi total yang dihabiskan oleh proses hanya untuk **menunggu di antrean** sebelum dilayani CPU.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Step-by-step Calculation Walkthrough -->
+                    <div class="bg-slate-900 p-6 rounded-2xl text-white space-y-4 border border-slate-700">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="text-xs font-mono font-bold text-blue-400">PANDUAN PERHITUNGAN BERTAHAP (FCFS)</span>
+                            <span class="text-xs font-mono text-slate-400">Langkah <span id="walkthroughStepNum">1</span> dari 4</span>
+                        </div>
+
+                        <div id="walkthroughContent" class="min-h-[120px] space-y-3">
+                            <!-- Dynamic walkthrough injected by JS -->
+                        </div>
+
+                        <div class="flex justify-between items-center pt-3 border-t border-slate-800">
+                            <button id="btnPrevStep" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-bold transition disabled:opacity-50">
+                                <i class="fa-solid fa-chevron-left mr-1"></i> Sebelumnya
+                            </button>
+                            <button id="btnNextStep" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-xs font-bold transition">
+                                Selanjutnya <i class="fa-solid fa-chevron-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="lab" class="space-y-6 pt-8 border-b border-slate-200 dark:border-slate-800 pb-12">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-blue-600 text-white font-mono font-bold px-3 py-1 rounded-lg text-sm shadow">BAGIAN 12</span>
+                    <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">LABORATORIUM PROCESS SCHEDULING</h2>
+                </div>
+
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                    Uji coba berbagai kombinasi Arrival Time, Burst Time, dan Algoritma. Simulasi akan menghasilkan **Gantt Chart otomatis** beserta seluruh tabel kalkulasi $CT, TAT, WT, \text{Average}$.
+                </p>
+
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden">
+                    <div class="bg-slate-900 p-4 border-b border-slate-700 flex flex-wrap items-center justify-between gap-3 text-white">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-flask text-blue-400 text-lg"></i>
+                            <span class="font-bold text-sm tracking-wide">SIMULATOR SCHEDULER UTAMA</span>
+                        </div>
+                        <!-- Controls -->
+                        <div class="flex items-center space-x-2">
+                            <button id="btnAddProcess" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center space-x-1">
+                                <i class="fa-solid fa-plus"></i><span>Tambah Proses</span>
+                            </button>
+                            <button id="btnResetLab" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+                                <i class="fa-solid fa-rotate-left"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-6 space-y-6">
+                        <!-- Input Configuration Grid -->
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            
+                            <!-- Process Input Table -->
+                            <div class="lg:col-span-2 space-y-3">
+                                <h3 class="font-bold text-xs uppercase text-slate-500 tracking-wider flex items-center">
+                                    <i class="fa-solid fa-table mr-2"></i> Daftar Proses Masukan
+                                </h3>
+                                <div class="overflow-x-auto border border-slate-200 dark:border-slate-700 rounded-xl">
+                                    <table class="w-full text-xs text-left">
+                                        <thead class="bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-700">
+                                            <tr>
+                                                <th class="p-3">Proses</th>
+                                                <th class="p-3">Arrival Time (AT)</th>
+                                                <th class="p-3">Burst Time (BT)</th>
+                                                <th class="p-3 text-center">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="labProcessTableBody" class="divide-y divide-slate-200 dark:divide-slate-700">
+                                            <!-- Dynamically populated rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Algorithm & Settings Selector -->
+                            <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-4">
+                                <h3 class="font-bold text-xs uppercase text-slate-500 tracking-wider">
+                                    <i class="fa-solid fa-sliders mr-2"></i> Pengaturan Algoritma
+                                </h3>
+
+                                <div class="space-y-2">
+                                    <label class="text-xs font-bold text-slate-700 dark:text-slate-300 block">Pilih Algoritma:</label>
+                                    <select id="labAlgoSelect" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-xs font-semibold focus:ring-2 focus:ring-blue-500">
+                                        <option value="FCFS">First Come First Serve (FCFS)</option>
+                                        <option value="SJF">Shortest Job First (SJF - Non Preemptive)</option>
+                                        <option value="RR">Round Robin (RR)</option>
+                                    </select>
+                                </div>
+
+                                <div id="labQuantumContainer" class="space-y-2 hidden">
+                                    <label class="text-xs font-bold text-slate-700 dark:text-slate-300 block">Time Quantum (ms):</label>
+                                    <input id="labQuantumInput" type="number" min="1" max="10" value="2" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-xs font-mono font-bold">
+                                </div>
+
+                                <!-- Guess Mode Checkbox -->
+                                <div class="p-3 bg-amber-50 dark:bg-slate-800 rounded-lg border border-amber-200 dark:border-slate-700 space-y-2">
+                                    <label class="flex items-center space-x-2 text-xs font-bold text-amber-800 dark:text-amber-300 cursor-pointer">
+                                        <input type="checkbox" id="chkGuessMode" class="rounded text-amber-600 focus:ring-amber-500">
+                                        <span>Aktifkan Mode "Tebak Dulu"</span>
+                                    </label>
+                                    <p class="text-[10px] text-slate-500">
+                                        Sistem akan meminta Anda menebak urutan pertama sebelum simulasi berjalan.
+                                    </p>
+                                </div>
+
+                                <button id="btnRunLabSimulation" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition flex items-center justify-center space-x-2 text-xs">
+                                    <i class="fa-solid fa-play"></i>
+                                    <span>JALANKAN SIMULASI & HITUNG</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Guess Modal Box (If active) -->
+                        <div id="guessBox" class="hidden p-4 bg-amber-50 dark:bg-slate-900 border-2 border-amber-400 rounded-xl space-y-3">
+                            <p class="font-bold text-xs text-amber-800 dark:text-amber-300">
+                                <i class="fa-solid fa-brain mr-1"></i> Mode Tebak Dulu: Menurut Anda, proses manakah yang pertama kali mendapatkan CPU?
+                            </p>
+                            <div id="guessOptionsContainer" class="flex flex-wrap gap-2"></div>
+                            <div id="guessFeedback" class="hidden text-xs font-bold p-2 rounded"></div>
+                        </div>
+
+                        <!-- Simulation Results Container -->
+                        <div id="labResultContainer" class="space-y-6 pt-4 border-t border-slate-200 dark:border-slate-700">
+                            
+                            <!-- Gantt Chart Render Area -->
+                            <div class="space-y-2">
+                                <h4 class="font-bold text-xs text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center">
+                                    <i class="fa-solid fa-chart-gantt mr-2 text-blue-500"></i> Hasil Gantt Chart Dinamis:
+                                </h4>
+                                <div id="ganttChartArea" class="bg-slate-900 p-4 rounded-xl border border-slate-700 overflow-x-auto min-h-[90px] flex flex-col justify-center">
+                                    <!-- Rendered bars -->
+                                </div>
+                            </div>
+
+                            <!-- Calculations Table -->
+                            <div class="space-y-2">
+                                <h4 class="font-bold text-xs text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center">
+                                    <i class="fa-solid fa-calculator mr-2 text-emerald-500"></i> Tabel Hasil Perhitungan Waktu:
+                                </h4>
+                                <div class="overflow-x-auto border border-slate-200 dark:border-slate-700 rounded-xl">
+                                    <table class="w-full text-xs text-left">
+                                        <thead class="bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-700">
+                                            <tr>
+                                                <th class="p-3">Proses</th>
+                                                <th class="p-3">Arrival Time (AT)</th>
+                                                <th class="p-3">Burst Time (BT)</th>
+                                                <th class="p-3">Completion Time (CT)</th>
+                                                <th class="p-3">Turnaround Time (TAT = CT - AT)</th>
+                                                <th class="p-3">Waiting Time (WT = TAT - BT)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="labCalcTableBody" class="divide-y divide-slate-200 dark:divide-slate-700 font-mono">
+                                            <!-- Dynamically computed rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Average Metrics Summary Cards -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="p-4 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl border border-emerald-200 dark:border-emerald-800 flex justify-between items-center">
+                                    <div>
+                                        <p class="text-[10px] font-bold text-emerald-600 uppercase">Average Waiting Time (AWT)</p>
+                                        <p id="lblAvgWT" class="text-xl font-mono font-black text-emerald-700 dark:text-emerald-300">0.00 ms</p>
+                                    </div>
+                                    <i class="fa-solid fa-clock text-2xl text-emerald-400"></i>
+                                </div>
+                                <div class="p-4 bg-blue-50 dark:bg-blue-950/40 rounded-xl border border-blue-200 dark:border-blue-800 flex justify-between items-center">
+                                    <div>
+                                        <p class="text-[10px] font-bold text-blue-600 uppercase">Average Turnaround Time (ATT)</p>
+                                        <p id="lblAvgTAT" class="text-xl font-mono font-black text-blue-700 dark:text-blue-300">0.00 ms</p>
+                                    </div>
+                                    <i class="fa-solid fa-hourglass-half text-2xl text-blue-400"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="training" class="space-y-6 pt-8 border-b border-slate-200 dark:border-slate-800 pb-12">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-violet-100 text-violet-700 dark:bg-violet-900/50 dark:text-violet-300 font-mono font-bold px-3 py-1 rounded-lg text-sm">BAGIAN 13</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Training Pemahaman Concepts</h2>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                    <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-700 pb-4">
+                        <div>
+                            <h3 class="font-bold text-base text-slate-900 dark:text-white">Uji Pemahaman Teori & Logika</h3>
+                            <p class="text-xs text-slate-500">Jawab pertanyaan berikut untuk memverifikasi pemahaman Anda.</p>
+                        </div>
+                        <span id="quizScoreBadge" class="bg-violet-600 text-white font-mono font-bold text-xs px-3 py-1.5 rounded-full">Skor: 0</span>
+                    </div>
+
+                    <div id="quizContainer" class="space-y-6">
+                        <!-- Dynamically populated 10 questions -->
+                    </div>
+                </div>
+            </section>
+
+            <section id="challenge" class="space-y-6 pt-8 border-b border-slate-200 dark:border-slate-800 pb-12">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-amber-500 text-white font-mono font-bold px-3 py-1 rounded-lg text-sm shadow">BAGIAN 14</span>
+                    <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">CHALLENGE — "JADI SCHEDULER"</h2>
+                </div>
+
+                <div class="bg-gradient-to-br from-slate-900 to-indigo-950 text-white p-6 rounded-2xl border border-slate-700 shadow-2xl space-y-6">
+                    <div class="flex items-center space-x-3 border-b border-slate-800 pb-4">
+                        <i class="fa-solid fa-trophy text-amber-400 text-3xl"></i>
+                        <div>
+                            <h3 class="font-bold text-lg text-amber-300">Tantangan Mandiri Scheduler CPU</h3>
+                            <p class="text-xs text-slate-400">Anda bertindak sebagai OS Scheduler. Tentukan urutan dan hitung metriknya!</p>
+                        </div>
+                    </div>
+
+                    <!-- Challenge Problem Setup -->
+                    <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700 space-y-3 text-xs">
+                        <p class="font-bold text-slate-200">Diberikan 4 Proses berikut (SJF Non-Preemptive, Semua AT = 0):</p>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono">
+                            <div class="bg-slate-900 p-2 rounded border border-slate-700">P1 = 6 ms</div>
+                            <div class="bg-slate-900 p-2 rounded border border-slate-700">P2 = 2 ms</div>
+                            <div class="bg-slate-900 p-2 rounded border border-slate-700">P3 = 4 ms</div>
+                            <div class="bg-slate-900 p-2 rounded border border-slate-700">P4 = 3 ms</div>
+                        </div>
+                    </div>
+
+                    <!-- User Answers Inputs -->
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-300 block">1. Urutan Eksekusi Proses yang Benar (SJF):</label>
+                            <input id="chOrderInput" type="text" placeholder="Contoh: P2-P4-P3-P1" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs font-mono text-white focus:ring-2 focus:ring-amber-500">
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-slate-300 block">2. Average Waiting Time (AWT) (ms):</label>
+                                <input id="chAwtInput" type="number" step="0.01" placeholder="Masukkan nilai AWT" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs font-mono text-white">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-slate-300 block">3. Average Turnaround Time (ATT) (ms):</label>
+                                <input id="chAttInput" type="number" step="0.01" placeholder="Masukkan nilai ATT" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs font-mono text-white">
+                            </div>
+                        </div>
+
+                        <button id="btnSubmitChallenge" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 font-extrabold py-3 px-4 rounded-xl shadow-lg transition">
+                            KIRIM JAWABAN & HITUNG SKOR
+                        </button>
+                    </div>
+
+                    <!-- Result Breakdown Box -->
+                    <div id="chResultBox" class="hidden p-4 bg-slate-800 rounded-xl border border-slate-700 space-y-3">
+                        <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                            <span class="font-bold text-xs text-amber-300">TOTAL SKOR TANTANGAN:</span>
+                            <span id="chFinalScore" class="font-mono text-2xl font-black text-amber-400">0 / 100</span>
+                        </div>
+                        <div id="chFeedbackText" class="text-xs text-slate-300 leading-relaxed"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="studikasus" class="space-y-6 pt-8 border-b border-slate-200 dark:border-slate-800 pb-12">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-pink-100 text-pink-700 dark:bg-pink-900/50 dark:text-pink-300 font-mono font-bold px-3 py-1 rounded-lg text-sm">BAGIAN 15</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Studi Kasus & Refleksi</h2>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                    <div class="p-4 bg-pink-50 dark:bg-pink-950/30 rounded-xl border border-pink-200 dark:border-pink-800 space-y-2">
+                        <h3 class="font-bold text-sm text-pink-700 dark:text-pink-300"><i class="fa-solid fa-laptop-code mr-1"></i> Kasus Nyata Laptop Mahasiswa</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-300">
+                            Saat menyusun skripsi, Anda membuka Chrome (10 tab), MS Word, Spotify, dan WhatsApp Desktop secara bersamaan. Mengapa lagu Spotify tidak tersendat walau Chrome sedang memuat halaman berat?
+                        </p>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h4 class="font-bold text-xs text-slate-500 uppercase tracking-wider">Refleksi Pemahaman (Klik untuk Jawaban):</h4>
+
+                        <div class="space-y-2">
+                            <details class="bg-slate-50 dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-700 text-xs">
+                                <summary class="font-bold cursor-pointer text-slate-800 dark:text-slate-200">1. Apa fungsi utama Ready Queue?</summary>
+                                <p class="mt-2 text-slate-600 dark:text-slate-400 pl-4 border-l-2 border-blue-500">
+                                    Menampung proses-proses yang dalam kondisi sehat dan siap dieksekusi CPU, menunggu giliran alokasi.
+                                </p>
+                            </details>
+
+                            <details class="bg-slate-50 dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-700 text-xs">
+                                <summary class="font-bold cursor-pointer text-slate-800 dark:text-slate-200">2. Mengapa Round Robin menggunakan Time Quantum?</summary>
+                                <p class="mt-2 text-slate-600 dark:text-slate-400 pl-4 border-l-2 border-blue-500">
+                                    Agar tidak ada satu proses pun yang memonopoli CPU dalam waktu lama, menjaga sifat responsif pada sistem *multitasking*.
+                                </p>
+                            </details>
+
+                            <details class="bg-slate-50 dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-700 text-xs">
+                                <summary class="font-bold cursor-pointer text-slate-800 dark:text-slate-200">3. Apa bedanya Waiting Time dan Turnaround Time?</summary>
+                                <p class="mt-2 text-slate-600 dark:text-slate-400 pl-4 border-l-2 border-blue-500">
+                                    Waiting Time murni waktu **menunggu di antrean**, sedangkan Turnaround Time adalah **total waktu dari datang hingga selesai diproses**.
+                                </p>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tugas" class="space-y-6 pt-8 pb-16">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-blue-600 text-white font-mono font-bold px-3 py-1 rounded-lg text-sm shadow">BAGIAN 16</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Tugas Pertemuan 5 & Rangkuman</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Task Assignment Box -->
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-4 shadow-sm">
+                        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-3">
+                            <h3 class="font-bold text-sm text-blue-600 dark:text-blue-400 flex items-center">
+                                <i class="fa-solid fa-pen-to-square mr-2"></i> TUGAS ANALISIS PROCESS SCHEDULING
+                            </h3>
+                            <span class="text-[10px] bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded">SPARING</span>
+                        </div>
+
+                        <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-lg text-xs font-mono space-y-1">
+                            <p class="font-bold text-slate-700 dark:text-slate-300">Data Soal Tugas Mandiri:</p>
+                            <p>P1 | AT = 0 | BT = 5</p>
+                            <p>P2 | AT = 1 | BT = 3</p>
+                            <p>P3 | AT = 2 | BT = 2</p>
+                            <p>P4 | AT = 3 | BT = 4</p>
+                        </div>
+
+                        <ol class="text-xs text-slate-600 dark:text-slate-300 list-decimal pl-4 space-y-1">
+                            <li>Hitung urutan FCFS & SJF Non-Preemptive.</li>
+                            <li>Gambarkan Gantt Chart kedua algoritma.</li>
+                            <li>Hitung Completion Time, TAT, WT, AWT, dan ATT.</li>
+                            <li>Bandingkan algoritma mana yang memiliki AWT lebih singkat.</li>
+                            <li>Kumpulkan PDF laporan di portal SPARING.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Simple Summary Box -->
+                    <div class="bg-slate-900 text-white p-6 rounded-2xl border border-slate-700 space-y-4 shadow-xl">
+                        <h3 class="font-bold text-sm text-emerald-400 flex items-center border-b border-slate-800 pb-3">
+                            <i class="fa-solid fa-list-check mr-2"></i> RANGKUMAN PALING SEDERHANA
+                        </h3>
+
+                        <div class="flex items-center space-x-2 text-xs font-mono text-slate-300 overflow-x-auto py-2">
+                            <span class="bg-slate-800 px-2 py-1 rounded">Banyak Proses</span>
+                            <i class="fa-solid fa-arrow-right text-slate-500"></i>
+                            <span class="bg-amber-900/60 text-amber-300 px-2 py-1 rounded">Ready Queue</span>
+                            <i class="fa-solid fa-arrow-right text-slate-500"></i>
+                            <span class="bg-blue-900/60 text-blue-300 px-2 py-1 rounded">Scheduler</span>
+                            <i class="fa-solid fa-arrow-right text-slate-500"></i>
+                            <span class="bg-emerald-900/60 text-emerald-300 px-2 py-1 rounded">CPU</span>
+                        </div>
+
+                        <div class="space-y-2 text-xs">
+                            <p><strong class="text-rose-400">FCFS:</strong> Datang dulu $\rightarrow$ Jalan dulu</p>
+                            <p><strong class="text-orange-400">SJF:</strong> Paling pendek $\rightarrow$ Jalan dulu</p>
+                            <p><strong class="text-teal-400">Round Robin:</strong> Bergiliran sesuai Time Quantum</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // Global Application State
+        const state = {
+            progress: 0,
+            completedSections: new Set(),
+            theme: 'light',
+            
+            // Lab processes
+            labProcesses: [
+                { id: 'P1', at: 0, bt: 5 },
+                { id: 'P2', at: 1, bt: 3 },
+                { id: 'P3', at: 2, bt: 2 }
+            ],
+
+            // Walkthrough step index
+            walkstep: 0,
+
+            // Quiz score
+            quizScore: 0
+        };
+
+        // Walkthrough steps data
+        const walkthroughSteps = [
+            {
+                num: 1,
+                title: "Langkah 1: Menentukan Urutan Kedatangan (FCFS)",
+                desc: "Lihat Arrival Time (AT). P1 datang t=0, P2 datang t=1, P3 datang t=2.<br>Maka urutan eksekusi CPU adalah: <strong>P1 &rarr; P2 &rarr; P3</strong>."
+            },
+            {
+                num: 2,
+                title: "Langkah 2: Menggambar Gantt Chart",
+                desc: "P1 berjalan 0 s.d 5 (5ms).<br>P2 berjalan 5 s.d 8 (3ms).<br>P3 berjalan 8 s.d 10 (2ms)."
+            },
+            {
+                num: 3,
+                title: "Langkah 3: Menghitung Completion Time (CT)",
+                desc: "CT P1 = 5ms<br>CT P2 = 8ms<br>CT P3 = 10ms"
+            },
+            {
+                num: 4,
+                title: "Langkah 4: Menghitung Turnaround Time & Waiting Time",
+                desc: "<strong>P1:</strong> TAT = 5-0 = 5, WT = 5-5 = 0<br><strong>P2:</strong> TAT = 8-1 = 7, WT = 7-3 = 4<br><strong>P3:</strong> TAT = 10-2 = 8, WT = 8-2 = 6<br><br><strong>Rata-rata WT (AWT)</strong> = (0 + 4 + 6) / 3 = <strong>3.33 ms</strong>"
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            initSidebar();
+            initHeroAnimation();
+            initReadyQueueDemo();
+            initFcfsDemo();
+            initWalkthrough();
+            initLab();
+            initQuiz();
+            initChallenge();
+            initScrollObserver();
+        });
+
+        // Theme Switcher
+        function initTheme() {
+            const themeBtn = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+
+            themeBtn.addEventListener('click', () => {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    themeIcon.className = 'fa-solid fa-moon text-lg';
+                    state.theme = 'light';
+                } else {
+                    document.documentElement.classList.add('dark');
+                    themeIcon.className = 'fa-solid fa-sun text-lg text-amber-400';
+                    state.theme = 'dark';
+                }
+            });
+        }
+
+        // Sidebar mobile toggle
+        function initSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = document.getElementById('toggleSidebarMobile');
+
+            toggleBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
+        }
+
+        // Scroll observer for progress tracking
+        function initScrollObserver() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-item');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.id;
+                        state.completedSections.add(id);
+
+                        // Highlight active nav
+                        navLinks.forEach(link => {
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('bg-blue-50', 'dark:bg-slate-700', 'font-bold');
+                            } else {
+                                link.classList.remove('bg-blue-50', 'dark:bg-slate-700', 'font-bold');
+                            }
+                        });
+
+                        updateProgressBar();
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            sections.forEach(sec => observer.observe(sec));
+        }
+
+        function updateProgressBar() {
+            const total = 17;
+            const current = state.completedSections.size;
+            const pct = Math.min(100, Math.round((current / total) * 100));
+            document.getElementById('progressBar').style.width = `${pct}%`;
+            document.getElementById('progressText').innerText = `${pct}%`;
+        }
+
+        // Section 1 Hero Animation
+        function initHeroAnimation() {
+            const btn = document.getElementById('btnStartHeroAnim');
+            const queue = document.getElementById('heroQueue');
+            const cpu = document.getElementById('heroCpu');
+
+            btn.addEventListener('click', async () => {
+                btn.disabled = true;
+                queue.innerHTML = `
+                    <span class="process-chip bg-blue-600 text-white px-3 py-2 rounded-lg font-mono font-bold text-sm">P1</span>
+                    <span class="process-chip bg-emerald-600 text-white px-3 py-2 rounded-lg font-mono font-bold text-sm">P2</span>
+                    <span class="process-chip bg-purple-600 text-white px-3 py-2 rounded-lg font-mono font-bold text-sm">P3</span>
+                    <span class="process-chip bg-rose-600 text-white px-3 py-2 rounded-lg font-mono font-bold text-sm">P4</span>
+                `;
+                cpu.innerHTML = `<span class="text-xs text-slate-500 italic">Menunggu...</span>`;
+
+                const processes = Array.from(queue.children);
+
+                for (let proc of processes) {
+                    await new Promise(r => setTimeout(r, 800));
+                    proc.classList.add('scale-0');
+                    await new Promise(r => setTimeout(r, 300));
+                    proc.remove();
+
+                    cpu.innerHTML = `
+                        <div class="px-4 py-2 rounded-lg ${proc.className} animate-pulse">
+                            ${proc.innerText} - RUNNING
+                        </div>
+                    `;
+                    await new Promise(r => setTimeout(r, 1200));
+                }
+
+                cpu.innerHTML = `<span class="text-xs text-emerald-400 font-bold">Semua Selesai!</span>`;
+                btn.disabled = false;
+            });
+        }
+
+        // Section 2 Quiz 1 Check
+        function checkQuiz1(ans) {
+            const fb = document.getElementById('quiz1Feedback');
+            fb.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'bg-green-100', 'text-green-800');
+            
+            if (ans === 'B') {
+                fb.classList.add('bg-green-100', 'text-green-800', 'dark:bg-green-900/50', 'dark:text-green-200');
+                fb.innerHTML = `<strong>Tepat Sekali! (Jawaban B)</strong><br>Sistem operasi menggunakan algoritma scheduling tertentu untuk menentukan giliran. Kedatangan lebih awal tidak menjamin jika ada aturan SJF atau Round Robin!`;
+            } else {
+                fb.classList.add('bg-red-100', 'text-red-800', 'dark:bg-red-900/50', 'dark:text-red-200');
+                fb.innerHTML = `<strong>Belum Tepat (Jawaban A).</strong><br>Proses yang datang duluan hanya pasti berjalan duluan jika algoritma yang dipakai adalah FCFS. Jika menggunakan SJF atau Prioritas, urutannya bisa berubah!`;
+            }
+        }
+
+        // Section 5 Ready Queue Interactive Dispatch
+        function initReadyQueueDemo() {
+            const btn = document.getElementById('btnDispatchRQ');
+            const resetBtn = document.getElementById('btnResetRQ');
+            const container = document.getElementById('readyQueueContainer');
+            const target = document.getElementById('rqCpuTarget');
+
+            btn.addEventListener('click', () => {
+                if (container.children.length > 0) {
+                    const firstProc = container.children[0];
+                    target.innerHTML = '';
+                    target.appendChild(firstProc);
+                } else {
+                    target.innerHTML = `<span class="text-xs text-emerald-400 font-bold">Semua Aplikasi Telah Mendapatkan CPU!</span>`;
+                }
+            });
+
+            resetBtn.addEventListener('click', () => {
+                container.innerHTML = `
+                    <div id="rq-chrome" class="bg-red-600 text-white font-mono font-bold text-xs px-3 py-2 rounded-lg shadow flex items-center space-x-1">
+                        <i class="fa-brands fa-chrome"></i><span>CHROME</span>
+                    </div>
+                    <div id="rq-word" class="bg-blue-600 text-white font-mono font-bold text-xs px-3 py-2 rounded-lg shadow flex items-center space-x-1">
+                        <i class="fa-solid fa-file-word"></i><span>WORD</span>
+                    </div>
+                    <div id="rq-vscode" class="bg-sky-600 text-white font-mono font-bold text-xs px-3 py-2 rounded-lg shadow flex items-center space-x-1">
+                        <i class="fa-solid fa-code"></i><span>VSCode</span>
+                    </div>
+                `;
+                target.innerHTML = `<span class="text-xs text-slate-500 italic">Kosong</span>`;
+            });
+        }
+
+        // Section 7 FCFS Demo
+        function initFcfsDemo() {
+            const btn = document.getElementById('btnRunFcfsDemo');
+            const qBox = document.getElementById('fcfsQueueBox');
+            const cBox = document.getElementById('fcfsCpuBox');
+            const status = document.getElementById('fcfsStatusText');
+
+            btn.addEventListener('click', async () => {
+                btn.disabled = true;
+                const items = [
+                    { id: 'fcfs-p1', name: 'P1 (Datang t=0)' },
+                    { id: 'fcfs-p2', name: 'P2 (Datang t=1)' },
+                    { id: 'fcfs-p3', name: 'P3 (Datang t=2)' }
+                ];
+
+                for (let item of items) {
+                    const el = document.getElementById(item.id);
+                    if (el) el.remove();
+
+                    status.innerText = `Menjalankan ${item.name} di CPU...`;
+                    cBox.innerHTML = `<span class="text-emerald-400 font-bold">${item.name} sedang dieksekusi...</span>`;
+                    await new Promise(r => setTimeout(r, 1200));
+                }
+
+                cBox.innerHTML = `<span class="text-emerald-400 font-bold">P1, P2, P3 SELESAI</span>`;
+                status.innerText = `FCFS selesai! Sesuai urutan kedatangan.`;
+                btn.disabled = false;
+            });
+        }
+
+        function checkFcfsPractice(choice) {
+            const fb = document.getElementById('fcfsPracticeFeedback');
+            fb.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'bg-green-100', 'text-green-800');
+            if (choice === 'P1') {
+                fb.classList.add('bg-green-100', 'text-green-800');
+                fb.innerText = "BENAR! P1 datang paling awal (t=0), sehingga FCFS melayani P1 terlebih dahulu.";
+            } else {
+                fb.classList.add('bg-red-100', 'text-red-800');
+                fb.innerText = "SALAH. FCFS selalu memilih proses dengan Arrival Time paling kecil.";
+            }
+        }
+
+        // Section 12 Walkthrough Logic
+        function initWalkthrough() {
+            updateWalkstep();
+            document.getElementById('btnPrevStep').addEventListener('click', () => {
+                if (state.walkstep > 0) {
+                    state.walkstep--;
+                    updateWalkstep();
+                }
+            });
+            document.getElementById('btnNextStep').addEventListener('click', () => {
+                if (state.walkstep < walkthroughSteps.length - 1) {
+                    state.walkstep++;
+                    updateWalkstep();
+                }
+            });
+        }
+
+        function updateWalkstep() {
+            const data = walkthroughSteps[state.walkstep];
+            document.getElementById('walkthroughStepNum').innerText = data.num;
+            document.getElementById('walkthroughContent').innerHTML = `
+                <h4 class="font-bold text-sm text-blue-300">${data.title}</h4>
+                <p class="text-xs text-slate-300 leading-relaxed">${data.desc}</p>
+            `;
+            document.getElementById('btnPrevStep').disabled = (state.walkstep === 0);
+            document.getElementById('btnNextStep').disabled = (state.walkstep === walkthroughSteps.length - 1);
+        }
+
+        function initLab() {
+            renderLabInputTable();
+
+            document.getElementById('btnAddProcess').addEventListener('click', () => {
+                const nextId = `P${state.labProcesses.length + 1}`;
+                state.labProcesses.push({ id: nextId, at: 0, bt: 4 });
+                renderLabInputTable();
+            });
+
+            document.getElementById('btnResetLab').addEventListener('click', () => {
+                state.labProcesses = [
+                    { id: 'P1', at: 0, bt: 5 },
+                    { id: 'P2', at: 1, bt: 3 },
+                    { id: 'P3', at: 2, bt: 2 }
+                ];
+                renderLabInputTable();
+            });
+
+            document.getElementById('labAlgoSelect').addEventListener('change', (e) => {
+                const qCont = document.getElementById('labQuantumContainer');
+                if (e.target.value === 'RR') {
+                    qCont.classList.remove('hidden');
+                } else {
+                    qCont.classList.add('hidden');
+                }
+            });
+
+            document.getElementById('btnRunLabSimulation').addEventListener('click', runLabSimulation);
+        }
+
+        function renderLabInputTable() {
+            const tbody = document.getElementById('labProcessTableBody');
+            tbody.innerHTML = '';
+
+            state.labProcesses.forEach((p, idx) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 dark:hover:bg-slate-900";
+                tr.innerHTML = `
+                    <td class="p-3 font-bold font-mono text-blue-600 dark:text-blue-400">${p.id}</td>
+                    <td class="p-3">
+                        <input type="number" min="0" value="${p.at}" onchange="updateLabProcess(${idx}, 'at', this.value)" class="w-16 bg-slate-100 dark:bg-slate-800 border rounded px-2 py-1 font-mono text-xs">
+                    </td>
+                    <td class="p-3">
+                        <input type="number" min="1" value="${p.bt}" onchange="updateLabProcess(${idx}, 'bt', this.value)" class="w-16 bg-slate-100 dark:bg-slate-800 border rounded px-2 py-1 font-mono text-xs">
+                    </td>
+                    <td class="p-3 text-center">
+                        ${state.labProcesses.length > 1 ? `<button onclick="removeLabProcess(${idx})" class="text-red-500 hover:text-red-700 text-xs"><i class="fa-solid fa-trash"></i></button>` : '-'}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateLabProcess(idx, key, val) {
+            state.labProcesses[idx][key] = parseInt(val) || 0;
+        }
+
+        function removeLabProcess(idx) {
+            state.labProcesses.splice(idx, 1);
+            renderLabInputTable();
+        }
+
+        // Run Scheduler Simulation
+        function runLabSimulation() {
+            const algo = document.getElementById('labAlgoSelect').value;
+            const quantum = parseInt(document.getElementById('labQuantumInput').value) || 2;
+            const isGuessMode = document.getElementById('chkGuessMode').checked;
+
+            // Deep clone processes
+            const procs = state.labProcesses.map(p => ({ ...p, remainingBt: p.bt }));
+
+            let timeline = []; // { procId, start, end }
+            let calcResults = []; // { id, at, bt, ct, tat, wt }
+
+            if (algo === 'FCFS') {
+                timeline = solveFCFS(procs);
+            } else if (algo === 'SJF') {
+                timeline = solveSJF(procs);
+            } else if (algo === 'RR') {
+                timeline = solveRR(procs, quantum);
+            }
+
+            // Check guess mode
+            if (isGuessMode) {
+                showGuessModal(timeline, () => renderSimulationResults(timeline));
+            } else {
+                renderSimulationResults(timeline);
+            }
+        }
+
+        // FCFS Solver
+        function solveFCFS(procs) {
+            let sorted = [...procs].sort((a, b) => a.at - b.at);
+            let time = 0;
+            let timeline = [];
+
+            sorted.forEach(p => {
+                if (time < p.at) time = p.at;
+                let start = time;
+                time += p.bt;
+                timeline.push({ procId: p.id, start: start, end: time });
+            });
+            return timeline;
+        }
+
+        // SJF Non-Preemptive Solver
+        function solveSJF(procs) {
+            let n = procs.length;
+            let completed = 0;
+            let time = 0;
+            let isCompleted = new Array(n).fill(false);
+            let timeline = [];
+
+            while (completed < n) {
+                let idx = -1;
+                let minBt = Infinity;
+
+                for (let i = 0; i < n; i++) {
+                    if (procs[i].at <= time && !isCompleted[i]) {
+                        if (procs[i].bt < minBt) {
+                            minBt = procs[i].bt;
+                            idx = i;
+                        }
+                        if (procs[i].bt === minBt) {
+                            if (procs[i].at < procs[idx].at) {
+                                idx = i;
+                            }
+                        }
+                    }
+                }
+
+                if (idx !== -1) {
+                    let start = time;
+                    time += procs[idx].bt;
+                    timeline.push({ procId: procs[idx].id, start: start, end: time });
+                    isCompleted[idx] = true;
+                    completed++;
+                } else {
+                    time++;
+                }
+            }
+            return timeline;
+        }
+
+        // Round Robin Solver
+        function solveRR(procs, quantum) {
+            let n = procs.length;
+            let time = 0;
+            let completed = 0;
+            let queue = [];
+            let inQueue = new Array(n).fill(false);
+            let timeline = [];
+
+            // Sort by arrival initially
+            let sorted = [...procs].sort((a, b) => a.at - b.at);
+
+            // Add first processes arriving at 0
+            sorted.forEach((p, i) => {
+                if (p.at === 0) {
+                    queue.push(p);
+                    inQueue[i] = true;
+                }
+            });
+
+            if (queue.length === 0 && sorted.length > 0) {
+                time = sorted[0].at;
+                sorted.forEach((p, i) => {
+                    if (p.at === time) {
+                        queue.push(p);
+                        inQueue[i] = true;
+                    }
+                });
+            }
+
+            while (completed < n) {
+                if (queue.length === 0) {
+                    // Advance time to next process arrival
+                    let nextArrival = Infinity;
+                    sorted.forEach(p => {
+                        if (p.remainingBt > 0 && p.at > time && p.at < nextArrival) {
+                            nextArrival = p.at;
+                        }
+                    });
+                    if (nextArrival !== Infinity) time = nextArrival;
+
+                    sorted.forEach((p, i) => {
+                        if (p.at <= time && p.remainingBt > 0 && !inQueue[i]) {
+                            queue.push(p);
+                            inQueue[i] = true;
+                        }
+                    });
+                    continue;
+                }
+
+                let current = queue.shift();
+                let execTime = Math.min(current.remainingBt, quantum);
+                let start = time;
+                time += execTime;
+                current.remainingBt -= execTime;
+
+                timeline.push({ procId: current.id, start: start, end: time });
+
+                // Check new arrivals during execution
+                sorted.forEach((p, i) => {
+                    if (p.id !== current.id && p.at <= time && p.remainingBt > 0 && !inQueue[i]) {
+                        queue.push(p);
+                        inQueue[i] = true;
+                    }
+                });
+
+                if (current.remainingBt > 0) {
+                    queue.push(current);
+                } else {
+                    completed++;
+                }
+            }
+            return timeline;
+        }
+
+        function showGuessModal(timeline, callback) {
+            const guessBox = document.getElementById('guessBox');
+            const optsContainer = document.getElementById('guessOptionsContainer');
+            const fb = document.getElementById('guessFeedback');
+
+            guessBox.classList.remove('hidden');
+            optsContainer.innerHTML = '';
+            fb.className = 'hidden text-xs font-bold p-2 rounded';
+
+            const firstProc = timeline[0].procId;
+            const uniqueProcs = [...new Set(state.labProcesses.map(p => p.id))];
+
+            uniqueProcs.forEach(pid => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white dark:bg-slate-800 border border-amber-300 font-mono font-bold text-xs px-3 py-1.5 rounded hover:bg-amber-100";
+                btn.innerText = pid;
+                btn.onclick = () => {
+                    fb.classList.remove('hidden');
+                    if (pid === firstProc) {
+                        fb.className = 'p-2 bg-green-100 text-green-800 text-xs font-bold rounded';
+                        fb.innerText = `✓ TEBAKAN BENAR! ${pid} berjalan pertama kali.`;
+                    } else {
+                        fb.className = 'p-2 bg-red-100 text-red-800 text-xs font-bold rounded';
+                        fb.innerText = `✗ BELUM TEPAT. Proses pertama sebenarnya adalah ${firstProc}.`;
+                    }
+                    setTimeout(callback, 1200);
+                };
+                optsContainer.appendChild(btn);
+            });
+        }
+
+        function renderSimulationResults(timeline) {
+            const ganttArea = document.getElementById('ganttChartArea');
+            const calcTbody = document.getElementById('labCalcTableBody');
+            ganttArea.innerHTML = '';
+            calcTbody.innerHTML = '';
+
+            if (timeline.length === 0) return;
+
+            let totalDuration = timeline[timeline.length - 1].end;
+
+            // Render Gantt Bar
+            let barContainer = document.createElement('div');
+            barContainer.className = "flex w-full overflow-hidden rounded-lg border border-slate-700 min-w-[300px]";
+
+            let timeAxis = document.createElement('div');
+            timeAxis.className = "flex text-[10px] font-mono text-slate-400 mt-1 justify-between px-0.5 min-w-[300px]";
+
+            const colors = ['bg-blue-600', 'bg-emerald-600', 'bg-purple-600', 'bg-rose-600', 'bg-amber-600', 'bg-teal-600'];
+
+            timeline.forEach((block, idx) => {
+                let duration = block.end - block.start;
+                let pct = (duration / totalDuration) * 100;
+                let colorClass = colors[parseInt(block.procId.replace('P', '')) % colors.length] || 'bg-blue-600';
+
+                let blockEl = document.createElement('div');
+                blockEl.className = `${colorClass} text-white font-mono text-center text-xs py-2 font-bold border-r border-slate-900 truncate px-1`;
+                blockEl.style.width = `${pct}%`;
+                blockEl.innerText = `${block.procId}`;
+                blockEl.title = `${block.procId}: ${block.start}ms - ${block.end}ms`;
+                barContainer.appendChild(blockEl);
+            });
+
+            ganttArea.appendChild(barContainer);
+
+            // Compute CT, TAT, WT for each process
+            let processStats = {};
+            state.labProcesses.forEach(p => {
+                processStats[p.id] = { at: p.at, bt: p.bt, ct: 0, tat: 0, wt: 0 };
+            });
+
+            timeline.forEach(block => {
+                processStats[block.procId].ct = block.end;
+            });
+
+            let sumWT = 0;
+            let sumTAT = 0;
+            let count = state.labProcesses.length;
+
+            Object.keys(processStats).forEach(pid => {
+                let item = processStats[pid];
+                item.tat = item.ct - item.at;
+                item.wt = item.tat - item.bt;
+                sumWT += item.wt;
+                sumTAT += item.tat;
+
+                let tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 dark:hover:bg-slate-900";
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-blue-600">${pid}</td>
+                    <td class="p-3">${item.at}</td>
+                    <td class="p-3">${item.bt}</td>
+                    <td class="p-3">${item.ct}</td>
+                    <td class="p-3 font-bold text-purple-600">${item.tat}</td>
+                    <td class="p-3 font-bold text-emerald-600">${item.wt}</td>
+                `;
+                calcTbody.appendChild(tr);
+            });
+
+            document.getElementById('lblAvgWT').innerText = `${(sumWT / count).toFixed(2)} ms`;
+            document.getElementById('lblAvgTAT').innerText = `${(sumTAT / count).toFixed(2)} ms`;
+        }
+
+        const quizData = [
+            { q: "1. Apa fungsi utama dari Ready Queue?", options: ["Tempat menyimpan file permanent", "Antrean proses yang siap menggunakan CPU", "Tempat menyimpan kata sandi", "Mematikan daya komputer"], ans: 1 },
+            { q: "2. Kepanjangan dari FCFS adalah...", options: ["First Come First Serve", "Fast CPU Fast Speed", "File Control Fast System", "First Computer First System"], ans: 0 },
+            { q: "3. Pada algoritma SJF, proses mana yang diprioritaskan?", options: ["Proses yang paling besar ukuran memorinya", "Proses dengan Burst Time paling pendek", "Proses yang paling terakhir datang", "Proses dengan PID angka terbesar"], ans: 1 },
+            { q: "4. Jatah waktu khusus yang digunakan pada Round Robin disebut...", options: ["Quantum Time / Time Quantum", "Burst Slot", "CPU Clock", "Speed Limit"], ans: 0 },
+            { q: "5. Apa arti dari sifat Preemptive?", options: ["Proses tidak boleh dihentikan sampai selesai", "Proses dapat diinterupsi oleh OS sebelum selesai", "Proses hanya berjalan saat malam hari", "Proses diubah menjadi file gambar"], ans: 1 },
+            { q: "6. Durasi total waktu yang dibutuhkan proses di CPU dinamakan...", options: ["Arrival Time", "Burst Time", "Completion Time", "Delay Time"], ans: 1 },
+            { q: "7. Rumus menghitung Turnaround Time (TAT) adalah...", options: ["Completion Time - Arrival Time", "Waiting Time + Arrival Time", "Burst Time - Arrival Time", "Completion Time + Burst Time"], ans: 0 },
+            { q: "8. Rumus menghitung Waiting Time (WT) adalah...", options: ["TAT - Burst Time", "TAT + Completion Time", "Arrival Time - BT", "CT - AT"], ans: 0 },
+            { q: "9. Diagram horizontal yang menggambarkan urutan waktu eksekusi CPU disebut...", options: ["Flowchart", "Gantt Chart", "Pie Chart", "ER Diagram"], ans: 1 },
+            { q: "10. Manakah algoritma berikut yang paling adil mencegah monopoli CPU?", options: ["FCFS", "SJF Non-Preemptive", "Round Robin", "Shortest Job First"], ans: 2 }
+        ];
+
+        function initQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+
+            quizData.forEach((item, qIdx) => {
+                const card = document.createElement('div');
+                card.className = "p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3";
+
+                let optionsHTML = item.options.map((opt, oIdx) => `
+                    <button onclick="answerQuiz(${qIdx}, ${oIdx})" class="quiz-opt-${qIdx} w-full text-left p-2.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-800 text-xs font-medium transition">
+                        ${String.fromCharCode(65 + oIdx)}. ${opt}
+                    </button>
+                `).join('');
+
+                card.innerHTML = `
+                    <p class="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-200">${item.q}</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">${optionsHTML}</div>
+                    <div id="quizFeedback-${qIdx}" class="hidden text-xs font-bold p-2 rounded"></div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function answerQuiz(qIdx, selectedOpt) {
+            const item = quizData[qIdx];
+            const fb = document.getElementById(`quizFeedback-${qIdx}`);
+            const buttons = document.querySelectorAll(`.quiz-opt-${qIdx}`);
+
+            buttons.forEach(b => b.disabled = true);
+            fb.classList.remove('hidden');
+
+            if (selectedOpt === item.ans) {
+                fb.className = "p-2 bg-green-100 text-green-800 text-xs font-bold rounded";
+                fb.innerText = "✓ Jawaban Anda Benar!";
+                state.quizScore += 10;
+            } else {
+                fb.className = "p-2 bg-red-100 text-red-800 text-xs font-bold rounded";
+                fb.innerText = `✗ Kurang tepat. Jawaban benar: ${String.fromCharCode(65 + item.ans)}. ${item.options[item.ans]}`;
+            }
+
+            document.getElementById('quizScoreBadge').innerText = `Skor: ${state.quizScore}`;
+        }
+
+        function initChallenge() {
+            document.getElementById('btnSubmitChallenge').addEventListener('click', () => {
+                const order = document.getElementById('chOrderInput').value.trim().toUpperCase().replace(/\s+/g, '');
+                const awt = parseFloat(document.getElementById('chAwtInput').value);
+                const att = parseFloat(document.getElementById('chAttInput').value);
+
+                let score = 0;
+                let feedback = [];
+
+                // Correct SJF order for BT: P1=6, P2=2, P3=4, P4=3 is P2-P4-P3-P1
+                if (order === 'P2-P4-P3-P1' || order === 'P2,P4,P3,P1') {
+                    score += 50;
+                    feedback.push("✓ Urutan SJF Benar (+50 Poin): P2(2ms) &rarr; P4(3ms) &rarr; P3(4ms) &rarr; P1(6ms)");
+                } else {
+                    feedback.push("✗ Urutan SJF Salah. Urutan terpendek seharusnya: P2 &rarr; P4 &rarr; P3 &rarr; P1.");
+                }
+
+                // Correct AWT: (0 + 2 + 5 + 9)/4 = 16/4 = 4.0
+                if (Math.abs(awt - 4.0) < 0.1) {
+                    score += 25;
+                    feedback.push("✓ Perhitungan AWT Benar (+25 Poin): 4.0 ms");
+                } else {
+                    feedback.push("✗ AWT Salah. Nilai AWT yang benar adalah 4.0 ms.");
+                }
+
+                // Correct ATT: (2 + 5 + 9 + 15)/4 = 31/4 = 7.75
+                if (Math.abs(att - 7.75) < 0.1) {
+                    score += 25;
+                    feedback.push("✓ Perhitungan ATT Benar (+25 Poin): 7.75 ms");
+                } else {
+                    feedback.push("✗ ATT Salah. Nilai ATT yang benar adalah 7.75 ms.");
+                }
+
+                const resBox = document.getElementById('chResultBox');
+                resBox.classList.remove('hidden');
+                document.getElementById('chFinalScore').innerText = `${score} / 100`;
+                document.getElementById('chFeedbackText').innerHTML = feedback.join('<br>');
+            });
+        }
+    </script>
+</body>
+</html>

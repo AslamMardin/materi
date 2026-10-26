@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Pembelajaran Interaktif: Google Drive & s.id</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#2563eb',
+                            600: '#1d4ed8',
+                            700: '#1e40af',
+                            800: '#1e3a8a',
+                        },
+                        gdrive: {
+                            blue: '#4285F4',
+                            red: '#EA4335',
+                            yellow: '#FBBC05',
+                            green: '#34A853'
+                        },
+                        sid: {
+                            primary: '#E11D48',
+                            dark: '#9F1239'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Styling for Interactive Components */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .sim-file-item:hover {
+            background-color: #f1f5f9;
+        }
+        .animate-bounce-slow {
+            animation: bounce 3s infinite;
+        }
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(0.98); }
+        }
+        .active-nav-link {
+            background-color: #eff6ff;
+            color: #2563eb;
+            border-right: 4px solid #2563eb;
+            font-weight: 600;
+        }
+        /* Fullscreen Presentation Mode Specifics */
+        :-webkit-full-screen { background: white; }
+        :-moz-full-screen { background: white; }
+        :fullscreen { background: white; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- Top Navbar -->
+    <header class="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <button id="toggle-sidebar-btn" class="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 focus:outline-none" aria-label="Toggle Sidebar">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+                <div class="flex items-center gap-2">
+                    <div class="bg-brand-600 text-white p-2 rounded-lg font-bold flex items-center justify-center w-9 h-9 shadow-md">
+                        <i class="fa-solid fa-graduation-cap text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-slate-800 text-sm sm:text-base leading-tight">TIK - STI10005</h1>
+                        <p class="text-xs text-slate-500 font-medium hidden sm:block">Pendidikan Agama Islam (PAI) - Semester 1</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Header Right Controls -->
+            <div class="flex items-center gap-3">
+                <button id="fullscreen-btn" onclick="toggleFullScreen()" class="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition" title="Mode Presentasi">
+                    <i class="fa-solid fa-expand text-brand-600"></i> Mode Presentasi
+                </button>
+                <div class="hidden md:flex flex-col items-end border-l pl-3 border-slate-200">
+                    <span class="text-xs font-bold text-slate-700">Dosen Pengampu:</span>
+                    <span class="text-xs text-slate-600">Aslam Mardin, S.Kom., M.Kom., Gr.</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Progress Bar Indicator -->
+        <div class="w-full bg-slate-100 h-1.5">
+            <div id="overall-progress" class="bg-gradient-to-r from-brand-500 to-emerald-500 h-1.5 w-0 transition-all duration-300"></div>
+        </div>
+    </header>
+
+    <div class="flex-1 flex max-w-7xl w-full mx-auto">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 w-72 bg-white border-r border-slate-200 transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 ease-in-out flex flex-col justify-between pt-16 lg:pt-0">
+            <div class="p-4 overflow-y-auto flex-1 space-y-1 text-sm">
+                <div class="px-3 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider">Navigasi Materi</div>
+                
+                <a href="#beranda" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 hover:bg-slate-100 transition active-nav-link" onclick="setActiveNav(this)">
+                    <i class="fa-solid fa-house text-brand-600 w-5"></i>
+                    <span>1. Beranda</span>
+                </a>
+                <a href="#tujuan" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 hover:bg-slate-100 transition" onclick="setActiveNav(this)">
+                    <i class="fa-solid fa-bullseye text-red-500 w-5"></i>
+                    <span>2. Tujuan Pembelajaran</span>
+                </a>
+                <a href="#materi-gdrive" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 hover:bg-slate-100 transition" onclick="setActiveNav(this)">
+                    <i class="fa-brands fa-google-drive text-emerald-600 w-5"></i>
+                    <span>3. Materi Google Drive</span>
+                </a>
+                <a href="#animasi-komparasi" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 hover:bg-slate-100 transition" onclick="setActiveNav(this)">
+                    <i class="fa-solid fa-film text-indigo-600 w-5"></i>
+                    <span>4. Animasi Komparasi</span>
+                </a>
+                <a href="#simulasi-gdrive" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 hover:bg-slate-100 transition" onclick="setActiveNav(this)">
+                    <i class="fa-solid fa-laptop-code text-gdrive-blue w-5"></i>
+                    <span>5. Simulasi Google Drive</span>
+                </a>
+                <a href="#materi-sid" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 hover:bg-slate-100 transition" onclick="setActiveNav(this)">
+                    <i class="fa-solid fa-link text-sid-primary w-5"></i>
+                    <span>6. Materi s.id</span>
+                </a>
+                <a href="#simulasi-sid" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 hover:bg-slate-100 transition" onclick="setActiveNav(this)">
+                    <i class="fa-solid fa-scissors text-amber-500 w-5"></i>
+                    <span>7. Simulasi s.id</span>
+                </a>
+                <a href="#studi-kasus" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 hover:bg-slate-100 transition" onclick="setActiveNav(this)">
+                    <i class="fa-solid fa-chalkboard-user text-purple-600 w-5"></i>
+                    <span>8. Studi Kasus PAI</span>
+                </a>
+                <a href="#latihan" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 hover:bg-slate-100 transition" onclick="setActiveNav(this)">
+                    <i class="fa-solid fa-list-check text-teal-600 w-5"></i>
+                    <span>9. Latihan Praktik</span>
+                </a>
+                <a href="#kuis" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 hover:bg-slate-100 transition" onclick="setActiveNav(this)">
+                    <i class="fa-solid fa-clipboard-question text-amber-600 w-5"></i>
+                    <span>10. Kuis Interaktif</span>
+                </a>
+                <a href="#kesimpulan" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 hover:bg-slate-100 transition" onclick="setActiveNav(this)">
+                    <i class="fa-solid fa-flag-checkered text-sky-600 w-5"></i>
+                    <span>11. Kesimpulan & Refleksi</span>
+                </a>
+            </div>
+
+            <!-- Progres Tracker Footer in Sidebar -->
+            <div class="p-4 border-t border-slate-200 bg-slate-50">
+                <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+                    <span>Progres Belajar</span>
+                    <span id="progress-percentage-text">0%</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-2">
+                    <div id="sidebar-progress-bar" class="bg-brand-600 h-2 rounded-full w-0 transition-all"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Overlay backdrop for mobile sidebar -->
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/50 z-20 hidden lg:hidden" onclick="toggleSidebar()"></div>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto space-y-12">
+
+            <!-- SECTION 1: BERANDA -->
+            <section id="beranda" class="scroll-mt-20">
+                <div class="bg-gradient-to-r from-brand-700 to-brand-500 rounded-2xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+                        <i class="fa-brands fa-google-drive text-[240px]"></i>
+                    </div>
+                    <span class="inline-block px-3 py-1 bg-white/20 backdrop-blur border border-white/30 rounded-full text-xs font-semibold tracking-wide uppercase mb-3">
+                        Media Pembelajaran Interaktif
+                    </span>
+                    <h1 class="text-2xl sm:text-4xl font-extrabold mb-3 leading-tight">
+                        Penyimpanan Cloud dan Pemendek URL:<br><span class="text-amber-300">Google Drive dan s.id</span>
+                    </h1>
+                    <p class="text-brand-100 text-sm sm:text-base max-w-2xl mb-6">
+                        Solusi praktis kelola dokumen administrasi pembelajaran Agama Islam secara aman, efisien, dan tersistem berbasis cloud.
+                    </p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 border-t border-white/20 pt-6 text-xs sm:text-sm">
+                        <div class="flex items-center gap-3 bg-white/10 p-3 rounded-lg backdrop-blur">
+                            <i class="fa-solid fa-book-open text-xl text-amber-300"></i>
+                            <div>
+                                <div class="font-bold">Mata Kuliah</div>
+                                <div class="text-brand-100">Teknologi Informasi & Komunikasi</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 bg-white/10 p-3 rounded-lg backdrop-blur">
+                            <i class="fa-solid fa-user-graduate text-xl text-amber-300"></i>
+                            <div>
+                                <div class="font-bold">Sasaran</div>
+                                <div class="text-brand-100">Prodi PAI - Semester 1</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 bg-white/10 p-3 rounded-lg backdrop-blur sm:col-span-2 lg:col-span-1">
+                            <i class="fa-solid fa-user-tie text-xl text-amber-300"></i>
+                            <div>
+                                <div class="font-bold">Dosen Pengampu</div>
+                                <div class="text-brand-100">Aslam Mardin, S.Kom., M.Kom., Gr.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex flex-wrap gap-3">
+                        <a href="#tujuan" class="px-5 py-2.5 bg-white text-brand-700 font-bold rounded-xl shadow hover:bg-slate-100 transition inline-flex items-center gap-2 text-sm">
+                            Mulai Belajar <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <a href="#animasi-komparasi" class="px-5 py-2.5 bg-brand-800/60 hover:bg-brand-800/80 text-white font-medium rounded-xl transition inline-flex items-center gap-2 text-sm border border-white/20">
+                            <i class="fa-solid fa-play"></i> Lihat Simulasi
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: TUJUAN PEMBELAJARAN -->
+            <section id="tujuan" class="scroll-mt-20">
+                <div class="border-l-4 border-brand-500 pl-4 mb-6">
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Tujuan Pembelajaran</h2>
+                    <p class="text-sm text-slate-500">Capaian pembelajaran yang akan dikuasai setelah menyelesaikan modul ini.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                        <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold mb-3">1</div>
+                        <h3 class="font-semibold text-slate-800 mb-1">Fungsi & Manfaat Google Drive</h3>
+                        <p class="text-xs text-slate-600">Menjelaskan fungsi dan manfaat utama penyimpanan cloud Google Drive secara rinci.</p>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                        <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center font-bold mb-3">2</div>
+                        <h3 class="font-semibold text-slate-800 mb-1">Komparasi Komputer vs Cloud</h3>
+                        <p class="text-xs text-slate-600">Membedakan karakteristik penyimpanan lokal komputer dengan cloud storage.</p>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold mb-3">3</div>
+                        <h3 class="font-semibold text-slate-800 mb-1">Pengelolaan File & Folder</h3>
+                        <p class="text-xs text-slate-600">Mempraktikkan konsep dasar pembuatan, pengelolaan, dan berbagi file di Google Drive.</p>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                        <div class="w-10 h-10 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center font-bold mb-3">4</div>
+                        <h3 class="font-semibold text-slate-800 mb-1">Pemendek Tautan s.id</h3>
+                        <p class="text-xs text-slate-600">Menjelaskan fungsi dan kegunaan platform s.id dalam menyederhanakan tautan URL.</p>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                        <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center font-bold mb-3">5</div>
+                        <h3 class="font-semibold text-slate-800 mb-1">Berbagi Tautan Pembelajaran</h3>
+                        <p class="text-xs text-slate-600">Memahami mekanisme berbagi tautan materi dengan aman, cepat, dan teratur.</p>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                        <div class="w-10 h-10 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center font-bold mb-3">6</div>
+                        <h3 class="font-semibold text-slate-800 mb-1">Aplikasi Administrasi PAI</h3>
+                        <p class="text-xs text-slate-600">Menerapkan kombinasi Google Drive & s.id untuk mendukung pengelolaan berkas PAI.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: MATERI GOOGLE DRIVE -->
+            <section id="materi-gdrive" class="scroll-mt-20">
+                <div class="border-l-4 border-gdrive-blue pl-4 mb-6">
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-brands fa-google-drive text-gdrive-blue"></i> Materi A — Google Drive
+                    </h2>
+                    <p class="text-sm text-slate-500">Penyimpanan berbasis cloud terintegrasi untuk fleksibilitas tinggi.</p>
+                </div>
+
+                <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-6">
+                    <p class="text-slate-700 text-sm leading-relaxed">
+                        <strong class="text-brand-700">Google Drive</strong> adalah layanan penyimpanan file berbasis cloud (komputasi awan) besutan Google. Layanan ini memungkinkan pengguna menyimpan, mengelola, dan membagikan dokumen secara online tanpa batas perangkat.
+                    </p>
+
+                    <!-- Core Functions Grid -->
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wide mb-3 text-brand-600">Fungsi Utama Google Drive</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                            <div class="p-3.5 bg-slate-50 rounded-lg border border-slate-200 flex items-start gap-3">
+                                <i class="fa-solid fa-cloud-arrow-up text-gdrive-blue text-lg mt-0.5"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-slate-800">Menyimpan Dokumen Online</div>
+                                    <div class="text-[11px] text-slate-500">Mencegah kehilangan file akibat kerusakan hardware fisik.</div>
+                                </div>
+                            </div>
+                            <div class="p-3.5 bg-slate-50 rounded-lg border border-slate-200 flex items-start gap-3">
+                                <i class="fa-solid fa-folder-tree text-gdrive-yellow text-lg mt-0.5"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-slate-800">Manajemen File & Folder</div>
+                                    <div class="text-[11px] text-slate-500">Mengelompokkan dokumen agar rapi dan mudah dicari.</div>
+                                </div>
+                            </div>
+                            <div class="p-3.5 bg-slate-50 rounded-lg border border-slate-200 flex items-start gap-3">
+                                <i class="fa-solid fa-mobile-screen text-gdrive-green text-lg mt-0.5"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-slate-800">Akses Lintas Perangkat</div>
+                                    <div class="text-[11px] text-slate-500">Dapat dibuka dari laptop, tablet, atau smartphone kapan saja.</div>
+                                </div>
+                            </div>
+                            <div class="p-3.5 bg-slate-50 rounded-lg border border-slate-200 flex items-start gap-3">
+                                <i class="fa-solid fa-share-nodes text-gdrive-red text-lg mt-0.5"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-slate-800">Membagikan File Praktis</div>
+                                    <div class="text-[11px] text-slate-500">Cukup bagikan tautan tanpa mengirim lampiran fisik berulang.</div>
+                                </div>
+                            </div>
+                            <div class="p-3.5 bg-slate-50 rounded-lg border border-slate-200 flex items-start gap-3">
+                                <i class="fa-solid fa-users text-purple-600 text-lg mt-0.5"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-slate-800">Kolaborasi Real-time</div>
+                                    <div class="text-[11px] text-slate-500">Bekerja bersama dalam satu dokumen (Docs, Sheets, Slides).</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommended Folder Structure -->
+                    <div class="border-t border-slate-200 pt-5">
+                        <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wide mb-3 text-brand-600">Struktur Folder Administrasi PAI yang Direkomendasikan</h3>
+                        
+                        <div class="bg-slate-900 text-slate-100 p-4 rounded-xl font-mono text-xs overflow-x-auto shadow-inner">
+                            <div class="flex items-center gap-2 text-emerald-400 font-bold mb-2">
+                                <i class="fa-solid fa-folder-open"></i> Administrasi_PAI/
+                            </div>
+                            <div class="pl-6 space-y-1.5 border-l border-slate-700 ml-2">
+                                <div class="flex items-center gap-2 text-amber-300"><i class="fa-solid fa-folder"></i> 01_Modul_Ajar/ <span class="text-slate-400 text-[11px] font-sans">(RPP, Alur Tujuan Pembelajaran)</span></div>
+                                <div class="flex items-center gap-2 text-amber-300"><i class="fa-solid fa-folder"></i> 02_Jurnal_Mengajar/ <span class="text-slate-400 text-[11px] font-sans">(Catatan harian tatap muka)</span></div>
+                                <div class="flex items-center gap-2 text-amber-300"><i class="fa-solid fa-folder"></i> 03_Daftar_Hadir/ <span class="text-slate-400 text-[11px] font-sans">(Presensi siswa/mahasiswa)</span></div>
+                                <div class="flex items-center gap-2 text-amber-300"><i class="fa-solid fa-folder"></i> 04_Buku_Nilai/ <span class="text-slate-400 text-[11px] font-sans">(Rekapitulasi penilaian tugas & ujian)</span></div>
+                                <div class="flex items-center gap-2 text-amber-300"><i class="fa-solid fa-folder"></i> 05_Materi_Pembelajaran/ <span class="text-slate-400 text-[11px] font-sans">(Slide PPT, PDF, Bahan Ajar)</span></div>
+                                <div class="flex items-center gap-2 text-amber-300"><i class="fa-solid fa-folder"></i> 06_Tugas_Mahasiswa/ <span class="text-slate-400 text-[11px] font-sans">(Folder pengumpulan berkas)</span></div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                            <div class="bg-blue-50 border border-blue-200 p-3 rounded-lg text-blue-800">
+                                <strong>1. Penamaan Konsisten:</strong> Gunakan penomoran di depan folder agar urutan folder selalu tetap dan rapi.
+                            </div>
+                            <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg text-amber-800">
+                                <strong>2. Versi Jelas:</strong> Hindari nama file seperti "RPP_Final_BGT.docx". Gunakan "RPP_PAI_V1.docx".
+                            </div>
+                            <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg text-emerald-800">
+                                <strong>3. Cadangan Rutin:</strong> Tetap miliki salinan penting secara berkaliber di lebih dari satu tempat.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: ANIMASI PERBANDINGAN -->
+            <section id="animasi-komparasi" class="scroll-mt-20">
+                <div class="border-l-4 border-indigo-600 pl-4 mb-6">
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-film text-indigo-600"></i> Fitur Utama — Animasi Komparasi
+                    </h2>
+                    <p class="text-sm text-slate-500">Studi Visual: Penyimpanan Komputer Lokal vs Google Drive Cloud</p>
+                </div>
+
+                <!-- Interactive Storyboard Panel -->
+                <div class="bg-slate-900 rounded-2xl p-4 sm:p-6 text-white shadow-xl">
+                    <!-- Controls Header -->
+                    <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4 mb-6">
+                        <div>
+                            <span class="text-xs text-indigo-400 font-semibold tracking-wider uppercase">Simulasi Interaktif</span>
+                            <h3 id="scene-title" class="text-lg font-bold">Tekan "Mulai Simulasi" untuk memulai cerita</h3>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button id="btn-start-anim" onclick="startAnimation()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-lg text-xs transition flex items-center gap-2 shadow">
+                                <i class="fa-solid fa-play"></i> Mulai Simulasi
+                            </button>
+                            <button id="btn-reset-anim" onclick="resetAnimation()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-lg text-xs transition">
+                                <i class="fa-solid fa-rotate-left"></i> Ulangi
+                            </button>
+                            <button onclick="showLessonModal()" class="px-3 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-lightbulb"></i> Apa Pelajarannya?
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dual Screen Comparison Panels -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <!-- Panel Left: PC / Local -->
+                        <div class="bg-slate-800/80 rounded-xl p-4 border border-slate-700 flex flex-col justify-between min-h-[320px] relative overflow-hidden">
+                            <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-3">
+                                <div class="flex items-center gap-2 text-rose-400 font-bold text-xs uppercase tracking-wider">
+                                    <i class="fa-solid fa-desktop"></i> Hanya di Komputer (Lokal)
+                                </div>
+                                <span class="bg-rose-950/80 text-rose-300 text-[10px] px-2 py-0.5 rounded border border-rose-800/50">Tersimpan di Perangkat</span>
+                            </div>
+
+                            <!-- Graphic Representation -->
+                            <div id="local-graphic" class="flex-1 flex flex-col items-center justify-center p-4 text-center my-2">
+                                <div class="w-16 h-16 rounded-full bg-slate-700 flex items-center justify-center text-3xl mb-3 text-slate-400">
+                                    <i class="fa-solid fa-laptop"></i>
+                                </div>
+                                <div class="text-sm font-medium text-slate-300">Siap Menjalankan Simulasi</div>
+                                <div class="text-xs text-slate-500 mt-1">Klik tombol mulai di atas</div>
+                            </div>
+
+                            <!-- Notification Box -->
+                            <div id="local-status" class="bg-slate-900/90 p-3 rounded-lg border border-slate-700 text-xs text-slate-300 font-mono">
+                                Status: Menunggu instruksi...
+                            </div>
+                        </div>
+
+                        <!-- Panel Right: Cloud Drive -->
+                        <div class="bg-slate-800/80 rounded-xl p-4 border border-slate-700 flex flex-col justify-between min-h-[320px] relative overflow-hidden">
+                            <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-3">
+                                <div class="flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase tracking-wider">
+                                    <i class="fa-solid fa-cloud"></i> Google Drive (Cloud Storage)
+                                </div>
+                                <span class="bg-emerald-950/80 text-emerald-300 text-[10px] px-2 py-0.5 rounded border border-emerald-800/50">Tersimpan di Cloud</span>
+                            </div>
+
+                            <!-- Graphic Representation -->
+                            <div id="cloud-graphic" class="flex-1 flex flex-col items-center justify-center p-4 text-center my-2">
+                                <div class="w-16 h-16 rounded-full bg-slate-700 flex items-center justify-center text-3xl mb-3 text-emerald-400">
+                                    <i class="fa-brands fa-google-drive"></i>
+                                </div>
+                                <div class="text-sm font-medium text-slate-300">Siap Menjalankan Simulasi</div>
+                                <div class="text-xs text-slate-500 mt-1">Klik tombol mulai di atas</div>
+                            </div>
+
+                            <!-- Notification Box -->
+                            <div id="cloud-status" class="bg-slate-900/90 p-3 rounded-lg border border-slate-700 text-xs text-slate-300 font-mono">
+                                Status: Menunggu instruksi...
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Scene Stepper Indicator -->
+                    <div class="mt-6 flex justify-center items-center gap-2">
+                        <span id="step-dot-1" class="w-3 h-3 rounded-full bg-slate-700 transition-all"></span>
+                        <span id="step-dot-2" class="w-3 h-3 rounded-full bg-slate-700 transition-all"></span>
+                        <span id="step-dot-3" class="w-3 h-3 rounded-full bg-slate-700 transition-all"></span>
+                        <span id="step-dot-4" class="w-3 h-3 rounded-full bg-slate-700 transition-all"></span>
+                    </div>
+                </div>
+
+                <!-- Comparison Matrix Table -->
+                <div class="mt-8 bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+                    <div class="p-4 bg-slate-100 border-b border-slate-200 font-bold text-slate-800 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-table-list text-brand-600"></i> Tabel Perbandingan Ringkas
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
+                                    <th class="p-3">Aspek</th>
+                                    <th class="p-3 text-rose-700 bg-rose-50/50">Hanya di Komputer</th>
+                                    <th class="p-3 text-emerald-700 bg-emerald-50/50">Google Drive</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 text-slate-700">
+                                <tr>
+                                    <td class="p-3 font-semibold">Lokasi File</td>
+                                    <td class="p-3">Perangkat fisik tertentu</td>
+                                    <td class="p-3">Penyimpanan cloud online</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-semibold">Risiko Lupa Lokasi</td>
+                                    <td class="p-3">Bisa sering terjadi (desktop acak)</td>
+                                    <td class="p-3">Dapat dikurangi dengan hirarki folder teratur</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-semibold">Akses Perangkat Lain</td>
+                                    <td class="p-3">Perlu flashdisk / salin fisik manual</td>
+                                    <td class="p-3">Bisa melalui akun & izin yang sesuai</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-semibold">Risiko Kerusakan Hardware</td>
+                                    <td class="p-3 text-rose-600 font-semibold">Bisa hilang total jika tak ada backup</td>
+                                    <td class="p-3 text-emerald-600 font-semibold">Salinan cloud tetap aman di server</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-semibold">Berbagi File</td>
+                                    <td class="p-3">Mengirim lampiran email / chat berulang</td>
+                                    <td class="p-3">Cukup bagikan tautan izin akses</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-semibold">Koneksi Internet</td>
+                                    <td class="p-3">Tidak diperlukan untuk file lokal</td>
+                                    <td class="p-3">Diperlukan untuk sinkronisasi / akses cloud</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 5: SIMULASI GOOGLE DRIVE -->
+            <section id="simulasi-gdrive" class="scroll-mt-20">
+                <div class="border-l-4 border-gdrive-blue pl-4 mb-6">
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-laptop-code text-gdrive-blue"></i> Simulasi Interaktif Google Drive
+                    </h2>
+                    <p class="text-sm text-slate-500">Praktik langsung pengelolaan file & folder dalam lingkungan simulasi lokal.</p>
+                </div>
+
+                <!-- Interactive App Simulation Window -->
+                <div class="bg-white rounded-2xl border-2 border-slate-300 shadow-xl overflow-hidden">
+                    <!-- Top Disclaimer Bar -->
+                    <div class="bg-amber-500 text-slate-950 font-bold px-4 py-1.5 text-xs text-center flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>SIMULASI PEMBELAJARAN — bukan Google Drive asli. Data hanya tersimpan sementara di memori browser Anda.</span>
+                    </div>
+
+                    <!-- Drive Interface Header Bar -->
+                    <div class="p-3 bg-slate-100 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-brands fa-google-drive text-2xl text-gdrive-blue"></i>
+                            <span class="font-bold text-slate-800 text-sm">Drive Saya</span>
+                            <span id="current-path-display" class="text-xs bg-slate-200 px-2.5 py-1 rounded-md text-slate-600 font-mono">/Administrasi_PAI</span>
+                        </div>
+
+                        <!-- Action Toolbar -->
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button onclick="simNavigateBack()" id="btn-drive-back" disabled class="px-2.5 py-1.5 bg-slate-200 text-slate-700 hover:bg-slate-300 disabled:opacity-40 disabled:hover:bg-slate-200 rounded text-xs font-semibold flex items-center gap-1">
+                                <i class="fa-solid fa-arrow-left"></i> Kembali
+                            </button>
+                            <button onclick="simCreateFolderPrompt()" class="px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 rounded text-xs font-semibold flex items-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-folder-plus text-amber-500"></i> Folder Baru
+                            </button>
+                            <button onclick="simUploadFilePrompt()" class="px-3 py-1.5 bg-gdrive-blue hover:bg-blue-600 text-white rounded text-xs font-semibold flex items-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-upload"></i> Unggah File
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Drive File Explorer Content Area -->
+                    <div class="p-4 min-h-[300px] bg-slate-50/50">
+                        <!-- Drive Table List -->
+                        <div class="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 font-semibold">
+                                        <th class="p-3">Nama</th>
+                                        <th class="p-3 hidden sm:table-cell">Ukuran</th>
+                                        <th class="p-3 hidden md:table-cell">Diperbarui</th>
+                                        <th class="p-3 text-right">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="drive-files-container" class="divide-y divide-slate-100">
+                                    <!-- Dynamic Rows rendered by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Drive Storage Info Footer -->
+                    <div class="px-4 py-2 bg-slate-100 border-t border-slate-200 text-[11px] text-slate-500 flex justify-between items-center">
+                        <span>Penyimpanan Terpakai Simulasi: <strong class="text-slate-700">12.4 MB</strong> dari 15 GB</span>
+                        <span class="italic">Fitur: Buka, Buat, Unggah, Bagikan & Hapus</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 6: MATERI S.ID -->
+            <section id="materi-sid" class="scroll-mt-20">
+                <div class="border-l-4 border-sid-primary pl-4 mb-6">
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-link text-sid-primary"></i> Materi B — Pemendek URL s.id
+                    </h2>
+                    <p class="text-sm text-slate-500">Platform pemendek link dan microsite praktis untuk memperluas akses media pembelajaran.</p>
+                </div>
+
+                <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="md:col-span-2 space-y-4">
+                            <h3 class="font-bold text-slate-800 text-base">Apa itu Pemendek Tautan (URL Shortener)?</h3>
+                            <p class="text-slate-700 text-sm leading-relaxed">
+                                Pemendek URL adalah layanan web yang mengompres tautan panjang (seperti link berbagi Google Drive yang rumit) menjadi bentuk yang jauh lebih ringkas, rapi, dan mudah diingat.
+                            </p>
+                            
+                            <div class="bg-rose-50 border-l-4 border-sid-primary p-4 rounded-r-lg">
+                                <div class="text-xs font-bold text-sid-dark uppercase tracking-wider mb-1">Contoh Praktis Perubahan Link:</div>
+                                <div class="text-xs text-slate-600 line-through truncate mb-1">https://drive.google.com/file/d/1a2b3c4d5e6f7g8h9i0j_XYZ_PAI_2026/view?usp=sharing</div>
+                                <div class="text-sm font-bold text-sid-primary flex items-center gap-2">
+                                    <i class="fa-solid fa-arrow-right"></i> https://s.id/materi-akhlak-pai
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                            <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider text-sid-primary">Manfaat Utama s.id:</h4>
+                            <ul class="text-xs text-slate-600 space-y-2">
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-check text-emerald-500 mt-0.5"></i>
+                                    <span>Menghemat ruang saat membagikan tautan di WhatsApp atau LMS.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-check text-emerald-500 mt-0.5"></i>
+                                    <span>Meminimalkan kesalahan pengetikan manual oleh mahasiswa.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-check text-emerald-500 mt-0.5"></i>
+                                    <span>Memudahkan dosen menulis tautan di slide presentasi / papan tulis.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Steps to use s.id -->
+                    <div class="border-t border-slate-200 pt-5">
+                        <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wide mb-3">Langkah Penggunaan s.id dalam Pembelajaran</h3>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 text-center text-xs">
+                            <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+                                <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 font-bold inline-flex items-center justify-center text-[10px] mb-1">1</span>
+                                <div class="font-medium text-slate-800">Buka s.id</div>
+                            </div>
+                            <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+                                <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 font-bold inline-flex items-center justify-center text-[10px] mb-1">2</span>
+                                <div class="font-medium text-slate-800">Masuk / Daftar</div>
+                            </div>
+                            <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+                                <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 font-bold inline-flex items-center justify-center text-[10px] mb-1">3</span>
+                                <div class="font-medium text-slate-800">Pilih Link</div>
+                            </div>
+                            <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+                                <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 font-bold inline-flex items-center justify-center text-[10px] mb-1">4</span>
+                                <div class="font-medium text-slate-800">Tempel URL</div>
+                            </div>
+                            <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+                                <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 font-bold inline-flex items-center justify-center text-[10px] mb-1">5</span>
+                                <div class="font-medium text-slate-800">Proses Link</div>
+                            </div>
+                            <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+                                <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 font-bold inline-flex items-center justify-center text-[10px] mb-1">6</span>
+                                <div class="font-medium text-slate-800">Salin Hasil</div>
+                            </div>
+                            <div class="p-2.5 bg-emerald-50 rounded-lg border border-emerald-200">
+                                <span class="w-6 h-6 rounded-full bg-emerald-200 text-emerald-800 font-bold inline-flex items-center justify-center text-[10px] mb-1">7</span>
+                                <div class="font-medium text-emerald-900">Uji Tautan</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 7: SIMULASI S.ID -->
+            <section id="simulasi-sid" class="scroll-mt-20">
+                <div class="border-l-4 border-amber-500 pl-4 mb-6">
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-scissors text-amber-500"></i> Simulasi Pemendekan Tautan s.id
+                    </h2>
+                    <p class="text-sm text-slate-500">Coba langsung mekanisme pemendekan URL secara lokal.</p>
+                </div>
+
+                <div class="bg-white rounded-2xl border-2 border-slate-300 shadow-xl overflow-hidden p-6 max-w-3xl mx-auto">
+                    <!-- Disclaimer Banner -->
+                    <div class="mb-5 bg-amber-50 border border-amber-200 text-amber-800 text-xs p-3 rounded-lg flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-amber-600 text-base"></i>
+                        <span>Tautan ini hanya contoh lokal simulasi, bukan tautan s.id sungguhan. Tidak ada data yang dikirim ke server eksternal.</span>
+                    </div>
+
+                    <!-- Input Form -->
+                    <div class="space-y-4">
+                        <div>
+                            <label for="sid-input-url" class="block text-xs font-bold text-slate-700 uppercase mb-1">Masukkan URL Panjang (Drive / Bahan Ajar):</label>
+                            <input type="url" id="sid-input-url" placeholder="https://drive.google.com/file/d/1234567890abcdefg/view?usp=sharing" 
+                                class="w-full px-4 py-2.5 text-xs sm:text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sid-primary font-mono">
+                        </div>
+
+                        <div>
+                            <label for="sid-custom-alias" class="block text-xs font-bold text-slate-700 uppercase mb-1">Custom Alias (Opsional):</label>
+                            <div class="flex items-center">
+                                <span class="bg-slate-100 border border-r-0 border-slate-300 px-3 py-2.5 text-xs text-slate-500 rounded-l-lg font-mono">https://s.id/</span>
+                                <input type="text" id="sid-custom-alias" placeholder="materi-akhlak-pai" 
+                                    class="flex-1 px-3 py-2.5 text-xs sm:text-sm border border-slate-300 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-sid-primary font-mono">
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <button onclick="processSidShorten()" class="px-5 py-2.5 bg-sid-primary hover:bg-sid-dark text-white font-bold rounded-lg text-xs transition flex items-center gap-2 shadow">
+                                <i class="fa-solid fa-bolt"></i> Pendekkan Tautan
+                            </button>
+                            <a href="https://s.id/" target="_blank" rel="noopener" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg text-xs transition flex items-center gap-1.5 border border-slate-300">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Situs Resmi s.id
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Output Area -->
+                    <div id="sid-output-box" class="mt-6 hidden p-4 bg-slate-900 rounded-xl border border-slate-800 text-white animate-fade-in">
+                        <div class="text-xs text-slate-400 mb-1">Hasil Tautan Pendek Simulasi:</div>
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            <span id="sid-result-link" class="font-mono text-emerald-400 font-bold text-sm sm:text-base">https://s.id/materi-akhlak-pai</span>
+                            <div class="flex items-center gap-2">
+                                <button onclick="copySidLink()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded border border-slate-700 flex items-center gap-1">
+                                    <i class="fa-regular fa-copy"></i> Salin
+                                </button>
+                                <button onclick="testSidLink()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold rounded text-white flex items-center gap-1">
+                                    <i class="fa-solid fa-vial"></i> Uji Simulasi
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 8: STUDI KASUS TERPADU -->
+            <section id="studi-kasus" class="scroll-mt-20">
+                <div class="border-l-4 border-purple-600 pl-4 mb-6">
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-chalkboard-user text-purple-600"></i> Studi Kasus Administrasi Pembelajaran PAI
+                    </h2>
+                    <p class="text-sm text-slate-500">Integrasi Alur Kerja Google Drive & s.id dalam Situasi Nyata Perkuliahan.</p>
+                </div>
+
+                <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-6">
+                    <!-- Scenario Card -->
+                    <div class="bg-purple-50 border border-purple-200 rounded-xl p-4 flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-full bg-purple-600 text-white flex items-center justify-center text-xl shrink-0 shadow">
+                            <i class="fa-solid fa-user-gear"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-purple-700 uppercase tracking-wider">Skenario Pembelajaran</span>
+                            <h3 class="font-bold text-slate-800 text-sm mt-0.5">Membagikan File "Materi_Akhlak_Terpuji.pdf" via WhatsApp Group Class</h3>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                                Seorang dosen PAI hendak membagikan materi terbaru. Dosen menginginkan berkas tetap aman di Google Drive tanpa tumpat di ruang penyimpanan memori ponsel mahasiswa.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Workflow Diagram -->
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider mb-3 text-purple-700">Diagram Alur Integrasi Google Drive & s.id</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-2 text-xs">
+                            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                                <i class="fa-solid fa-file-pdf text-red-500 text-lg mb-1"></i>
+                                <div class="font-bold text-slate-800 text-[11px]">1. File Materi</div>
+                            </div>
+                            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                                <i class="fa-brands fa-google-drive text-emerald-500 text-lg mb-1"></i>
+                                <div class="font-bold text-slate-800 text-[11px]">2. Unggah Drive</div>
+                            </div>
+                            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                                <i class="fa-solid fa-lock-open text-blue-500 text-lg mb-1"></i>
+                                <div class="font-bold text-slate-800 text-[11px]">3. Atur Izin Access</div>
+                            </div>
+                            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                                <i class="fa-solid fa-link text-indigo-500 text-lg mb-1"></i>
+                                <div class="font-bold text-slate-800 text-[11px]">4. Salin Link</div>
+                            </div>
+                            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                                <i class="fa-solid fa-scissors text-amber-500 text-lg mb-1"></i>
+                                <div class="font-bold text-slate-800 text-[11px]">5. s.id Shorten</div>
+                            </div>
+                            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                                <i class="fa-solid fa-vial-circle-check text-teal-500 text-lg mb-1"></i>
+                                <div class="font-bold text-slate-800 text-[11px]">6. Uji Tautan</div>
+                            </div>
+                            <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-center">
+                                <i class="fa-solid fa-paper-plane text-emerald-600 text-lg mb-1"></i>
+                                <div class="font-bold text-slate-800 text-[11px]">7. Bagikan WA</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Important Security Warning Box -->
+                    <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg text-xs space-y-1">
+                        <div class="font-bold text-amber-900 flex items-center gap-2">
+                            <i class="fa-solid fa-shield-halved"></i> Catatan Penting Keamanan & Izin Akses:
+                        </div>
+                        <p class="text-amber-800">
+                            s.id <strong>hanya memendekkan tautan</strong> dan <strong>TIDAK otomatis mengubah izin akses Google Drive</strong>. Jika tautan Google Drive Anda masih bertipe "Restricted / Dibatasi", penerima tautan s.id tetap tidak akan bisa membuka berkas tersebut!
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 9: LATIHAN PRAKTIK -->
+            <section id="latihan" class="scroll-mt-20">
+                <div class="border-l-4 border-teal-600 pl-4 mb-6">
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-teal-600"></i> Latihan Praktik & Checklist Kemahiran
+                    </h2>
+                    <p class="text-sm text-slate-500">Tandai setiap indikator kemampuan setelah Anda berhasil menguasainya.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Interactive Checklist -->
+                    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-3">
+                        <h3 class="font-bold text-slate-800 text-sm border-b pb-2 flex justify-between items-center">
+                            <span>Checklist Praktik Mandiri</span>
+                            <span id="checklist-counter" class="text-xs bg-teal-100 text-teal-800 px-2 py-0.5 rounded-full font-mono">0 / 7 Selesai</span>
+                        </h3>
+
+                        <div class="space-y-2 text-xs" id="checklist-container">
+                            <label class="flex items-start gap-3 p-2 rounded hover:bg-slate-50 cursor-pointer border border-transparent hover:border-slate-200">
+                                <input type="checkbox" onchange="updateChecklistProgress()" class="mt-0.5 rounded text-teal-600 focus:ring-teal-500">
+                                <span>Memahami perbedaan penyimpanan lokal komputer vs cloud drive.</span>
+                            </label>
+                            <label class="flex items-start gap-3 p-2 rounded hover:bg-slate-50 cursor-pointer border border-transparent hover:border-slate-200">
+                                <input type="checkbox" onchange="updateChecklistProgress()" class="mt-0.5 rounded text-teal-600 focus:ring-teal-500">
+                                <span>Mampu merancang hirarki folder Administrasi PAI yang rapi.</span>
+                            </label>
+                            <label class="flex items-start gap-3 p-2 rounded hover:bg-slate-50 cursor-pointer border border-transparent hover:border-slate-200">
+                                <input type="checkbox" onchange="updateChecklistProgress()" class="mt-0.5 rounded text-teal-600 focus:ring-teal-500">
+                                <span>Praktik membuat folder & mengunggah file di simulasi Google Drive.</span>
+                            </label>
+                            <label class="flex items-start gap-3 p-2 rounded hover:bg-slate-50 cursor-pointer border border-transparent hover:border-slate-200">
+                                <input type="checkbox" onchange="updateChecklistProgress()" class="mt-0.5 rounded text-teal-600 focus:ring-teal-500">
+                                <span>Menjelaskan perbedaan akses Viewer, Commenter, dan Editor.</span>
+                            </label>
+                            <label class="flex items-start gap-3 p-2 rounded hover:bg-slate-50 cursor-pointer border border-transparent hover:border-slate-200">
+                                <input type="checkbox" onchange="updateChecklistProgress()" class="mt-0.5 rounded text-teal-600 focus:ring-teal-500">
+                                <span>Memahami fungsi utama layanan pemendek tautan s.id.</span>
+                            </label>
+                            <label class="flex items-start gap-3 p-2 rounded hover:bg-slate-50 cursor-pointer border border-transparent hover:border-slate-200">
+                                <input type="checkbox" onchange="updateChecklistProgress()" class="mt-0.5 rounded text-teal-600 focus:ring-teal-500">
+                                <span>Mencoba pemendekan URL di panel simulasi s.id.</span>
+                            </label>
+                            <label class="flex items-start gap-3 p-2 rounded hover:bg-slate-50 cursor-pointer border border-transparent hover:border-slate-200">
+                                <input type="checkbox" onchange="updateChecklistProgress()" class="mt-0.5 rounded text-teal-600 focus:ring-teal-500">
+                                <span>Menjelaskan langkah berbagi tautan materi secara aman.</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Reflection Boxes -->
+                    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-4">
+                        <h3 class="font-bold text-slate-800 text-sm border-b pb-2">Kolom Refleksi Pemahaman</h3>
+
+                        <div class="space-y-1">
+                            <label class="block text-xs font-semibold text-slate-700">1. Apa risiko utama jika seluruh berkas pembelajaran PAI hanya tersimpan di satu komputer?</label>
+                            <textarea id="reflect-input-1" oninput="saveReflections()" rows="3" placeholder="Tuliskan analisis Anda di sini..." 
+                                class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none"></textarea>
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="block text-xs font-semibold text-slate-700">2. Hal penting apa yang harus diperiksa sebelum membagikan tautan Google Drive melalui s.id?</label>
+                            <textarea id="reflect-input-2" oninput="saveReflections()" rows="3" placeholder="Tuliskan analisis Anda di sini..." 
+                                class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none"></textarea>
+                        </div>
+
+                        <div id="reflection-save-status" class="text-[11px] text-emerald-600 font-semibold text-right hidden">
+                            <i class="fa-solid fa-check-double"></i> Refleksi tersimpan secara lokal.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 10: KUIS INTERAKTIF -->
+            <section id="kuis" class="scroll-mt-20">
+                <div class="border-l-4 border-amber-600 pl-4 mb-6">
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-clipboard-question text-amber-600"></i> Kuis Evaluasi Pemahaman (10 Soal)
+                    </h2>
+                    <p class="text-sm text-slate-500">Uji tingkat pemahaman Anda mengenai Google Drive & s.id.</p>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-lg p-6 max-w-3xl mx-auto">
+                    <!-- Quiz Progress Header -->
+                    <div class="flex items-center justify-between border-b border-slate-200 pb-4 mb-6">
+                        <div>
+                            <span class="text-xs text-slate-500 font-semibold uppercase">Soal Pertanyaan</span>
+                            <div id="quiz-question-number" class="text-lg font-bold text-brand-700">Soal 1 dari 10</div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs text-slate-500 font-semibold uppercase">Skor Sementara</span>
+                            <div id="quiz-live-score" class="text-lg font-bold text-emerald-600">0 / 100</div>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Question Container -->
+                    <div id="quiz-container" class="space-y-6">
+                        <h3 id="quiz-question-text" class="font-bold text-slate-800 text-base leading-relaxed">
+                            Loading pertanyaan...
+                        </h3>
+
+                        <!-- Options List -->
+                        <div id="quiz-options-container" class="space-y-2.5">
+                            <!-- Options injected dynamically by JS -->
+                        </div>
+
+                        <!-- Feedback Area -->
+                        <div id="quiz-feedback" class="hidden p-4 rounded-xl border text-xs leading-relaxed animate-fade-in">
+                            <!-- Feedback injected dynamically -->
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+                            <button id="btn-check-answer" onclick="checkQuizAnswer()" disabled class="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 disabled:opacity-40 text-white font-bold rounded-lg text-xs transition">
+                                Periksa Jawaban
+                            </button>
+                            <button id="btn-next-question" onclick="nextQuizQuestion()" class="hidden px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg text-xs transition">
+                                Soal Berikutnya <i class="fa-solid fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Final Score Screen (hidden by default) -->
+                    <div id="quiz-final-screen" class="hidden text-center py-8 space-y-6">
+                        <div class="w-20 h-20 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-4xl mx-auto shadow-inner">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-slate-800">Kuis Selesai!</h3>
+                            <p class="text-xs text-slate-500 mt-1">Berikut adalah hasil evaluasi Anda:</p>
+                        </div>
+                        <div class="text-5xl font-extrabold text-brand-600 font-mono" id="quiz-final-score">
+                            0
+                        </div>
+                        <p id="quiz-final-message" class="text-xs text-slate-600 max-w-md mx-auto">
+                            Pesan evaluasi kuis.
+                        </p>
+                        <button onclick="restartQuiz()" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs transition inline-flex items-center gap-2 shadow-md">
+                            <i class="fa-solid fa-rotate-right"></i> Ulangi Kuis
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 11: KESIMPULAN & REFLEKSI -->
+            <section id="kesimpulan" class="scroll-mt-20">
+                <div class="border-l-4 border-sky-600 pl-4 mb-6">
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-flag-checkered text-sky-600"></i> Kesimpulan & Refleksi Akhir
+                    </h2>
+                    <p class="text-sm text-slate-500">Rangkuman kunci modul dan rencana implementasi mandiri.</p>
+                </div>
+
+                <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl space-y-2">
+                            <div class="font-bold text-blue-900 text-sm flex items-center gap-2">
+                                <i class="fa-brands fa-google-drive text-gdrive-blue"></i> 1. Google Drive
+                            </div>
+                            <p class="text-xs text-blue-800 leading-relaxed">
+                                Penyimpanan cloud memudahkan mahasiswa dan dosen PAI untuk menyimpan, menata, dan berbagi dokumen dari mana saja secara aman.
+                            </p>
+                        </div>
+
+                        <div class="p-4 bg-rose-50 border border-rose-200 rounded-xl space-y-2">
+                            <div class="font-bold text-rose-900 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-link text-sid-primary"></i> 2. s.id
+                            </div>
+                            <p class="text-xs text-rose-800 leading-relaxed">
+                                Pemendek tautan menjadikan URL bahan ajar yang panjang menjadi ringkas dan mudah diketik tanpa resiko salah karakter.
+                            </p>
+                        </div>
+
+                        <div class="p-4 bg-amber-50 border border-amber-200 rounded-xl space-y-2">
+                            <div class="font-bold text-amber-900 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-shield-halved text-amber-600"></i> 3. Etika & Keamanan
+                            </div>
+                            <p class="text-xs text-amber-800 leading-relaxed">
+                                Penggunaan keduanya wajib diimbangi dengan struktur folder yang teratur, pengecekan izin berbagi, dan kewaspadaan keamanan data.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-200 pt-5 space-y-3">
+                        <h3 class="font-bold text-slate-800 text-sm">Pertanyaan Refleksi Akhir:</h3>
+                        <p class="text-xs text-slate-600 italic">
+                            "Bagaimana Anda akan menerapkan kombinasi Google Drive dan s.id dalam mengelola serta membagikan dokumen pembelajaran PAI secara nyata di sekolah/kampus?"
+                        </p>
+                        <textarea id="final-reflection-text" oninput="saveReflections()" rows="3" placeholder="Tuliskan komitmen penerapan Anda..." 
+                            class="w-full p-3 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="text-center text-xs text-slate-500 border-t border-slate-200 pt-6 pb-12">
+                <p>© 2026 TIK PAI — Media Pembelajaran Interaktif Google Drive & s.id</p>
+                <p class="mt-1">Disusun untuk Mata Kuliah TIK (STI10005) - Dosen Pengampu: Aslam Mardin, S.Kom., M.Kom., Gr.</p>
+            </footer>
+
+        </main>
+    </div>
+
+    <!-- MODAL: Lesson Learned Modal for Animation -->
+    <div id="lesson-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 animate-scale-up">
+            <div class="flex items-center justify-between border-b pb-3">
+                <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                    <i class="fa-solid fa-lightbulb text-amber-500"></i> Pelajaran Penting Simulasi
+                </h3>
+                <button onclick="closeLessonModal()" class="text-slate-400 hover:text-slate-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+                “Jangan hanya mengandalkan penyimpanan lokal. Susun file dengan rapi, simpan salinan cadangan, dan gunakan penyimpanan cloud sesuai kebutuhan. Google Drive membantu akses dan berbagi file, tetapi tetap perlu menjaga keamanan akun dan mengatur izin akses.”
+            </p>
+            <div class="text-right">
+                <button onclick="closeLessonModal()" class="px-4 py-2 bg-brand-600 text-white rounded-lg font-bold text-xs hover:bg-brand-700">
+                    Saya Mengerti
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Logic Script -->
+    <script>
+        // State variables
+        let currentAnimationStep = 0;
+        let animationInterval = null;
+
+        // Drive Simulation State
+        let driveData = [
+            { id: 1, name: "01_Modul_Ajar", type: "folder", size: "--", updated: "2026-10-12" },
+            { id: 2, name: "02_Jurnal_Mengajar", type: "folder", size: "--", updated: "2026-10-14" },
+            { id: 3, name: "03_Daftar_Hadir", type: "folder", size: "--", updated: "2026-10-15" },
+            { id: 4, name: "04_Buku_Nilai", type: "folder", size: "--", updated: "2026-10-18" },
+            { id: 5, name: "05_Materi_Pembelajaran", type: "folder", size: "--", updated: "2026-10-20" },
+            { id: 6, name: "06_Tugas_Mahasiswa", type: "folder", size: "--", updated: "2026-10-21" },
+            { id: 7, name: "RPP_PAI_Semester_1.docx", type: "file", size: "2.4 MB", updated: "2026-10-21" },
+            { id: 8, name: "Silabus_TIK_STI10005.pdf", type: "file", size: "1.8 MB", updated: "2026-10-10" }
+        ];
+        let currentPath = "/Administrasi_PAI";
+
+        // Quiz Question Dataset
+        const quizQuestions = [
+            {
+                question: "1. Apa fungsi utama dari layanan Google Drive?",
+                options: [
+                    "Menyimpan file secara online berbasis cloud dan membagikannya via internet.",
+                    "Membuat jaringan komputer lokal tanpa sambungan internet.",
+                    "Mengedit video resolusi tinggi secara otomatis.",
+                    "Menghapus file komputer lokal secara permanen."
+                ],
+                correct: 0,
+                explanation: "Google Drive berfungsi menyimpan, mengelola, dan membagikan file secara online (cloud storage)."
+            },
+            {
+                question: "2. Apa risiko utama dari menyimpan dokumen hanya pada folder Desktop komputer lokal?",
+                options: [
+                    "File akan otomatis terhapus setiap jam.",
+                    "Dokumen berisiko sulit diakses atau hilang jika komputer rusak atau tertinggal.",
+                    "Ukuran file akan menjadi dua kali lipat lebih besar.",
+                    "Google Drive akan memblokir akun Anda."
+                ],
+                correct: 1,
+                explanation: "Penyimpanan lokal sangat bergantung pada kesehatan fisik hardware perangkat tersebut."
+            },
+            {
+                question: "3. Mengapa struktur penamaan folder seperti '01_Modul_Ajar' sangat direkomendasikan?",
+                options: [
+                    "Agar folder tidak bisa dibuka oleh orang lain.",
+                    "Agar folder terurut dengan rapi, sistematis, dan mudah dicari.",
+                    "Agar Google Drive memberikan kapasitas penyimpanan gratis tambahan.",
+                    "Agar file di dalam folder terkonversi menjadi format PDF."
+                ],
+                correct: 1,
+                explanation: "Penomoran konsisten membantu menjaga keterurutan file secara otomatis di cloud maupun komputer."
+            },
+            {
+                question: "4. Bagaimana cara mengakses file di Google Drive dari perangkat lain (misal: smartphone)?",
+                options: [
+                    "Harus memindahkan kartu memori HP ke komputer terlebih dahulu.",
+                    "Login ke akun Google yang sama dan memiliki koneksi internet serta izin akses.",
+                    "Menghubungkan HP dan komputer dengan kabel LAN.",
+                    "File tidak pernah bisa dibuka dari smartphone."
+                ],
+                correct: 1,
+                explanation: "Konektivitas cloud memungkinkan akses fleksibel dari mana saja selama login ke akun yang berhak."
+            },
+            {
+                question: "5. Apa perbedaan peran 'Viewer' dan 'Editor' saat membagikan tautan Google Drive?",
+                options: [
+                    "Viewer bisa mengedit file, Editor hanya bisa melihat.",
+                    "Viewer hanya bisa melihat/mengunduh, sedangkan Editor bisa mengubah/mengedit file.",
+                    "Viewer mewajibkan pembayaran, Editor gratis.",
+                    "Keduanya memiliki hak akses yang sama persis."
+                ],
+                correct: 1,
+                explanation: "Viewer hanya memiliki hak baca, sedangkan Editor diberikan akses untuk mengubah konten berkas."
+            },
+            {
+                question: "6. Apa fungsi utama dari layanan s.id dalam pembelajaran?",
+                options: [
+                    "Menyimpan file video berukuran gigabyte.",
+                    "Memperpendek URL tautan yang panjang agar ringkas dan mudah dibagikan.",
+                    "Mengubah file Word menjadi presentasi PowerPoint.",
+                    "Membuat soal ujian otomatis."
+                ],
+                correct: 1,
+                explanation: "s.id difokuskan sebagai pemendek URL dan pembuat microsite digital."
+            },
+            {
+                question: "7. Langkah apa yang paling penting dilakukan sebelum membagikan tautan s.id kepada mahasiswa?",
+                options: [
+                    "Menguji (test) tautan singkat tersebut terlebih dahulu.",
+                    "Mematikan sambungan internet.",
+                    "Menghapus file asli di Google Drive.",
+                    "Mengganti nama laptop."
+                ],
+                correct: 0,
+                explanation: "Selalu uji tautan singkat untuk memastikan tujuan link mengarah ke berkas yang benar."
+            },
+            {
+                question: "8. Jika file Google Drive diset 'Restricted' (Dibatasi), apakah mahasiswa bisa membukanya melalui link s.id?",
+                options: [
+                    "Bisa, karena s.id otomatis membuka semua proteksi file.",
+                    "Tidak bisa, karena s.id hanya memendekkan tautan dan tidak mengubah izin akses Drive.",
+                    "Bisa, jika mahasiswa menggunakan ponsel Android.",
+                    "Bisa, jika file berformat PDF."
+                ],
+                correct: 1,
+                explanation: "s.id hanya mengompres karakter URL, bukan pengatur izin keamanan Google Drive."
+            },
+            {
+                question: "9. Mengapa penggunaan nama file 'RPP_Final_Banget_Revisi2.docx' sebaiknya dihindari?",
+                options: [
+                    "Karena Google Drive tidak mendukung ekstensi .docx.",
+                    "Karena membingungkan identifikasi versi terbaru dokumen.",
+                    "Karena akan menghabiskan kuota internet lebih banyak.",
+                    "Karena nama file tersebut melanggar aturan s.id."
+                ],
+                correct: 1,
+                explanation: "Penamaan versi yang tidak baku memicu kekeliruan dalam menentukan berkas acuan terbaru."
+            },
+            {
+                question: "10. Manakah urutan alur kerja yang paling efisien dalam membagikan berkas pembelajaran PAI?",
+                options: [
+                    "s.id → Unggah Drive → Bagikan WA.",
+                    "Unggah File ke Drive → Atur Izin Akses → Salin Link → Memendekkan di s.id → Uji & Bagikan.",
+                    "Kirim File via Email ke Semua Orang → Simpan di Desktop.",
+                    "Pendekkan Link s.id → Baru Buat File di Laptop."
+                ],
+                correct: 1,
+                explanation: "Alur logis: Unggah berkas -> Atur izin -> Ambil Link -> Shorten s.id -> Test -> Kirim."
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let quizScore = 0;
+        let selectedQuizOption = null;
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            sidebar.classList.toggle('-translate-x-full');
+            backdrop.classList.toggle('hidden');
+        }
+
+        document.getElementById('toggle-sidebar-btn').addEventListener('click', toggleSidebar);
+
+        function setActiveNav(element) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active-nav-link'));
+            element.classList.add('active-nav-link');
+            if (window.innerWidth < 1024) {
+                toggleSidebar();
+            }
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`Gagal masuk mode presentasi: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        function startAnimation() {
+            resetAnimation();
+            currentAnimationStep = 1;
+            renderAnimationStep(1);
+
+            animationInterval = setInterval(() => {
+                currentAnimationStep++;
+                if (currentAnimationStep > 4) {
+                    clearInterval(animationInterval);
+                } else {
+                    renderAnimationStep(currentAnimationStep);
+                }
+            }, 5000);
+        }
+
+        function resetAnimation() {
+            if (animationInterval) clearInterval(animationInterval);
+            currentAnimationStep = 0;
+            document.getElementById('scene-title').innerText = 'Tekan "Mulai Simulasi" untuk memulai cerita';
+            
+            document.getElementById('local-graphic').innerHTML = `
+                <div class="w-16 h-16 rounded-full bg-slate-700 flex items-center justify-center text-3xl mb-3 text-slate-400">
+                    <i class="fa-solid fa-laptop"></i>
+                </div>
+                <div class="text-sm font-medium text-slate-300">Siap Menjalankan Simulasi</div>
+                <div class="text-xs text-slate-500 mt-1">Klik tombol mulai di atas</div>
+            `;
+            document.getElementById('local-status').innerText = 'Status: Menunggu instruksi...';
+
+            document.getElementById('cloud-graphic').innerHTML = `
+                <div class="w-16 h-16 rounded-full bg-slate-700 flex items-center justify-center text-3xl mb-3 text-emerald-400">
+                    <i class="fa-brands fa-google-drive"></i>
+                </div>
+                <div class="text-sm font-medium text-slate-300">Siap Menjalankan Simulasi</div>
+                <div class="text-xs text-slate-500 mt-1">Klik tombol mulai di atas</div>
+            `;
+            document.getElementById('cloud-status').innerText = 'Status: Menunggu instruksi...';
+
+            updateStepDots(0);
+        }
+
+        function renderAnimationStep(step) {
+            updateStepDots(step);
+
+            if (step === 1) {
+                document.getElementById('scene-title').innerText = 'Adegan 1 — Menyimpan File Baru';
+                
+                document.getElementById('local-graphic').innerHTML = `
+                    <div class="text-amber-400 text-4xl mb-2 animate-bounce"><i class="fa-solid fa-file-word"></i></div>
+                    <div class="text-xs font-bold text-slate-200">RPP_PAI_Final.docx</div>
+                    <div class="text-[11px] text-slate-400 mt-2">Disimpan di: <span class="text-rose-400">C:\\Users\\Desktop\\Folder_Acak</span></div>
+                `;
+                document.getElementById('local-status').innerText = 'Status: File lokal tersimpan di drive C: internal.';
+
+                document.getElementById('cloud-graphic').innerHTML = `
+                    <div class="text-emerald-400 text-4xl mb-2 animate-bounce"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                    <div class="text-xs font-bold text-slate-200">RPP_PAI_Final.docx</div>
+                    <div class="text-[11px] text-slate-400 mt-2">Diunggah ke: <span class="text-emerald-400">/Administrasi_PAI/01_Modul_Ajar</span></div>
+                `;
+                document.getElementById('cloud-status').innerText = 'Status: File tersinkronisasi aman di cloud server.';
+            } 
+            else if (step === 2) {
+                document.getElementById('scene-title').innerText = 'Adegan 2 — Beberapa Hari Kemudian (Mencari Berkas)';
+                
+                document.getElementById('local-graphic').innerHTML = `
+                    <div class="text-rose-400 text-3xl mb-2"><i class="fa-solid fa-circle-question"></i></div>
+                    <div class="text-xs text-rose-300 font-semibold">"Di folder mana saya menyimpan RPP kemarin?"</div>
+                    <div class="mt-2 text-[10px] bg-slate-900 p-2 rounded text-slate-400 text-left space-y-1">
+                        <div>📄 RPP_Final.docx</div>
+                        <div>📄 RPP_Final_Revisi.docx</div>
+                        <div>📄 RPP_Final_Baru.docx</div>
+                    </div>
+                `;
+                document.getElementById('local-status').innerText = 'Status: Bingung menentukan versi file terbaru akibat nama acak.';
+
+                document.getElementById('cloud-graphic').innerHTML = `
+                    <div class="text-emerald-400 text-3xl mb-2"><i class="fa-solid fa-magnifying-glass"></i></div>
+                    <div class="text-xs text-emerald-300 font-semibold">"Pencarian Instan via Kata Kunci"</div>
+                    <div class="mt-2 text-[10px] bg-slate-900 p-2 rounded text-slate-300 text-left border border-emerald-800">
+                        📁 Administrasi_PAI ➔ 📄 RPP_PAI_Semester_1.docx
+                    </div>
+                `;
+                document.getElementById('cloud-status').innerText = 'Status: Struktur teratur memudahkan pencarian berkas.';
+            } 
+            else if (step === 3) {
+                document.getElementById('scene-title').innerText = 'Adegan 3 — Laptop Bermasalah / Tertinggal di Rumah';
+                
+                document.getElementById('local-graphic').innerHTML = `
+                    <div class="text-red-500 text-4xl mb-2"><i class="fa-solid fa-laptop-code"></i></div>
+                    <div class="text-xs font-bold text-red-400">Laptop Rusak / Tertinggal!</div>
+                    <div class="text-[11px] text-slate-400 mt-1">"File lokal tidak dapat diakses dari perangkat lain."</div>
+                `;
+                document.getElementById('local-status').innerText = 'Peringatan: Berkas berisiko hilang/tidak bisa dibuka mengajar!';
+
+                document.getElementById('cloud-graphic').innerHTML = `
+                    <div class="text-emerald-400 text-4xl mb-2"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                    <div class="text-xs font-bold text-emerald-300">Akses Fleksibel via HP / Tablet</div>
+                    <div class="text-[11px] text-slate-300 mt-1">Cukup login akun Google & sambungkan internet.</div>
+                `;
+                document.getElementById('cloud-status').innerText = 'Status: Pembelajaran tetap berlangsung lancar dari HP.';
+            } 
+            else if (step === 4) {
+                document.getElementById('scene-title').innerText = 'Adegan 4 — Kesimpulan & Hasil Perbandingan';
+                
+                document.getElementById('local-graphic').innerHTML = `
+                    <div class="text-amber-400 text-3xl mb-2"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <div class="text-xs text-slate-300 font-bold">Keterbatasan Lokal:</div>
+                    <div class="text-[11px] text-slate-400 mt-1">Tergantung 1 fisik hardware & lokasi fisik.</div>
+                `;
+                document.getElementById('local-status').innerText = 'Catatan: Sangat berisiko tanpa salinan cadangan.';
+
+                document.getElementById('cloud-graphic').innerHTML = `
+                    <div class="text-emerald-400 text-3xl mb-2"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="text-xs text-emerald-300 font-bold">Keunggulan Cloud:</div>
+                    <div class="text-[11px] text-slate-300 mt-1">Aman, fleksibel, terstruktur & mudah dibagikan.</div>
+                `;
+                document.getElementById('cloud-status').innerText = 'Catatan: Solusi utama administrasi era digital.';
+            }
+        }
+
+        function updateStepDots(step) {
+            for (let i = 1; i <= 4; i++) {
+                const dot = document.getElementById(`step-dot-${i}`);
+                if (i === step) {
+                    dot.className = "w-3 h-3 rounded-full bg-indigo-500 scale-125 transition-all";
+                } else {
+                    dot.className = "w-3 h-3 rounded-full bg-slate-700 transition-all";
+                }
+            }
+        }
+
+        function showLessonModal() {
+            document.getElementById('lesson-modal').classList.remove('hidden');
+        }
+
+        function closeLessonModal() {
+            document.getElementById('lesson-modal').classList.add('hidden');
+        }
+
+        function renderDriveFiles() {
+            const container = document.getElementById('drive-files-container');
+            container.innerHTML = '';
+
+            driveData.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = "hover:bg-slate-50 transition border-b border-slate-100";
+                
+                const icon = item.type === 'folder' 
+                    ? '<i class="fa-solid fa-folder text-amber-500 text-base"></i>' 
+                    : '<i class="fa-solid fa-file-lines text-blue-500 text-base"></i>';
+
+                row.innerHTML = `
+                    <td class="p-3 flex items-center gap-2 font-medium text-slate-800">
+                        ${icon}
+                        <span class="${item.type === 'folder' ? 'cursor-pointer hover:underline font-semibold' : ''}" 
+                              onclick="${item.type === 'folder' ? `simOpenFolder('${item.name}')` : ''}">
+                            ${item.name}
+                        </span>
+                    </td>
+                    <td class="p-3 text-slate-500 hidden sm:table-cell">${item.size}</td>
+                    <td class="p-3 text-slate-500 hidden md:table-cell">${item.updated}</td>
+                    <td class="p-3 text-right space-x-1">
+                        <button onclick="simSharePrompt('${item.name}')" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded" title="Bagikan">
+                            <i class="fa-solid fa-share-nodes"></i>
+                        </button>
+                        <button onclick="simDeleteItem(${item.id})" class="p-1.5 text-rose-600 hover:bg-rose-50 rounded" title="Hapus">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                container.appendChild(row);
+            });
+            updateOverallProgress();
+        }
+
+        function simOpenFolder(folderName) {
+            currentPath += `/${folderName}`;
+            document.getElementById('current-path-display').innerText = currentPath;
+            document.getElementById('btn-drive-back').disabled = false;
+            // Demo sub-folder items
+            driveData = [
+                { id: 101, name: "Dokumen_Sub_PAI_1.pdf", type: "file", size: "1.1 MB", updated: "2026-10-21" },
+                { id: 102, name: "Lampiran_Catatan.docx", type: "file", size: "500 KB", updated: "2026-10-21" }
+            ];
+            renderDriveFiles();
+        }
+
+        function simNavigateBack() {
+            currentPath = "/Administrasi_PAI";
+            document.getElementById('current-path-display').innerText = currentPath;
+            document.getElementById('btn-drive-back').disabled = true;
+            // Restore default
+            driveData = [
+                { id: 1, name: "01_Modul_Ajar", type: "folder", size: "--", updated: "2026-10-12" },
+                { id: 2, name: "02_Jurnal_Mengajar", type: "folder", size: "--", updated: "2026-10-14" },
+                { id: 3, name: "03_Daftar_Hadir", type: "folder", size: "--", updated: "2026-10-15" },
+                { id: 4, name: "04_Buku_Nilai", type: "folder", size: "--", updated: "2026-10-18" },
+                { id: 5, name: "05_Materi_Pembelajaran", type: "folder", size: "--", updated: "2026-10-20" },
+                { id: 6, name: "06_Tugas_Mahasiswa", type: "folder", size: "--", updated: "2026-10-21" },
+                { id: 7, name: "RPP_PAI_Semester_1.docx", type: "file", size: "2.4 MB", updated: "2026-10-21" },
+                { id: 8, name: "Silabus_TIK_STI10005.pdf", type: "file", size: "1.8 MB", updated: "2026-10-10" }
+            ];
+            renderDriveFiles();
+        }
+
+        function simCreateFolderPrompt() {
+            const folderName = prompt("Masukkan nama folder baru simulasi:", "07_Dokumen_Baru");
+            if (folderName) {
+                driveData.unshift({
+                    id: Date.now(),
+                    name: folderName,
+                    type: "folder",
+                    size: "--",
+                    updated: "2026-10-21"
+                });
+                renderDriveFiles();
+            }
+        }
+
+        function simUploadFilePrompt() {
+            const fileName = prompt("Masukkan nama file simulasi yang ingin diunggah:", "Materi_Akhlak_Terpuji.pdf");
+            if (fileName) {
+                driveData.unshift({
+                    id: Date.now(),
+                    name: fileName,
+                    type: "file",
+                    size: "3.2 MB",
+                    updated: "2026-10-21"
+                });
+                renderDriveFiles();
+            }
+        }
+
+        function simDeleteItem(id) {
+            if (confirm("Apakah Anda yakin ingin menghapus item simulasi ini?")) {
+                driveData = driveData.filter(item => item.id !== id);
+                renderDriveFiles();
+            }
+        }
+
+        function simSharePrompt(itemName) {
+            const role = prompt(
+                `Pengaturan Berbagi Simulasi untuk "${itemName}":\n\nPilih Hak Akses:\n1. Viewer (Hanya melihat)\n2. Commenter (Melihat & Komentar)\n3. Editor (Mengedit file)\n\nKetik 1, 2, atau 3:`, 
+                "1"
+            );
+            
+            let roleText = "Viewer (Hanya Melihat)";
+            if (role === "2") roleText = "Commenter";
+            if (role === "3") roleText = "Editor";
+
+            alert(`[SIMULASI LINK GOOGLE DRIVE]\n\nPeran Terpilih: ${roleText}\nTautan Berbagi Simulasi:\nhttps://drive.google.com/file/d/simulasi_${Math.floor(Math.random()*100000)}/view\n\nIngat: Pada Google Drive asli, periksa izin berbagi dengan teliti.`);
+        }
+
+        function processSidShorten() {
+            const longUrl = document.getElementById('sid-input-url').value.trim();
+            const customAlias = document.getElementById('sid-custom-alias').value.trim();
+
+            if (!longUrl) {
+                alert("Masukkan URL panjang terlebih dahulu!");
+                return;
+            }
+
+            // Simple URL Validation
+            if (!longUrl.startsWith('http://') && !longUrl.startsWith('https://')) {
+                alert("Format URL harus diawali dengan http:// atau https://");
+                return;
+            }
+
+            const alias = customAlias ? customAlias : "pai-" + Math.floor(1000 + Math.random() * 9000);
+            const generatedLink = `https://s.id/${alias}`;
+
+            document.getElementById('sid-result-link').innerText = generatedLink;
+            document.getElementById('sid-output-box').classList.remove('hidden');
+            updateOverallProgress();
+        }
+
+        function copySidLink() {
+            const linkText = document.getElementById('sid-result-link').innerText;
+            
+            // Clipboard fallback as specified
+            const tempInput = document.createElement('input');
+            tempInput.value = linkText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            alert("Tautan simulasi berhasil disalin ke clipboard!");
+        }
+
+        function testSidLink() {
+            alert("UJI SIMULASI:\n\nTautan ini mengarah ke file simulasi pembelajaran PAI.\n(Ini adalah demonstrasi interaktif lokal).");
+        }
+
+        function updateChecklistProgress() {
+            const checkboxes = document.querySelectorAll('#checklist-container input[type="checkbox"]');
+            let checkedCount = 0;
+            checkboxes.forEach(cb => {
+                if (cb.checked) checkedCount++;
+            });
+
+            document.getElementById('checklist-counter').innerText = `${checkedCount} / ${checkboxes.length} Selesai`;
+            
+            // Save to localStorage
+            const states = Array.from(checkboxes).map(cb => cb.checked);
+            try {
+                localStorage.setItem('tik_pai_checklist', JSON.stringify(states));
+            } catch(e){}
+
+            updateOverallProgress();
+        }
+
+        function loadChecklistState() {
+            try {
+                const saved = localStorage.getItem('tik_pai_checklist');
+                if (saved) {
+                    const states = JSON.parse(saved);
+                    const checkboxes = document.querySelectorAll('#checklist-container input[type="checkbox"]');
+                    checkboxes.forEach((cb, idx) => {
+                        if (states[idx] !== undefined) cb.checked = states[idx];
+                    });
+                    updateChecklistProgress();
+                }
+            } catch(e){}
+        }
+
+        function saveReflections() {
+            const r1 = document.getElementById('reflect-input-1').value;
+            const r2 = document.getElementById('reflect-input-2').value;
+            const rFinal = document.getElementById('final-reflection-text').value;
+
+            try {
+                localStorage.setItem('tik_pai_reflections', JSON.stringify({ r1, r2, rFinal }));
+                const status = document.getElementById('reflection-save-status');
+                status.classList.remove('hidden');
+                setTimeout(() => status.classList.add('hidden'), 2000);
+            } catch(e){}
+
+            updateOverallProgress();
+        }
+
+        function loadReflections() {
+            try {
+                const saved = localStorage.getItem('tik_pai_reflections');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    if (data.r1) document.getElementById('reflect-input-1').value = data.r1;
+                    if (data.r2) document.getElementById('reflect-input-2').value = data.r2;
+                    if (data.rFinal) document.getElementById('final-reflection-text').value = data.rFinal;
+                }
+            } catch(e){}
+        }
+
+        function renderQuizQuestion() {
+            const q = quizQuestions[currentQuizIndex];
+            document.getElementById('quiz-question-number').innerText = `Soal ${currentQuizIndex + 1} dari ${quizQuestions.length}`;
+            document.getElementById('quiz-question-text').innerText = q.question;
+            
+            const optionsContainer = document.getElementById('quiz-options-container');
+            optionsContainer.innerHTML = '';
+            
+            selectedQuizOption = null;
+            document.getElementById('btn-check-answer').disabled = true;
+            document.getElementById('quiz-feedback').className = "hidden p-4 rounded-xl border text-xs leading-relaxed animate-fade-in";
+            document.getElementById('btn-next-question').classList.add('hidden');
+            document.getElementById('btn-check-answer').classList.remove('hidden');
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition text-xs flex items-start gap-3 text-slate-700 font-medium";
+                btn.onclick = () => selectQuizOption(idx, btn);
+                btn.innerHTML = `
+                    <span class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-[10px] font-bold text-slate-500 shrink-0">
+                        ${String.fromCharCode(65 + idx)}
+                    </span>
+                    <span>${opt}</span>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectQuizOption(index, element) {
+            selectedQuizOption = index;
+            const allOptions = document.querySelectorAll('#quiz-options-container button');
+            allOptions.forEach(btn => {
+                btn.classList.remove('border-brand-500', 'bg-brand-50', 'ring-1', 'ring-brand-500');
+            });
+            element.classList.add('border-brand-500', 'bg-brand-50', 'ring-1', 'ring-brand-500');
+            document.getElementById('btn-check-answer').disabled = false;
+        }
+
+        function checkQuizAnswer() {
+            if (selectedQuizOption === null) return;
+
+            const q = quizQuestions[currentQuizIndex];
+            const isCorrect = selectedQuizOption === q.correct;
+            const feedbackBox = document.getElementById('quiz-feedback');
+
+            if (isCorrect) {
+                quizScore += 10;
+                feedbackBox.className = "p-4 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-900 text-xs leading-relaxed";
+                feedbackBox.innerHTML = `<div class="font-bold text-emerald-700 mb-1"><i class="fa-solid fa-circle-check"></i> Jawaban Anda Benar!</div>${q.explanation}`;
+            } else {
+                feedbackBox.className = "p-4 rounded-xl border border-rose-200 bg-rose-50 text-rose-900 text-xs leading-relaxed";
+                feedbackBox.innerHTML = `<div class="font-bold text-rose-700 mb-1"><i class="fa-solid fa-circle-xmark"></i> Jawaban Kurang Tepat!</div>${q.explanation}`;
+            }
+
+            document.getElementById('quiz-live-score').innerText = `${quizScore} / 100`;
+            feedbackBox.classList.remove('hidden');
+
+            document.getElementById('btn-check-answer').classList.add('hidden');
+            document.getElementById('btn-next-question').classList.remove('hidden');
+        }
+
+        function nextQuizQuestion() {
+            currentQuizIndex++;
+            if (currentQuizIndex < quizQuestions.length) {
+                renderQuizQuestion();
+            } else {
+                showQuizFinalScreen();
+            }
+        }
+
+        function showQuizFinalScreen() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            const finalScreen = document.getElementById('quiz-final-screen');
+            finalScreen.classList.remove('hidden');
+
+            document.getElementById('quiz-final-score').innerText = quizScore;
+
+            let msg = "";
+            if (quizScore >= 80) {
+                msg = "Luar biasa! Anda telah menguasai konsep Google Drive dan s.id untuk administrasi PAI secara sempurna.";
+            } else if (quizScore >= 60) {
+                msg = "Hasil yang baik! Pelajari kembali beberapa poin yang keliru agar makin mahir.";
+            } else {
+                msg = "Jangan berkecil hati. Pelajari kembali materi modul dan ulangi kuis ini.";
+            }
+            document.getElementById('quiz-final-message').innerText = msg;
+            updateOverallProgress();
+        }
+
+        function restartQuiz() {
+            currentQuizIndex = 0;
+            quizScore = 0;
+            document.getElementById('quiz-live-score').innerText = "0 / 100";
+            document.getElementById('quiz-final-screen').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            renderQuizQuestion();
+        }
+
+        function updateOverallProgress() {
+            let totalTasks = 4;
+            let completedTasks = 0;
+
+            // 1. Sid link generated?
+            if (!document.getElementById('sid-output-box').classList.contains('hidden')) completedTasks++;
+
+            // 2. Checklist items completed (>3)
+            const cbs = document.querySelectorAll('#checklist-container input[type="checkbox"]:checked');
+            if (cbs.length >= 3) completedTasks++;
+
+            // 3. Reflection filled?
+            if (document.getElementById('reflect-input-1').value.trim().length > 5) completedTasks++;
+
+            // 4. Quiz attempted?
+            if (currentQuizIndex > 0 || quizScore > 0) completedTasks++;
+
+            const pct = Math.round((completedTasks / totalTasks) * 100);
+            document.getElementById('overall-progress').style.width = `${pct}%`;
+            document.getElementById('sidebar-progress-bar').style.width = `${pct}%`;
+            document.getElementById('progress-percentage-text').innerText = `${pct}%`;
+        }
+
+        window.onload = function () {
+            renderDriveFiles();
+            renderQuizQuestion();
+            loadChecklistState();
+            loadReflections();
+            updateOverallProgress();
+        };
+    </script>
+</body>
+</html>

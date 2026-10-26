@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pertemuan 3: Jenis Dokumen Administrasi Pembelajaran PAI</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Poppins & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-navy: #0f172a;
+            --brand-blue: #1d4ed8;
+            --accent-green: #10b981;
+            --accent-amber: #f59e0b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        h1, h2, h3, h4, h5, h6, .font-heading {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Card Hover Effects */
+        .interactive-card {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .interactive-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Active Navigation Highlight */
+        .nav-link.active {
+            background-color: #1e40af;
+            color: #ffffff;
+            font-weight: 600;
+            border-left: 4px solid #60a5fa;
+        }
+
+        /* Badge pulse animation */
+        @keyframes subtlePulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(1.02); }
+        }
+        .pulse-badge {
+            animation: subtlePulse 3s infinite ease-in-out;
+        }
+
+        /* Print/Projector Mode adjustments */
+        @media print {
+            .no-print { display: none !important; }
+            .print-full { width: 100% !important; margin: 0 !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen">
+
+    <!-- TOP BAR & PROGRESS BAR -->
+    <header class="sticky top-0 z-40 bg-slate-900 text-white shadow-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <button id="mobileMenuBtn" class="lg:hidden p-2 text-slate-300 hover:text-white focus:outline-none" aria-label="Toggle Navigation">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+                <div class="flex items-center gap-2">
+                    <span class="bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-md uppercase tracking-wider">PAI Semester 1</span>
+                    <h1 class="text-sm md:text-base font-bold text-slate-100 truncate max-w-xs md:max-w-md">
+                        Pengelolaan Administrasi Pembelajaran berbasis TI
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Global Progress Bar Widget -->
+            <div class="hidden md:flex items-center gap-4 bg-slate-800/80 px-4 py-1.5 rounded-full border border-slate-700">
+                <div class="text-xs font-medium text-slate-300 flex items-center gap-1.5">
+                    <i class="fa-solid fa-graduation-cap text-blue-400"></i>
+                    <span>Kemajuan Belajar:</span>
+                </div>
+                <div class="w-32 bg-slate-700 h-2.5 rounded-full overflow-hidden">
+                    <div id="overallProgressBar" class="bg-gradient-to-r from-blue-500 to-emerald-400 h-full w-0 transition-all duration-500"></div>
+                </div>
+                <span id="overallProgressText" class="text-xs font-bold text-emerald-400">0%</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button onclick="toggleProjectorMode()" class="px-3 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition flex items-center gap-1.5" title="Mode Layar Lebar Proyektor">
+                    <i class="fa-solid fa-desktop text-amber-400"></i>
+                    <span class="hidden sm:inline">Mode Proyektor</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Top Thin Progress Bar for Mobile -->
+        <div class="w-full bg-slate-800 h-1 md:hidden">
+            <div id="overallProgressBarMobile" class="bg-blue-500 h-full w-0 transition-all duration-300"></div>
+        </div>
+    </header>
+
+    <!-- MAIN WRAPPER WITH SIDEBAR & CONTENT -->
+    <div class="flex-1 max-w-7xl w-full mx-auto flex">
+
+        <!-- SIDEBAR NAVIGATION -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 w-72 bg-slate-900 text-slate-300 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out lg:static lg:block shadow-xl flex flex-col no-print border-r border-slate-800">
+            <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
+                <div>
+                    <span class="text-xs text-blue-400 font-semibold tracking-wider uppercase block">Pertemuan 3</span>
+                    <h2 class="text-sm font-bold text-white">Materi Dokumen PAI</h2>
+                </div>
+                <button id="closeSidebarBtn" class="lg:hidden text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Scrollable Nav Items -->
+            <nav class="flex-1 overflow-y-auto py-3 px-2 space-y-1 text-sm" id="navContainer">
+                <a href="#beranda" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-house w-5 text-center text-blue-400 group-hover:scale-110 transition"></i>
+                    <span>Beranda</span>
+                </a>
+                <a href="#tujuan" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-bullseye w-5 text-center text-red-400 group-hover:scale-110 transition"></i>
+                    <span>Tujuan Pembelajaran</span>
+                </a>
+                <a href="#peta-materi" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-sitemap w-5 text-center text-emerald-400 group-hover:scale-110 transition"></i>
+                    <span>Peta Materi</span>
+                </a>
+
+                <div class="pt-2 pb-1 px-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Materi Utama</div>
+
+                <a href="#prota" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-calendar-days w-5 text-center text-amber-400 group-hover:scale-110 transition"></i>
+                    <span>1. Prota (Tahunan)</span>
+                </a>
+                <a href="#promes" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-calendar-week w-5 text-center text-indigo-400 group-hover:scale-110 transition"></i>
+                    <span>2. Promes (Semester)</span>
+                </a>
+                <a href="#silabus" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-book-open w-5 text-center text-teal-400 group-hover:scale-110 transition"></i>
+                    <span>3. Silabus</span>
+                </a>
+                <a href="#rpp" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-file-pen w-5 text-center text-purple-400 group-hover:scale-110 transition"></i>
+                    <span>4. RPP</span>
+                </a>
+
+                <div class="pt-2 pb-1 px-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Aktivitas Interaktif</div>
+
+                <a href="#perbandingan" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-code-compare w-5 text-center text-blue-400 group-hover:scale-110 transition"></i>
+                    <span>Perbandingan Dokumen</span>
+                </a>
+                <a href="#bedakan" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-layer-group w-5 text-center text-sky-400 group-hover:scale-110 transition"></i>
+                    <span>Kartu Identifikasi</span>
+                </a>
+                <a href="#studi-kasus" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-magnifying-glass text-center text-amber-400 w-5 group-hover:scale-110 transition"></i>
+                    <span>Detektif Dokumen</span>
+                </a>
+                <a href="#game" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-gamepad w-5 text-center text-pink-400 group-hover:scale-110 transition"></i>
+                    <span>Game Tebak Dokumen</span>
+                </a>
+
+                <div class="pt-2 pb-1 px-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Diskusi & Tugas</div>
+
+                <a href="#debat" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-comments w-5 text-center text-rose-400 group-hover:scale-110 transition"></i>
+                    <span>Debat Kelas</span>
+                </a>
+                <a href="#tugas" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-users-gear w-5 text-center text-orange-400 group-hover:scale-110 transition"></i>
+                    <span>Tugas Kelompok</span>
+                </a>
+                <a href="#pengumpulan" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-cloud-arrow-up w-5 text-center text-emerald-400 group-hover:scale-110 transition"></i>
+                    <span>Pengumpulan LMS</span>
+                </a>
+                <a href="#presentasi" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-chalkboard-user w-5 text-center text-violet-400 group-hover:scale-110 transition"></i>
+                    <span>Panduan Presentasi</span>
+                </a>
+                <a href="#refleksi" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-lightbulb w-5 text-center text-yellow-400 group-hover:scale-110 transition"></i>
+                    <span>Refleksi</span>
+                </a>
+                <a href="#ringkasan" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-square-check w-5 text-center text-emerald-400 group-hover:scale-110 transition"></i>
+                    <span>Ringkasan Materi</span>
+                </a>
+            </nav>
+
+            <div class="p-3 border-t border-slate-800 text-center text-xs text-slate-500">
+                Media Perkuliahan PAI &copy; 2026
+            </div>
+        </aside>
+
+        <!-- Overlay backdrop for mobile sidebar -->
+        <div id="sidebarBackdrop" class="fixed inset-0 bg-slate-900/60 z-20 hidden lg:hidden backdrop-blur-sm"></div>
+
+        <!-- MAIN CONTENT CONTAINER -->
+        <main class="flex-1 overflow-x-hidden p-4 sm:p-6 lg:p-8 space-y-12">
+
+            <!-- 1. BERANDA -->
+            <section id="beranda" class="scroll-mt-20">
+                <div class="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden border border-slate-800">
+                    <!-- Background Subtle Grid / Graphics -->
+                    <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+                        <i class="fa-solid fa-folder-tree text-[280px]"></i>
+                    </div>
+
+                    <div class="relative z-10 max-w-3xl">
+                        <div class="inline-flex items-center gap-2 bg-blue-500/20 border border-blue-400/30 text-blue-300 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">
+                            <i class="fa-solid fa-graduation-cap"></i> Perkuliahan Pertemuan 3
+                        </div>
+
+                        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight mb-4 text-white">
+                            JENIS DOKUMEN ADMINISTRASI PEMBELAJARAN PAI
+                        </h1>
+
+                        <p class="text-blue-200 text-sm sm:text-base mb-2 font-medium">
+                            Mata Kuliah: Pengelolaan Administrasi Pembelajaran Berbasis Teknologi Informasi
+                        </p>
+                        <p class="text-slate-300 text-xs sm:text-sm mb-6 leading-relaxed">
+                            Program Studi Pendidikan Agama Islam (PAI) — Semester 1
+                        </p>
+
+                        <div class="bg-slate-800/80 backdrop-blur border border-slate-700/60 p-4 rounded-xl mb-8">
+                            <p class="text-slate-200 text-xs sm:text-sm leading-relaxed">
+                                <i class="fa-solid fa-circle-info text-blue-400 mr-1.5"></i>
+                                Pada pertemuan ini kita akan mengenal, menganalisis, dan membedakan empat dokumen penting dalam administrasi/perencanaan pembelajaran PAI, yaitu <strong>Prota (Program Tahunan)</strong>, <strong>Promes (Program Semester)</strong>, <strong>Silabus</strong>, dan <strong>RPP (Rencana Pelaksanaan Pembelajaran)</strong>.
+                            </p>
+                        </div>
+
+                        <!-- Illustrated Icons Bar -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+                            <div class="bg-slate-800/50 border border-slate-700/50 p-3 rounded-xl flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-blue-600/30 text-blue-400 flex items-center justify-center font-bold text-lg">
+                                    <i class="fa-solid fa-chalkboard-user"></i>
+                                </div>
+                                <span class="text-xs font-medium text-slate-200">Peran Guru</span>
+                            </div>
+                            <div class="bg-slate-800/50 border border-slate-700/50 p-3 rounded-xl flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-emerald-600/30 text-emerald-400 flex items-center justify-center font-bold text-lg">
+                                    <i class="fa-solid fa-folder-open"></i>
+                                </div>
+                                <span class="text-xs font-medium text-slate-200">Dokumen Digital</span>
+                            </div>
+                            <div class="bg-slate-800/50 border border-slate-700/50 p-3 rounded-xl flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-amber-600/30 text-amber-400 flex items-center justify-center font-bold text-lg">
+                                    <i class="fa-solid fa-calendar-days"></i>
+                                </div>
+                                <span class="text-xs font-medium text-slate-200">Kalender Akademik</span>
+                            </div>
+                            <div class="bg-slate-800/50 border border-slate-700/50 p-3 rounded-xl flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-purple-600/30 text-purple-400 flex items-center justify-center font-bold text-lg">
+                                    <i class="fa-solid fa-laptop-code"></i>
+                                </div>
+                                <span class="text-xs font-medium text-slate-200">Teknologi Informasi</span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-4 items-center">
+                            <a href="#tujuan" class="px-6 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm rounded-xl shadow-lg hover:shadow-blue-500/25 transition duration-200 flex items-center gap-2">
+                                <span>🚀 MULAI PEMBELAJARAN</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                            <a href="#peta-materi" class="px-5 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-sm rounded-xl border border-slate-700 transition flex items-center gap-2">
+                                <i class="fa-solid fa-sitemap text-emerald-400"></i>
+                                <span>Lihat Peta Materi</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. TUJUAN PEMBELAJARAN -->
+            <section id="tujuan" class="scroll-mt-20">
+                <div class="mb-6">
+                    <span class="text-xs font-bold text-blue-600 tracking-wider uppercase">Capaian & Sub-Capaian</span>
+                    <h2 class="text-2xl font-bold text-slate-900">🎯 TUJUAN PEMBELAJARAN</h2>
+                    <p class="text-slate-600 text-sm mt-1">
+                        Capaian Pembelajaran: Mahasiswa mampu mengidentifikasi jenis dokumen administrasi pembelajaran serta membedakan fungsi masing-masing dokumen.
+                    </p>
+                </div>
+
+                <!-- 5 Objectives Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm interactive-card flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold mb-3">
+                                📅
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-sm mb-1">Memahami Prota</h3>
+                            <p class="text-xs text-slate-500">Menjelaskan pengertian, fungsi, dan karakteristik Program Tahunan.</p>
+                        </div>
+                        <span class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded mt-3 inline-block">Tujuan 1</span>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm interactive-card flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold mb-3">
+                                📆
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-sm mb-1">Memahami Promes</h3>
+                            <p class="text-xs text-slate-500">Menjelaskan pengertian, fungsi, dan karakteristik Program Semester.</p>
+                        </div>
+                        <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded mt-3 inline-block">Tujuan 2</span>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm interactive-card flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center text-xl font-bold mb-3">
+                                📚
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-sm mb-1">Memahami Silabus</h3>
+                            <p class="text-xs text-slate-500">Menjelaskan pengertian, fungsi, dan komponen rancangan pembelajaran.</p>
+                        </div>
+                        <span class="text-[10px] font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded mt-3 inline-block">Tujuan 3</span>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm interactive-card flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl font-bold mb-3">
+                                📝
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-sm mb-1">Memahami RPP</h3>
+                            <p class="text-xs text-slate-500">Menjelaskan pengertian, fungsi, dan komponen Rencana Pelaksanaan Pembelajaran.</p>
+                        </div>
+                        <span class="text-[10px] font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded mt-3 inline-block">Tujuan 4</span>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm interactive-card flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold mb-3">
+                                🔎
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-sm mb-1">Membedakan Fungsi</h3>
+                            <p class="text-xs text-slate-500">Mengidentifikasi & membandingkan perbedaan fungsi keempat dokumen.</p>
+                        </div>
+                        <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded mt-3 inline-block">Tujuan 5 & 6</span>
+                    </div>
+                </div>
+
+                <!-- Highlight Box -->
+                <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-4 sm:p-5 rounded-2xl flex items-center gap-4 shadow-md">
+                    <div class="text-3xl text-amber-400">💡</div>
+                    <div>
+                        <h4 class="font-bold text-sm sm:text-base text-amber-300">Pesan Kunci untuk Mahasiswa PAI:</h4>
+                        <p class="text-xs sm:text-sm text-slate-200">
+                            "Jangan hanya menghafal nama dokumen. Pahami fungsi, karakteristik, dan perbedaannya agar menjadi pendidik PAI yang profesional dalam merencanakan pembelajaran berbasis teknologi."
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. PETA MATERI -->
+            <section id="peta-materi" class="scroll-mt-20">
+                <div class="mb-6">
+                    <span class="text-xs font-bold text-blue-600 tracking-wider uppercase">Visualisasi Hirarki</span>
+                    <h2 class="text-2xl font-bold text-slate-900">🗺️ PETA MATERI PEMBELAJARAN</h2>
+                    <p class="text-slate-600 text-sm mt-1">Alur hirarki dan keterkaitan dokumen perencanaan administrasi pembelajaran.</p>
+                </div>
+
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 relative">
+                        
+                        <!-- Step 1 -->
+                        <div class="bg-amber-50 border border-amber-200 p-5 rounded-2xl relative text-center flex flex-col justify-between hover:shadow-md transition">
+                            <div>
+                                <span class="bg-amber-500 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider mb-2 inline-block">Level 1</span>
+                                <h3 class="font-bold text-slate-900 text-lg">PROTA</h3>
+                                <p class="text-xs font-semibold text-amber-800 mt-1">"Perencanaan Tahunan"</p>
+                                <p class="text-xs text-slate-600 mt-2">Alokasi waktu seluruh materi PAI selama 1 tahun ajaran penuh (Semester Ganjil & Genap).</p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-amber-200/60 text-xs text-amber-700 font-medium">
+                                Focus: Alokasi Waktu Makro
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="bg-indigo-50 border border-indigo-200 p-5 rounded-2xl relative text-center flex flex-col justify-between hover:shadow-md transition">
+                            <div>
+                                <span class="bg-indigo-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider mb-2 inline-block">Level 2</span>
+                                <h3 class="font-bold text-slate-900 text-lg">PROMES</h3>
+                                <p class="text-xs font-semibold text-indigo-800 mt-1">"Perencanaan Semester"</p>
+                                <p class="text-xs text-slate-600 mt-2">Rincian penjadwalan materi PAI per bulan dan minggu dalam satu semester.</p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-indigo-200/60 text-xs text-indigo-700 font-medium">
+                                Focus: Jadwal Mingguan
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="bg-teal-50 border border-teal-200 p-5 rounded-2xl relative text-center flex flex-col justify-between hover:shadow-md transition">
+                            <div>
+                                <span class="bg-teal-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider mb-2 inline-block">Level 3</span>
+                                <h3 class="font-bold text-slate-900 text-lg">SILABUS</h3>
+                                <p class="text-xs font-semibold text-teal-800 mt-1">"Rancangan Pembelajaran"</p>
+                                <p class="text-xs text-slate-600 mt-2">Rancangan umum KD/CP, materi pokok, kegiatan, dan penilaian satu mata pelajaran.</p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-teal-200/60 text-xs text-teal-700 font-medium">
+                                Focus: Kerangka Kurikulum
+                            </div>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="bg-purple-50 border border-purple-200 p-5 rounded-2xl relative text-center flex flex-col justify-between hover:shadow-md transition">
+                            <div>
+                                <span class="bg-purple-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider mb-2 inline-block">Level 4</span>
+                                <h3 class="font-bold text-slate-900 text-lg">RPP</h3>
+                                <p class="text-xs font-semibold text-purple-800 mt-1">"Rencana Pelaksanaan"</p>
+                                <p class="text-xs text-slate-600 mt-2">Skenario operasional tatap muka langkah demi langkah di dalam kelas/ruang belajar.</p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-purple-200/60 text-xs text-purple-700 font-medium">
+                                Focus: Skenario Kelas mikro
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 bg-slate-50 border border-slate-200 rounded-xl p-4 text-center">
+                        <p class="text-xs sm:text-sm text-slate-700 font-medium">
+                            <i class="fa-solid fa-circle-nodes text-blue-600 mr-2"></i>
+                            <strong>Keterangan:</strong> Keempat dokumen memiliki fungsi dan fokus yang berbeda namun saling berkesinambungan dalam hirarki perencanaan pembelajaran.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. MATERI PROTA -->
+            <section id="prota" class="scroll-mt-20">
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="bg-gradient-to-r from-amber-600 to-amber-700 p-6 text-white flex flex-wrap justify-between items-center gap-4">
+                        <div>
+                            <span class="text-xs font-bold text-amber-200 uppercase tracking-wider">Dokumen 01</span>
+                            <h2 class="text-2xl font-bold">📅 PROGRAM TAHUNAN (PROTA)</h2>
+                        </div>
+                        <div class="bg-amber-900/40 border border-amber-300/40 px-4 py-2 rounded-xl text-amber-100 text-xs font-bold uppercase tracking-widest pulse-badge">
+                            Kata Kunci: "SATU TAHUN"
+                        </div>
+                    </div>
+
+                    <div class="p-6 sm:p-8 space-y-6">
+                        <!-- Content Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div class="bg-amber-50/60 p-4 rounded-xl border border-amber-100">
+                                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2 mb-2">
+                                        <i class="fa-solid fa-book-bookmark text-amber-600"></i>
+                                        A. Pengertian Prota
+                                    </h3>
+                                    <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                                        Program Tahunan (Prota) adalah rencana penetapan alokasi waktu satu tahun ajaran untuk mencapai tujuan pembelajaran (KD/CP) yang telah ditetapkan.
+                                    </p>
+                                </div>
+
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2 mb-2">
+                                        <i class="fa-solid fa-sliders text-amber-600"></i>
+                                        B. Fungsi & Tujuan Prota
+                                    </h3>
+                                    <ul class="text-xs text-slate-600 space-y-1.5 list-disc pl-4">
+                                        <li>Pedoman penyusunan Program Semester (Promes).</li>
+                                        <li>Mengoptimalkan penggunaan alokasi waktu belajar yang tersedia.</li>
+                                        <li>Ensuring seluruh materi PAI (Al-Qur'an Hadis, Akidah Akhlak, Fikih, SKI) terdistribusi secara merata selama 1 tahun.</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2 mb-2">
+                                        <i class="fa-solid fa-layer-group text-amber-600"></i>
+                                        C. Ruang Lingkup & Posisi
+                                    </h3>
+                                    <p class="text-xs text-slate-600 leading-relaxed">
+                                        Prota berada pada level paling atas dalam hirarki administrasi guru. Prota disusun di awal tahun ajaran baru berpatokan pada Kalender Pendidikan (Kaldik) sekolah/madrasah.
+                                    </p>
+                                </div>
+
+                                <!-- Inti Box -->
+                                <div class="bg-amber-500 text-white p-4 rounded-xl shadow-md">
+                                    <div class="text-xs font-bold uppercase tracking-wider text-amber-100 mb-1">💡 INTI PROTA</div>
+                                    <p class="text-xs sm:text-sm font-medium">
+                                        "Prota memberikan gambaran makro perencanaan pembelajaran dan distribusi jam pelajaran (JP) dalam kurun waktu SATU TAHUN."
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sample Table -->
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-table text-amber-600"></i>
+                                Contoh Sederhana Format Prota PAI:
+                            </h4>
+                            <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm">
+                                <table class="w-full text-xs text-left text-slate-700">
+                                    <thead class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200 uppercase">
+                                        <tr>
+                                            <th class="p-3 border-r">Semester</th>
+                                            <th class="p-3 border-r">Materi Pokok / Capaian Pembelajaran PAI</th>
+                                            <th class="p-3">Alokasi Waktu (JP)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-200">
+                                        <tr class="bg-white">
+                                            <td class="p-3 font-semibold border-r" rowspan="2">1 (Ganjil)</td>
+                                            <td class="p-3 border-r">QS. Al-Hujurat: 13 (Toleransi & Keberagaman)</td>
+                                            <td class="p-3">12 JP (4 Pertemuan)</td>
+                                        </tr>
+                                        <tr class="bg-white">
+                                            <td class="p-3 border-r">Memahami Asmaul Husna (Al-Alim, Al-Khabir)</td>
+                                            <td class="p-3">9 JP (3 Pertemuan)</td>
+                                        </tr>
+                                        <tr class="bg-slate-50">
+                                            <td class="p-3 font-semibold border-r" rowspan="2">2 (Genap)</td>
+                                            <td class="p-3 border-r">Ketentuan Makanan Halal & Haram dalam Islam</td>
+                                            <td class="p-3">12 JP (4 Pertemuan)</td>
+                                        </tr>
+                                        <tr class="bg-slate-50">
+                                            <td class="p-3 border-r">Sejarah Perjuangan Rasulullah SAW Periode Madinah</td>
+                                            <td class="p-3">9 JP (3 Pertemuan)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. MATERI PROMES -->
+            <section id="promes" class="scroll-mt-20">
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="bg-gradient-to-r from-indigo-700 to-indigo-800 p-6 text-white flex flex-wrap justify-between items-center gap-4">
+                        <div>
+                            <span class="text-xs font-bold text-indigo-200 uppercase tracking-wider">Dokumen 02</span>
+                            <h2 class="text-2xl font-bold">📆 PROGRAM SEMESTER (PROMES)</h2>
+                        </div>
+                        <div class="bg-indigo-950/50 border border-indigo-300/40 px-4 py-2 rounded-xl text-indigo-100 text-xs font-bold uppercase tracking-widest pulse-badge">
+                            Kata Kunci: "SATU SEMESTER"
+                        </div>
+                    </div>
+
+                    <div class="p-6 sm:p-8 space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div class="bg-indigo-50/60 p-4 rounded-xl border border-indigo-100">
+                                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2 mb-2">
+                                        <i class="fa-solid fa-book-bookmark text-indigo-600"></i>
+                                        A. Pengertian Promes
+                                    </h3>
+                                    <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                                        Program Semester (Promes) merupakan penjabaran rinci dari Prota yang memuat gambaran pelaksanaan pembelajaran PAI selama satu semester (6 bulan) yang dibagi ke dalam minggu-minggu efektif.
+                                    </p>
+                                </div>
+
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2 mb-2">
+                                        <i class="fa-solid fa-arrows-split-up-and-left text-indigo-600"></i>
+                                        B. Hubungan Promes dengan Prota
+                                    </h3>
+                                    <p class="text-xs text-slate-600 leading-relaxed">
+                                        Promes diturunkan langsung dari Prota. Jika Prota menentukan total Jam Pelajaran (JP), maka Promes memetakan JP tersebut secara rinci ke dalam minggu ke-1, ke-2, dst., lengkap dengan alokasi UTS/UAS dan hari libur.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <!-- Diagram Flow -->
+                                <div class="bg-slate-900 text-white p-5 rounded-2xl border border-slate-800">
+                                    <div class="text-xs font-bold text-indigo-400 uppercase tracking-wider mb-3">Diagram Alur Penurunan:</div>
+                                    <div class="flex flex-col items-center gap-2 text-xs font-bold">
+                                        <div class="w-full bg-amber-600 text-white py-2 px-3 rounded-lg text-center">
+                                            PROTA (Total Jam 1 Tahun)
+                                        </div>
+                                        <i class="fa-solid fa-arrow-down text-slate-400"></i>
+                                        <div class="w-full bg-indigo-600 text-white py-2 px-3 rounded-lg text-center">
+                                            PROMES (Distribusi Minggu Per Bulan)
+                                        </div>
+                                        <i class="fa-solid fa-arrow-down text-slate-400"></i>
+                                        <div class="w-full bg-teal-600 text-white py-2 px-3 rounded-lg text-center">
+                                            SILABUS / RPP (Pelaksanaan Skenario)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sample Matrix -->
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-table text-indigo-600"></i>
+                                Contoh Sederhana Matrix Promes PAI (Semester Ganjil):
+                            </h4>
+                            <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm">
+                                <table class="w-full text-xs text-center border-collapse">
+                                    <thead class="bg-indigo-900 text-white font-bold">
+                                        <tr>
+                                            <th class="p-2 border border-indigo-800 text-left" rowspan="2">Materi Pokok PAI</th>
+                                            <th class="p-2 border border-indigo-800" rowspan="2">JML JP</th>
+                                            <th class="p-2 border border-indigo-800" colspan="4">Juli</th>
+                                            <th class="p-2 border border-indigo-800" colspan="4">Agustus</th>
+                                            <th class="p-2 border border-indigo-800" colspan="4">September</th>
+                                        </tr>
+                                        <tr class="bg-indigo-800 text-slate-200 text-[10px]">
+                                            <td class="p-1 border border-indigo-700">1</td><td class="p-1 border border-indigo-700">2</td><td class="p-1 border border-indigo-700">3</td><td class="p-1 border border-indigo-700">4</td>
+                                            <td class="p-1 border border-indigo-700">1</td><td class="p-1 border border-indigo-700">2</td><td class="p-1 border border-indigo-700">3</td><td class="p-1 border border-indigo-700">4</td>
+                                            <td class="p-1 border border-indigo-700">1</td><td class="p-1 border border-indigo-700">2</td><td class="p-1 border border-indigo-700">3</td><td class="p-1 border border-indigo-700">4</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-slate-700 divide-y bg-white">
+                                        <tr>
+                                            <td class="p-2 border text-left font-medium">QS. Al-Hujurat: 13</td>
+                                            <td class="p-2 border font-bold">12 JP</td>
+                                            <td class="p-2 border bg-emerald-100 font-bold text-emerald-800">3</td>
+                                            <td class="p-2 border bg-emerald-100 font-bold text-emerald-800">3</td>
+                                            <td class="p-2 border bg-emerald-100 font-bold text-emerald-800">3</td>
+                                            <td class="p-2 border bg-emerald-100 font-bold text-emerald-800">3</td>
+                                            <td class="p-2 border text-slate-300">-</td><td class="p-2 border text-slate-300">-</td><td class="p-2 border text-slate-300">-</td><td class="p-2 border text-slate-300">-</td>
+                                            <td class="p-2 border text-slate-300">-</td><td class="p-2 border text-slate-300">-</td><td class="p-2 border text-slate-300">-</td><td class="p-2 border text-slate-300">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-2 border text-left font-medium">Asmaul Husna</td>
+                                            <td class="p-2 border font-bold">9 JP</td>
+                                            <td class="p-2 border text-slate-300">-</td><td class="p-2 border text-slate-300">-</td><td class="p-2 border text-slate-300">-</td><td class="p-2 border text-slate-300">-</td>
+                                            <td class="p-2 border bg-blue-100 font-bold text-blue-800">3</td>
+                                            <td class="p-2 border bg-blue-100 font-bold text-blue-800">3</td>
+                                            <td class="p-2 border bg-blue-100 font-bold text-blue-800">3</td>
+                                            <td class="p-2 border text-slate-300">-</td>
+                                            <td class="p-2 border text-slate-300">-</td><td class="p-2 border text-slate-300">-</td><td class="p-2 border text-slate-300">-</td><td class="p-2 border text-slate-300">-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. MATERI SILABUS -->
+            <section id="silabus" class="scroll-mt-20">
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="bg-gradient-to-r from-teal-700 to-teal-800 p-6 text-white flex flex-wrap justify-between items-center gap-4">
+                        <div>
+                            <span class="text-xs font-bold text-teal-200 uppercase tracking-wider">Dokumen 03</span>
+                            <h2 class="text-2xl font-bold">📚 SILABUS</h2>
+                        </div>
+                        <div class="bg-teal-950/50 border border-teal-300/40 px-4 py-2 rounded-xl text-teal-100 text-xs font-bold uppercase tracking-widest pulse-badge">
+                            Kata Kunci: "RANCANGAN PEMBELAJARAN"
+                        </div>
+                    </div>
+
+                    <div class="p-6 sm:p-8 space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div class="bg-teal-50/60 p-4 rounded-xl border border-teal-100">
+                                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2 mb-2">
+                                        <i class="fa-solid fa-book-bookmark text-teal-600"></i>
+                                        A. Pengertian Silabus
+                                    </h3>
+                                    <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                                        Silabus adalah rancangan pembelajaran pada suatu dan/atau kelompok mata pelajaran/tema tertentu yang mencakup Standar Kompetensi/CP, Kompetensi Dasar, materi pokok, kegiatan pembelajaran, indikator, penilaian, alokasi waktu, dan sumber belajar.
+                                    </p>
+                                </div>
+
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2 mb-2">
+                                        <i class="fa-solid fa-list-check text-teal-600"></i>
+                                        B. Komponen Utama Silabus
+                                    </h3>
+                                    <div class="grid grid-cols-2 gap-2 text-xs">
+                                        <div class="bg-white p-2 rounded border font-medium">1. Capaian / KD</div>
+                                        <div class="bg-white p-2 rounded border font-medium">2. Materi Pembelajaran</div>
+                                        <div class="bg-white p-2 rounded border font-medium">3. Kegiatan Pembelajaran</div>
+                                        <div class="bg-white p-2 rounded border font-medium">4. Indikator Penilaian</div>
+                                        <div class="bg-white p-2 rounded border font-medium">5. Alokasi Waktu</div>
+                                        <div class="bg-white p-2 rounded border font-medium">6. Sumber / Media Belajar</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="bg-teal-900 text-white p-5 rounded-2xl border border-teal-800">
+                                    <div class="text-xs font-bold text-teal-300 uppercase tracking-wider mb-2">Pesan Silabus:</div>
+                                    <p class="text-xs sm:text-sm leading-relaxed text-slate-200">
+                                        "Silabus memberikan gambaran mengenai rancangan pembelajaran secara terstruktur untuk satu topik/mata pelajaran utuh sebelum diturunkan menjadi skenario harian dalam RPP."
+                                    </p>
+                                </div>
+
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                    <h3 class="font-bold text-slate-900 text-sm mb-2">Ciri Khas Fisik Silabus:</h3>
+                                    <p class="text-xs text-slate-600">
+                                        Berbentuk matrik/tabel kolom mendatar yang memuat komponen secara linier dari KD hingga Sumber Belajar.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Visual Sample -->
+                        <div class="border border-teal-200 rounded-xl p-4 bg-teal-50/30">
+                            <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2 text-teal-800">
+                                <i class="fa-solid fa-eye mr-1"></i> Visualisasi Komponen Silabus PAI:
+                            </h4>
+                            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center text-xs font-semibold text-slate-700">
+                                <div class="bg-white p-2 rounded border border-teal-200 shadow-sm">Kompetensi Dasar</div>
+                                <div class="bg-white p-2 rounded border border-teal-200 shadow-sm">Materi Pokok PAI</div>
+                                <div class="bg-white p-2 rounded border border-teal-200 shadow-sm">Pengalaman Belajar</div>
+                                <div class="bg-white p-2 rounded border border-teal-200 shadow-sm">Teknik Penilaian</div>
+                                <div class="bg-white p-2 rounded border border-teal-200 shadow-sm">Media & Sumber</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. MATERI RPP -->
+            <section id="rpp" class="scroll-mt-20">
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="bg-gradient-to-r from-purple-700 to-purple-800 p-6 text-white flex flex-wrap justify-between items-center gap-4">
+                        <div>
+                            <span class="text-xs font-bold text-purple-200 uppercase tracking-wider">Dokumen 04</span>
+                            <h2 class="text-2xl font-bold">📝 RENCANA PELAKSANAAN PEMBELAJARAN (RPP)</h2>
+                        </div>
+                        <div class="bg-purple-950/50 border border-purple-300/40 px-4 py-2 rounded-xl text-purple-100 text-xs font-bold uppercase tracking-widest pulse-badge">
+                            Kata Kunci: "PELAKSANAAN PEMBELAJARAN"
+                        </div>
+                    </div>
+
+                    <div class="p-6 sm:p-8 space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div class="bg-purple-50/60 p-4 rounded-xl border border-purple-100">
+                                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2 mb-2">
+                                        <i class="fa-solid fa-book-bookmark text-purple-600"></i>
+                                        A. Pengertian RPP
+                                    </h3>
+                                    <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                                        RPP adalah rencana kegiatan pembelajaran tatap muka untuk satu pertemuan atau lebih. RPP dikembangkan dari silabus untuk mengarahkan kegiatan belajar siswa dalam upaya mencapai Kompetensi Dasar (KD) / Capaian Pembelajaran.
+                                    </p>
+                                </div>
+
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2 mb-2">
+                                        <i class="fa-solid fa-play text-purple-600"></i>
+                                        B. Fungsi Praktis RPP
+                                    </h3>
+                                    <p class="text-xs text-slate-600 leading-relaxed">
+                                        RPP berfungsi sebagai petunjuk arah (skenario) bagi guru PAI saat berdiri di depan kelas, mulai dari pembukaan (salam/doa), kegiatan inti (diskusi/praktek), hingga penutup (refleksi/penilaian).
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <!-- 3 Core Component Flow -->
+                                <div class="bg-slate-900 text-white p-5 rounded-2xl border border-slate-800">
+                                    <div class="text-xs font-bold text-purple-400 uppercase tracking-wider mb-3">Tiga Komponen Utama RPP (Format Sederhana):</div>
+                                    
+                                    <div class="space-y-2 text-xs">
+                                        <div class="bg-slate-800 p-2.5 rounded-lg border border-slate-700 flex items-center gap-3">
+                                            <span class="w-6 h-6 rounded bg-purple-600 flex items-center justify-center font-bold text-white shrink-0">1</span>
+                                            <div>
+                                                <strong class="text-purple-300 block">TUJUAN PEMBELAJARAN</strong>
+                                                <span class="text-slate-400">Target spesifik yang ingin dicapai murid hari ini.</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="bg-slate-800 p-2.5 rounded-lg border border-slate-700 flex items-center gap-3">
+                                            <span class="w-6 h-6 rounded bg-purple-600 flex items-center justify-center font-bold text-white shrink-0">2</span>
+                                            <div>
+                                                <strong class="text-purple-300 block">KEGIATAN PEMBELAJARAN</strong>
+                                                <span class="text-slate-400">Pendahuluan, Inti (sintaks model), dan Penutup.</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="bg-slate-800 p-2.5 rounded-lg border border-slate-700 flex items-center gap-3">
+                                            <span class="w-6 h-6 rounded bg-purple-600 flex items-center justify-center font-bold text-white shrink-0">3</span>
+                                            <div>
+                                                <strong class="text-purple-300 block">PENILAIAN (ASESMEN)</strong>
+                                                <span class="text-slate-400">Sikap (akhlak), Pengetahuan, dan Keterampilan.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. PERBANDINGAN 4 DOKUMEN -->
+            <section id="perbandingan" class="scroll-mt-20">
+                <div class="mb-6">
+                    <span class="text-xs font-bold text-blue-600 tracking-wider uppercase">Matriks Komparasi</span>
+                    <h2 class="text-2xl font-bold text-slate-900">⚖️ PERBANDINGAN FUNGSI DOKUMEN</h2>
+                    <p class="text-slate-600 text-sm mt-1">Klik pada setiap baris dokumen untuk membuka detail analisis mendalam.</p>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-900 text-white uppercase text-xs tracking-wider">
+                                <tr>
+                                    <th class="p-4">Dokumen</th>
+                                    <th class="p-4">Fokus Waktu</th>
+                                    <th class="p-4">Fungsi Utama</th>
+                                    <th class="p-4">Ciri Khas Fisik</th>
+                                    <th class="p-4 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200">
+                                <tr onclick="openDocModal('prota')" class="hover:bg-amber-50/60 cursor-pointer transition">
+                                    <td class="p-4 font-bold text-amber-700 flex items-center gap-2">
+                                        <i class="fa-solid fa-calendar-days text-lg"></i>
+                                        <span>Prota</span>
+                                    </td>
+                                    <td class="p-4 font-medium text-slate-700">1 Tahun Ajaran</td>
+                                    <td class="p-4 text-slate-600">Alokasi jam pelajaran makro 1 tahun</td>
+                                    <td class="p-4 text-slate-600">Tabel singkat memuat semester & JP</td>
+                                    <td class="p-4 text-center">
+                                        <button class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-lg hover:bg-amber-200">Detail Modal</button>
+                                    </td>
+                                </tr>
+
+                                <tr onclick="openDocModal('promes')" class="hover:bg-indigo-50/60 cursor-pointer transition">
+                                    <td class="p-4 font-bold text-indigo-700 flex items-center gap-2">
+                                        <i class="fa-solid fa-calendar-week text-lg"></i>
+                                        <span>Promes</span>
+                                    </td>
+                                    <td class="p-4 font-medium text-slate-700">1 Semester (6 Bulan)</td>
+                                    <td class="p-4 text-slate-600">Distribusi jam ke minggu-minggu efektif</td>
+                                    <td class="p-4 text-slate-600">Matriks kolom bulan & minggu (1,2,3,4)</td>
+                                    <td class="p-4 text-center">
+                                        <button class="px-3 py-1 bg-indigo-100 text-indigo-800 text-xs font-bold rounded-lg hover:bg-indigo-200">Detail Modal</button>
+                                    </td>
+                                </tr>
+
+                                <tr onclick="openDocModal('silabus')" class="hover:bg-teal-50/60 cursor-pointer transition">
+                                    <td class="p-4 font-bold text-teal-700 flex items-center gap-2">
+                                        <i class="fa-solid fa-book-open text-lg"></i>
+                                        <span>Silabus</span>
+                                    </td>
+                                    <td class="p-4 font-medium text-slate-700">1 Topik / Mapel</td>
+                                    <td class="p-4 text-slate-600">Rancangan umum standar kurikulum</td>
+                                    <td class="p-4 text-slate-600">Tabel memuat KD, Indikator, Kegiatan & Penilaian</td>
+                                    <td class="p-4 text-center">
+                                        <button class="px-3 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-lg hover:bg-teal-200">Detail Modal</button>
+                                    </td>
+                                </tr>
+
+                                <tr onclick="openDocModal('rpp')" class="hover:bg-purple-50/60 cursor-pointer transition">
+                                    <td class="p-4 font-bold text-purple-700 flex items-center gap-2">
+                                        <i class="fa-solid fa-file-pen text-lg"></i>
+                                        <span>RPP</span>
+                                    </td>
+                                    <td class="p-4 font-medium text-slate-700">1-2 Pertemuan Tatap Muka</td>
+                                    <td class="p-4 text-slate-600">Skenario detail langkah pembelajaran kelas</td>
+                                    <td class="p-4 text-slate-600">Deskripsi Pendahuluan, Inti, Penutup</td>
+                                    <td class="p-4 text-center">
+                                        <button class="px-3 py-1 bg-purple-100 text-purple-800 text-xs font-bold rounded-lg hover:bg-purple-200">Detail Modal</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. VISUAL "BEDAKAN DOKUMEN" -->
+            <section id="bedakan" class="scroll-mt-20">
+                <div class="mb-6">
+                    <span class="text-xs font-bold text-blue-600 tracking-wider uppercase">Visual Quick Identification</span>
+                    <h2 class="text-2xl font-bold text-slate-900">🎴 KARTU IDENTIFIKASI CEPAT</h2>
+                    <p class="text-slate-600 text-sm mt-1">Gunakan kata kunci utama berikut untuk mengenali jenis dokumen saat membaca isinya.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-gradient-to-b from-amber-50 to-white p-6 rounded-2xl border-2 border-amber-300 text-center shadow-sm">
+                        <div class="text-4xl mb-2">📅</div>
+                        <h3 class="font-extrabold text-amber-900 text-lg">PROTA</h3>
+                        <p class="text-xs font-bold text-amber-600 uppercase tracking-widest mt-1">"Rencana 1 Tahun"</p>
+                        <hr class="my-3 border-amber-200">
+                        <p class="text-xs text-slate-600">Ciri: Menghitung total Jam Pelajaran (JP) dalam dua semester.</p>
+                    </div>
+
+                    <div class="bg-gradient-to-b from-indigo-50 to-white p-6 rounded-2xl border-2 border-indigo-300 text-center shadow-sm">
+                        <div class="text-4xl mb-2">📆</div>
+                        <h3 class="font-extrabold text-indigo-900 text-lg">PROMES</h3>
+                        <p class="text-xs font-bold text-indigo-600 uppercase tracking-widest mt-1">"Rencana 1 Semester"</p>
+                        <hr class="my-3 border-indigo-200">
+                        <p class="text-xs text-slate-600">Ciri: Memiliki kotak-kotak penanggalan minggu per bulan.</p>
+                    </div>
+
+                    <div class="bg-gradient-to-b from-teal-50 to-white p-6 rounded-2xl border-2 border-teal-300 text-center shadow-sm">
+                        <div class="text-4xl mb-2">📚</div>
+                        <h3 class="font-extrabold text-teal-900 text-lg">SILABUS</h3>
+                        <p class="text-xs font-bold text-teal-600 uppercase tracking-widest mt-1">"Rancangan Pembelajaran"</p>
+                        <hr class="my-3 border-teal-200">
+                        <p class="text-xs text-slate-600">Ciri: Menjabarkan KD, Indikator, Penilaian, & Media Belajar.</p>
+                    </div>
+
+                    <div class="bg-gradient-to-b from-purple-50 to-white p-6 rounded-2xl border-2 border-purple-300 text-center shadow-sm">
+                        <div class="text-4xl mb-2">📝</div>
+                        <h3 class="font-extrabold text-purple-900 text-lg">RPP</h3>
+                        <p class="text-xs font-bold text-purple-600 uppercase tracking-widest mt-1">"Pelaksanaan Kelas"</p>
+                        <hr class="my-3 border-purple-200">
+                        <p class="text-xs text-slate-600">Ciri: Memuat skenario langkah Apersepsi, Kegiatan Inti & Penutup.</p>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl flex items-start gap-3">
+                    <i class="fa-solid fa-circle-question text-blue-600 text-xl mt-0.5"></i>
+                    <div>
+                        <strong class="text-blue-900 text-sm">Pertanyaan Pemantik Perkuliahan:</strong>
+                        <p class="text-xs text-blue-800 mt-0.5">
+                            "Bagaimana cara menentukan jenis sebuah dokumen secara instant jika Anda hanya melihat 1 lembar bagian isinya tanpa melihat judul utamanya?"
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 10. STUDI KASUS DOKUMEN -->
+            <section id="studi-kasus" class="scroll-mt-20">
+                <div class="mb-6">
+                    <span class="text-xs font-bold text-blue-600 tracking-wider uppercase">Latihan Analisis Mandiri</span>
+                    <h2 class="text-2xl font-bold text-slate-900">🔎 DETEKTIF DOKUMEN (STUDI KASUS)</h2>
+                    <p class="text-slate-600 text-sm mt-1">Baca setiap skenario studi kasus berikut, lalu tentukan jenis dokumen yang tepat!</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Case 1 -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Kasus 1</span>
+                                <span class="text-xs font-semibold text-slate-400">Bobot: +10 Poin</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-800 font-medium leading-relaxed mb-4">
+                                "Guru PAI di SMP Al-Azhar memegang sebuah dokumen yang berisi pemetaan alokasi total jam pelajaran untuk seluruh materi PAI selama kurun waktu satu tahun ajaran penuh."
+                            </p>
+                            
+                            <div class="space-y-2" id="case1Options">
+                                <button onclick="checkCase(1, 'A', true)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-medium transition flex items-center justify-between">
+                                    <span>A. Program Tahunan (Prota)</span>
+                                    <i class="fa-regular fa-circle text-slate-400"></i>
+                                </button>
+                                <button onclick="checkCase(1, 'B', false)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-medium transition flex items-center justify-between">
+                                    <span>B. Program Semester (Promes)</span>
+                                    <i class="fa-regular fa-circle text-slate-400"></i>
+                                </button>
+                                <button onclick="checkCase(1, 'C', false)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-medium transition flex items-center justify-between">
+                                    <span>C. Silabus</span>
+                                    <i class="fa-regular fa-circle text-slate-400"></i>
+                                </button>
+                                <button onclick="checkCase(1, 'D', false)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-medium transition flex items-center justify-between">
+                                    <span>D. RPP</span>
+                                    <i class="fa-regular fa-circle text-slate-400"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="case1Feedback" class="mt-4 hidden p-3 rounded-lg text-xs font-medium"></div>
+                    </div>
+
+                    <!-- Case 2 -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Kasus 2</span>
+                                <span class="text-xs font-semibold text-slate-400">Bobot: +10 Poin</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-800 font-medium leading-relaxed mb-4">
+                                "Dokumen administrasi PAI ini memuat matrik jadwal pembagian materi pembelajaran yang dipecah ke dalam minggu ke-1, 2, 3, dan 4 pada setiap bulan selama semester ganjil."
+                            </p>
+                            
+                            <div class="space-y-2" id="case2Options">
+                                <button onclick="checkCase(2, 'A', false)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-medium transition flex items-center justify-between">
+                                    <span>A. Program Tahunan (Prota)</span>
+                                    <i class="fa-regular fa-circle text-slate-400"></i>
+                                </button>
+                                <button onclick="checkCase(2, 'B', true)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-medium transition flex items-center justify-between">
+                                    <span>B. Program Semester (Promes)</span>
+                                    <i class="fa-regular fa-circle text-slate-400"></i>
+                                </button>
+                                <button onclick="checkCase(2, 'C', false)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-medium transition flex items-center justify-between">
+                                    <span>C. Silabus</span>
+                                    <i class="fa-regular fa-circle text-slate-400"></i>
+                                </button>
+                                <button onclick="checkCase(2, 'D', false)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-medium transition flex items-center justify-between">
+                                    <span>D. RPP</span>
+                                    <i class="fa-regular fa-circle text-slate-400"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="case2Feedback" class="mt-4 hidden p-3 rounded-lg text-xs font-medium"></div>
+                    </div>
+
+                    <!-- Case 3 -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="bg-teal-100 text-teal-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Kasus 3</span>
+                                <span class="text-xs font-semibold text-slate-400">Bobot: +10 Poin</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-800 font-medium leading-relaxed mb-4">
+                                "Dokumen memberikan rancangan pembelajaran terstruktur yang memuat Kompetensi Dasar, Indikator Pencapaian, Kegiatan Pembelajaran, dan Sistem Penilaian secara lengkap."
+                            </p>
+                            
+                            <div class="space-y-2" id="case3Options">
+                                <button onclick="checkCase(3, 'A', false)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-medium transition flex items-center justify-between">
+                                    <span>A. Program Tahunan</span>
+                                    <i class="fa-regular fa-circle text-slate-400"></i>
+                                </button>
+                                <button onclick="checkCase(3, 'B', false)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-medium transition flex items-center justify-between">
+                                    <span>B. Program Semester</span>
+                                    <i class="fa-regular fa-circle text-slate-400"></i>
+                                </button>
+                                <button onclick="checkCase(3, 'C', true)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-medium transition flex items-center justify-between">
+                                    <span>C. Silabus</span>
+                                    <i class="fa-regular fa-circle text-slate-400"></i>
+                                </button>
+                                <button onclick="checkCase(3, 'D', false)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-medium transition flex items-center justify-between">
+                                    <span>D. RPP</span>
+                                    <i class="fa-regular fa-circle text-slate-400"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="case3Feedback" class="mt-4 hidden p-3 rounded-lg text-xs font-medium"></div>
+                    </div>
+
+                    <!-- Case 4 -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="bg-purple-100 text-purple-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Kasus 4</span>
+                                <span class="text-xs font-semibold text-slate-400">Bobot: +10 Poin</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-800 font-medium leading-relaxed mb-4">
+                                "Sebelum masuk kelas pagi ini, Ustadz Ahmad membuka dokumen rincian skenario yang memuat alokasi waktu 10 menit pembukaan, 50 menit diskusi kelompok PAI, dan 20 menit evaluasi."
+                            </p>
+                            
+                            <div class="space-y-2" id="case4Options">
+                                <button onclick="checkCase(4, 'A', false)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-medium transition flex items-center justify-between">
+                                    <span>A. Prota</span>
+                                    <i class="fa-regular fa-circle text-slate-400"></i>
+                                </button>
+                                <button onclick="checkCase(4, 'B', false)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-medium transition flex items-center justify-between">
+                                    <span>B. Promes</span>
+                                    <i class="fa-regular fa-circle text-slate-400"></i>
+                                </button>
+                                <button onclick="checkCase(4, 'C', false)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-medium transition flex items-center justify-between">
+                                    <span>C. Silabus</span>
+                                    <i class="fa-regular fa-circle text-slate-400"></i>
+                                </button>
+                                <button onclick="checkCase(4, 'D', true)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-medium transition flex items-center justify-between">
+                                    <span>D. RPP (Rencana Pelaksanaan Pembelajaran)</span>
+                                    <i class="fa-regular fa-circle text-slate-400"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="case4Feedback" class="mt-4 hidden p-3 rounded-lg text-xs font-medium"></div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 11. GAME TEBAK DOKUMEN -->
+            <section id="game" class="scroll-mt-20">
+                <div class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-800">
+                    <div class="flex flex-wrap justify-between items-center gap-4 mb-6 pb-4 border-b border-slate-800">
+                        <div>
+                            <span class="text-xs font-bold text-pink-400 uppercase tracking-wider">Permainan Edukasi Interaktif</span>
+                            <h2 class="text-2xl font-extrabold text-white flex items-center gap-2">
+                                🎮 TEBAK DOKUMEN PAI
+                            </h2>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="bg-slate-800 px-4 py-2 rounded-xl border border-slate-700 text-center">
+                                <span class="text-[10px] text-slate-400 uppercase block font-bold">Skor Anda</span>
+                                <span id="gameScoreDisplay" class="text-xl font-black text-amber-400">0</span>
+                            </div>
+                            <button onclick="resetGame()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl border border-slate-700 transition" title="Mulai Ulang Game">
+                                <i class="fa-solid fa-rotate-right mr-1"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Game Container -->
+                    <div id="gameBox" class="max-w-2xl mx-auto bg-slate-800/80 backdrop-blur border border-slate-700 p-6 rounded-2xl">
+                        <!-- Progress Header -->
+                        <div class="flex justify-between items-center text-xs text-slate-300 font-semibold mb-2">
+                            <span id="gameQuestionTracker">Pertanyaan 1 dari 8</span>
+                            <span id="gameProgressPercent">12%</span>
+                        </div>
+                        <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden mb-6">
+                            <div id="gameProgressBar" class="bg-gradient-to-r from-pink-500 to-purple-500 h-full w-1/8 transition-all duration-300"></div>
+                        </div>
+
+                        <!-- Question Statement -->
+                        <div class="bg-slate-900/90 border border-slate-700 p-5 rounded-xl mb-6 text-center">
+                            <span class="text-[10px] text-indigo-400 font-bold uppercase tracking-widest block mb-1">Pernyataan Ciri Dokumen:</span>
+                            <p id="gameQuestionText" class="text-base sm:text-lg font-bold text-white leading-snug">
+                                "Saya menggambarkan alokasi waktu pembelajaran dalam satu tahun ajaran."
+                            </p>
+                        </div>
+
+                        <!-- Answer Options -->
+                        <div class="grid grid-cols-2 gap-3" id="gameOptionsContainer">
+                            <button onclick="submitGameAnswer('PROTA')" class="p-3.5 bg-slate-700/80 hover:bg-amber-600/80 text-white font-bold rounded-xl border border-slate-600 hover:border-amber-400 transition text-sm flex items-center justify-center gap-2">
+                                📅 PROTA
+                            </button>
+                            <button onclick="submitGameAnswer('PROMES')" class="p-3.5 bg-slate-700/80 hover:bg-indigo-600/80 text-white font-bold rounded-xl border border-slate-600 hover:border-indigo-400 transition text-sm flex items-center justify-center gap-2">
+                                📆 PROMES
+                            </button>
+                            <button onclick="submitGameAnswer('SILABUS')" class="p-3.5 bg-slate-700/80 hover:bg-teal-600/80 text-white font-bold rounded-xl border border-slate-600 hover:border-teal-400 transition text-sm flex items-center justify-center gap-2">
+                                📚 SILABUS
+                            </button>
+                            <button onclick="submitGameAnswer('RPP')" class="p-3.5 bg-slate-700/80 hover:bg-purple-600/80 text-white font-bold rounded-xl border border-slate-600 hover:border-purple-400 transition text-sm flex items-center justify-center gap-2">
+                                📝 RPP
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Game End Screen (Hidden by default) -->
+                    <div id="gameEndBox" class="hidden max-w-xl mx-auto bg-slate-800 border border-slate-700 p-8 rounded-2xl text-center">
+                        <div class="text-5xl mb-3">🎉</div>
+                        <h3 class="text-2xl font-black text-white mb-2">GAME SELESAI!</h3>
+                        <p class="text-slate-300 text-sm mb-4">Selamat, Anda telah menyelesaikan seluruh tebakan dokumen PAI!</p>
+                        <div class="inline-block bg-slate-900 border border-amber-500/50 px-6 py-4 rounded-2xl mb-6">
+                            <span class="text-xs text-slate-400 uppercase font-bold block">Skor Akhir Anda</span>
+                            <span id="finalScoreText" class="text-4xl font-extrabold text-amber-400">80 / 80</span>
+                        </div>
+                        <div>
+                            <button onclick="resetGame()" class="px-6 py-3 bg-pink-600 hover:bg-pink-500 text-white font-bold rounded-xl shadow-lg transition">
+                                <i class="fa-solid fa-rotate-right mr-2"></i> Main Lagi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 12. DEBAT KELAS -->
+            <section id="debat" class="scroll-mt-20">
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-2xl font-bold">
+                            💬
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-rose-600 uppercase tracking-wider">Aktivitas Diskusi Interaktif</span>
+                            <h2 class="text-2xl font-bold text-slate-900">DEBAT DOKUMEN ADMINISTRASI</h2>
+                        </div>
+                    </div>
+
+                    <div class="bg-rose-50 border border-rose-200 p-5 rounded-2xl">
+                        <span class="text-xs font-extrabold text-rose-800 uppercase tracking-wider block mb-1">Pertanyaan Mosi Utama:</span>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900">
+                            "Apakah guru PAI perlu memahami secara mendalam fungsi setiap dokumen administrasi pembelajaran, ataukah cukup sekadar mengikuti format/template yang sudah tersedia di sekolah?"
+                        </h3>
+                    </div>
+
+                    <!-- 2 Debate Positions -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-emerald-50/80 border border-emerald-200 p-5 rounded-2xl space-y-3">
+                            <div class="flex items-center gap-2 text-emerald-800 font-bold text-base">
+                                <span class="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">🟢</span>
+                                Posisi A: SETUJU
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
+                                "Guru harus memahami fungsi mendalam setiap dokumen. Tanpa pemahaman fungsi, administrasi hanya menjadi beban formalitas belaka tanpa berdampak pada kualitas pengajaran PAI di kelas."
+                            </p>
+                        </div>
+
+                        <div class="bg-blue-50/80 border border-blue-200 p-5 rounded-2xl space-y-3">
+                            <div class="flex items-center gap-2 text-blue-800 font-bold text-base">
+                                <span class="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">🔵</span>
+                                Posisi B: TIDAK SETUJU
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
+                                "Guru cukup mengikuti format yang disiapkan sekolah/Kemenag agar lebih efisien waktu, sehingga energi guru dapat berfokus penuh pada penyampaian materi di dalam kelas."
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Debate Prompt -->
+                    <div class="bg-slate-900 text-white p-5 rounded-2xl space-y-3">
+                        <h4 class="font-bold text-amber-400 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            Pertanyaan Lanjutan Dosen:
+                        </h4>
+                        <p class="text-xs sm:text-sm text-slate-300">
+                            "Jika seorang guru PAI hanya sekadar 'copy-paste' atau mengisi dokumen administrasi tanpa memahami fungsinya, risiko konkret apa saja yang akan terjadi saat proses pembelajaran berlangsung?"
+                        </p>
+                    </div>
+
+                    <!-- Debate Rules -->
+                    <div class="border border-slate-200 p-4 rounded-xl text-xs text-slate-600 space-y-2">
+                        <strong class="text-slate-800 font-bold block">Tata Cara Debat Kelas:</strong>
+                        <ol class="list-decimal pl-4 space-y-1">
+                            <li>Setiap kelompok memilih/ditentukan posisinya oleh dosen moderator.</li>
+                            <li>Sampaikan argumen berbasis teori pengelolaan administrasi pembelajaran PAI.</li>
+                            <li>Kelompok lawan berhak memberikan sanggahan yang santun dan ilmiah.</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 13. TUGAS KELOMPOK -->
+            <section id="tugas" class="scroll-mt-20">
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center text-2xl font-bold">
+                            📄
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-orange-600 uppercase tracking-wider">Instruksi Perkuliahan</span>
+                            <h2 class="text-2xl font-bold text-slate-900">TUGAS KELOMPOK — ANALISIS DOKUMEN</h2>
+                        </div>
+                    </div>
+
+                    <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl text-xs sm:text-sm text-amber-900 leading-relaxed">
+                        <i class="fa-solid fa-circle-info mr-1.5 text-amber-600"></i>
+                        <strong>Catatan Penting:</strong> Tugas dilakukan dengan menganalisis sampel dokumen administrasi pembelajaran PAI yang <strong>disediakan oleh Dosen Pengampu</strong>. Mahasiswa <em>tidak diminta</em> membuat dokumen dari nol.
+                    </div>
+
+                    <!-- Group Divisions -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-amber-50/50 border border-amber-200 p-4 rounded-2xl text-center">
+                            <span class="text-[10px] font-extrabold bg-amber-600 text-white px-2 py-0.5 rounded uppercase">Kelompok 1</span>
+                            <h3 class="font-bold text-slate-900 text-base mt-2">Analisis PROTA</h3>
+                            <p class="text-xs text-slate-500 mt-1">Dokumen Program Tahunan PAI</p>
+                        </div>
+
+                        <div class="bg-indigo-50/50 border border-indigo-200 p-4 rounded-2xl text-center">
+                            <span class="text-[10px] font-extrabold bg-indigo-600 text-white px-2 py-0.5 rounded uppercase">Kelompok 2</span>
+                            <h3 class="font-bold text-slate-900 text-base mt-2">Analisis PROMES</h3>
+                            <p class="text-xs text-slate-500 mt-1">Dokumen Program Semester PAI</p>
+                        </div>
+
+                        <div class="bg-teal-50/50 border border-teal-200 p-4 rounded-2xl text-center">
+                            <span class="text-[10px] font-extrabold bg-teal-600 text-white px-2 py-0.5 rounded uppercase">Kelompok 3</span>
+                            <h3 class="font-bold text-slate-900 text-base mt-2">Analisis SILABUS</h3>
+                            <p class="text-xs text-slate-500 mt-1">Dokumen Rancangan Silabus PAI</p>
+                        </div>
+
+                        <div class="bg-purple-50/50 border border-purple-200 p-4 rounded-2xl text-center">
+                            <span class="text-[10px] font-extrabold bg-purple-600 text-white px-2 py-0.5 rounded uppercase">Kelompok 4</span>
+                            <h3 class="font-bold text-slate-900 text-base mt-2">Analisis RPP</h3>
+                            <p class="text-xs text-slate-500 mt-1">Dokumen RPP Skenario PAI</p>
+                        </div>
+                    </div>
+
+                    <!-- 7 Analysis Checklist Items -->
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-sm mb-3">7 Poin yang Wajib Masing-Masing Kelompok Analisis:</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-medium">1. Identifikasi jenis dokumen secara tepat</div>
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-medium">2. Penjelasan fungsi utama dokumen tersebut</div>
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-medium">3. Identifikasi komponen / isi utama dokumen</div>
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-medium">4. Penjelasan ciri khas fisik/format dokumen</div>
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-medium">5. Perbandingan dengan 3 dokumen administrasi lainnya</div>
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-medium">6. Hubungan langsung dengan efektivitas pembelajaran PAI</div>
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-medium md:col-span-2">7. Kesimpulan akhir hasil analisis kelompok</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 14. HASIL YANG DIKUMPULKAN & 15. PENGUMPULAN EDLINK -->
+            <section id="pengumpulan" class="scroll-mt-20 space-y-6">
+                <!-- Section 14 Card -->
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
+                    <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-file-contract text-blue-600"></i>
+                        HASIL / FORMAT BERKAS TUGAS
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-600 mb-4">
+                        Setiap kelompok menyusun luaran berupa <strong>Laporan Analisis (PDF/DOCX)</strong> dan/atau <strong>Slide Presentasi (PPTX)</strong>.
+                    </p>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <strong class="text-xs text-slate-800 font-bold block mb-2">Struktur Minimal Isian Laporan:</strong>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs text-slate-600">
+                            <div>• Nama Kelompok & Anggota</div>
+                            <div>• Jenis Dokumen Analisis</div>
+                            <div>• Identifikasi & Fungsi</div>
+                            <div>• Komponen Utama</div>
+                            <div>• Karakteristik Fisik</div>
+                            <div>• Hubungan Praktik PAI</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 15 Pengumpulan Card -->
+                <div class="bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-emerald-800 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="space-y-2 max-w-xl">
+                        <span class="bg-emerald-500/30 text-emerald-300 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-emerald-400/30">
+                            📤 PENGUMPULAN TUGAS RESMI
+                        </span>
+                        <h3 class="text-2xl font-bold text-white">Platform EdLink LMS</h3>
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                            Setelah berkas analisis kelompok selesai disusun, kumpulkan berkas melalui portal LMS EdLink sesuai dengan tenggat waktu yang ditentukan oleh Dosen.
+                        </p>
+                        <p class="text-[11px] text-emerald-300 italic">
+                            *Website ini merupakan media pembelajaran interaktif perkuliahan dan tidak menyimpan berkas tugas mahasiswa.
+                        </p>
+                    </div>
+
+                    <div class="shrink-0 w-full md:w-auto text-center">
+                        <button onclick="openEdlinkNotice()" class="w-full md:w-auto px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm rounded-2xl shadow-lg hover:shadow-emerald-500/30 transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            <span>BUKA EDLINK</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 16. PRESENTASI DAN DISKUSI -->
+            <section id="presentasi" class="scroll-mt-20">
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-2xl bg-violet-100 text-violet-600 flex items-center justify-center text-2xl font-bold">
+                            🎤
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-violet-600 uppercase tracking-wider">Panduan Sesi Kelas</span>
+                            <h2 class="text-2xl font-bold text-slate-900">PRESENTASI KELOMPOK & TANGGAPAN</h2>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+                            <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-display text-violet-600"></i>
+                                Tugas Kelompok Presenter:
+                            </h3>
+                            <ul class="text-xs text-slate-600 space-y-1.5 list-disc pl-4">
+                                <li>Memaparkan hasil analisis jenis dokumen yang dipelajari.</li>
+                                <li>Menjelaskan komponen utama dan keunikannya.</li>
+                                <li>Menghubungkan dokumen dengan efektivitas pengajaran PAI.</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-violet-50/60 p-5 rounded-2xl border border-violet-100 space-y-3">
+                            <h3 class="font-bold text-violet-900 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-comments text-violet-600"></i>
+                                Tugas Kelompok Penanggap:
+                            </h3>
+                            <p class="text-xs text-violet-800 leading-relaxed">
+                                Kelompok lain wajib menyampaikan minimal satu pertanyaan kritis atau masukan. Contoh:
+                            </p>
+                            <div class="bg-white p-2.5 rounded-lg border border-violet-200 text-xs text-slate-700 italic">
+                                "Apakah identifikasi kelompok sudah tepat dan apa dampaknya jika komponen tersebut dihilangkan dalam RPP PAI?"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 17. REFLEKSI -->
+            <section id="refleksi" class="scroll-mt-20">
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-2xl bg-yellow-100 text-yellow-700 flex items-center justify-center text-2xl font-bold">
+                            💭
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-yellow-600 uppercase tracking-wider">Perenungan Mandiri</span>
+                            <h2 class="text-2xl font-bold text-slate-900">REFLEKSI PEMBELAJARAN</h2>
+                        </div>
+                    </div>
+
+                    <p class="text-xs sm:text-sm text-slate-600">
+                        Gunakan 5 pertanyaan reflektif berikut sebagai bahan kontemplasi setelah mengikuti perkuliahan Pertemuan 3 hari ini:
+                    </p>
+
+                    <div class="space-y-3">
+                        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-xs font-medium text-slate-800 flex items-center gap-3">
+                            <span class="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold shrink-0">1</span>
+                            <span>Apa perbedaan mendasar yang paling utama antara Program Tahunan (Prota) dan Program Semester (Promes)?</span>
+                        </div>
+                        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-xs font-medium text-slate-800 flex items-center gap-3">
+                            <span class="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold shrink-0">2</span>
+                            <span>Mengapa Silabus menjadi landasan utama sebelum seorang guru PAI dapat menyusun RPP?</span>
+                        </div>
+                        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-xs font-medium text-slate-800 flex items-center gap-3">
+                            <span class="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold shrink-0">3</span>
+                            <span>Mengapa calon guru PAI perlu memahami fungsi dokumen, bukan sekadar menghafal namanya?</span>
+                        </div>
+                        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-xs font-medium text-slate-800 flex items-center gap-3">
+                            <span class="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold shrink-0">4</span>
+                            <span>Pemahaman atau wawasan baru apa yang paling berkesan bagi Anda pada perkuliahan hari ini?</span>
+                        </div>
+                        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-xs font-medium text-slate-800 flex items-center gap-3">
+                            <span class="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold shrink-0">5</span>
+                            <span>Di antara 4 dokumen administrasi PAI, dokumen mana yang menurut Anda paling mudah dibedakan? Berikan alasannya!</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 18. RINGKASAN MATERI -->
+            <section id="ringkasan" class="scroll-mt-20">
+                <div class="bg-gradient-to-br from-slate-900 to-blue-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-800 space-y-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl font-bold border border-emerald-500/30">
+                            📌
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Rangkuman Perkuliahan Pertemuan 3</span>
+                            <h2 class="text-2xl font-bold text-white">RINGKASAN UTAMA</h2>
+                        </div>
+                    </div>
+
+                    <!-- Summary Flow Diagram -->
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-center">
+                        <div class="bg-slate-800/80 p-4 rounded-xl border border-amber-500/40">
+                            <span class="text-2xl mb-1 block">📅</span>
+                            <strong class="text-amber-400 text-sm block font-bold">PROTA</strong>
+                            <span class="text-xs text-slate-300">Perencanaan 1 Tahun</span>
+                        </div>
+                        <div class="bg-slate-800/80 p-4 rounded-xl border border-indigo-500/40">
+                            <span class="text-2xl mb-1 block">📆</span>
+                            <strong class="text-indigo-400 text-sm block font-bold">PROMES</strong>
+                            <span class="text-xs text-slate-300">Perencanaan 1 Semester</span>
+                        </div>
+                        <div class="bg-slate-800/80 p-4 rounded-xl border border-teal-500/40">
+                            <span class="text-2xl mb-1 block">📚</span>
+                            <strong class="text-teal-400 text-sm block font-bold">SILABUS</strong>
+                            <span class="text-xs text-slate-300">Rancangan Kurikulum</span>
+                        </div>
+                        <div class="bg-slate-800/80 p-4 rounded-xl border border-purple-500/40">
+                            <span class="text-2xl mb-1 block">📝</span>
+                            <strong class="text-purple-400 text-sm block font-bold">RPP</strong>
+                            <span class="text-xs text-slate-300">Skenario Pelaksanaan Tatap Muka</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700 text-center">
+                        <p class="text-xs sm:text-sm text-slate-200">
+                            "Keempat dokumen memiliki fungsi spesifik yang saling melengkapi. Kunci keberhasilan pembelajaran Pertemuan 3 adalah mahasiswa mampu <strong>mengidentifikasi dan membedakan fungsi masing-masing dokumen</strong> secara tepat."
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MODAL DIALOG FOR DOCUMENT DETAILS -->
+    <div id="docModal" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative animate-fade-in">
+            <button onclick="closeDocModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 p-2 text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="modalBody">
+                <!-- Content injected via JavaScript -->
+            </div>
+            <div class="mt-6 text-right">
+                <button onclick="closeDocModal()" class="px-5 py-2.5 bg-slate-900 text-white font-bold text-xs rounded-xl hover:bg-slate-800 transition">
+                    Tutup Modal
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DIALOG FOR EDLINK NOTICE -->
+    <div id="edlinkModal" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center shadow-2xl relative">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Pengumpulan LMS EdLink</h3>
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">
+                Silakan buka aplikasi/platform <strong>EdLink LMS Kampus</strong> Anda untuk mengunggah berkas Laporan dan Slide Presentasi kelompok sesuai instruksi Dosen Pengampu.
+            </p>
+            <button onclick="closeEdlinkModal()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-md transition">
+                Mengerti & Kembali
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Game Question Pool (8 randomized questions)
+        const allGameQuestions = [
+            {
+                q: "Saya menggambarkan alokasi waktu pembelajaran seluruh materi PAI dalam kurun waktu SATU TAHUN ajaran.",
+                a: "PROTA"
+            },
+            {
+                q: "Saya membagi alokasi jam pelajaran PAI secara lebih rinci ke dalam minggu-minggu efektif selama SATU SEMESTER.",
+                a: "PROMES"
+            },
+            {
+                q: "Saya memuat rancangan umum pembelajaran yang mencakup Kompetensi Dasar, Indikator, Penilaian, dan Sumber Belajar.",
+                a: "SILABUS"
+            },
+            {
+                q: "Saya adalah skenario pelaksanaan pembelajaran tatap muka langkah demi langkah di kelas untuk 1-2 pertemuan.",
+                a: "RPP"
+            },
+            {
+                q: "Format fisik saya memiliki kolom penanggalan minggu (1, 2, 3, 4) untuk setiap bulan di semester ganjil/genap.",
+                a: "PROMES"
+            },
+            {
+                q: "Saya memuat komponen Pendahuluan, Kegiatan Inti (sintaks model mengajar), serta Penilaian/Asesmen harian.",
+                a: "RPP"
+            },
+            {
+                q: "Saya menentukan berapa total Jam Pelajaran (JP) yang dibutuhkan untuk materi Asmaul Husna selama setahun.",
+                a: "PROTA"
+            },
+            {
+                q: "Saya berfungsi sebagai rancangan payung kurikulum sebelum guru menyusun skenario pembelajaran harian RPP.",
+                a: "SILABUS"
+            }
+        ];
+
+        let currentGameQuestions = [];
+        let currentGameIndex = 0;
+        let currentGameScore = 0;
+
+        // Visited sections set for overall learning progress
+        const visitedSections = new Set();
+        const totalSectionsCount = 18;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile Menu Toggle
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+
+            function openSidebar() {
+                sidebar.classList.remove('-translate-x-full');
+                sidebarBackdrop.classList.remove('hidden');
+            }
+
+            function closeSidebar() {
+                sidebar.classList.add('-translate-x-full');
+                sidebarBackdrop.classList.add('hidden');
+            }
+
+            if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openSidebar);
+            if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', closeSidebar);
+            if (sidebarBackdrop) sidebarBackdrop.addEventListener('click', closeSidebar);
+
+            // Close sidebar on link click in mobile
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 1024) {
+                        closeSidebar();
+                    }
+                });
+            });
+
+            // Intersection Observer for Scrollspy and Progress Tracking
+            const sections = document.querySelectorAll('main section');
+            const observerOptions = {
+                root: null,
+                rootMargin: '-20% 0px -60% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        
+                        // Active state in sidebar navigation
+                        navLinks.forEach(link => {
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('active');
+                            } else {
+                                link.classList.remove('active');
+                            }
+                        });
+
+                        // Track visited section
+                        visitedSections.add(id);
+                        updateOverallProgress();
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(sec => observer.observe(sec));
+
+            // Initialize Game
+            resetGame();
+        });
+
+        function updateOverallProgress() {
+            const percent = Math.min(100, Math.round((visitedSections.size / totalSectionsCount) * 100));
+            
+            const progressBar = document.getElementById('overallProgressBar');
+            const progressBarMobile = document.getElementById('overallProgressBarMobile');
+            const progressText = document.getElementById('overallProgressText');
+
+            if (progressBar) progressBar.style.width = `${percent}%`;
+            if (progressBarMobile) progressBarMobile.style.width = `${percent}%`;
+            if (progressText) progressText.textContent = `${percent}%`;
+        }
+
+        function checkCase(caseNum, selectedOption, isCorrect) {
+            const feedbackBox = document.getElementById(`case${caseNum}Feedback`);
+            const optionsContainer = document.getElementById(`case${caseNum}Options`);
+            
+            if (!feedbackBox || !optionsContainer) return;
+
+            feedbackBox.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800');
+
+            if (isCorrect) {
+                feedbackBox.classList.add('bg-emerald-100', 'text-emerald-800');
+                feedbackBox.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>
+                        <span><strong>BENAR! (+10 Poin)</strong> Jawaban Anda sangat tepat.</span>
+                    </div>
+                `;
+            } else {
+                feedbackBox.classList.add('bg-rose-100', 'text-rose-800');
+                feedbackBox.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-circle-xmark text-rose-600 text-base"></i>
+                        <span><strong>KURANG TEPAT (0 Poin).</strong> Silakan baca kembali definisi dan ciri utama dokumen tersebut!</span>
+                    </div>
+                `;
+            }
+        }
+
+        function resetGame() {
+            // Shuffle questions
+            currentGameQuestions = [...allGameQuestions].sort(() => Math.random() - 0.5);
+            currentGameIndex = 0;
+            currentGameScore = 0;
+
+            document.getElementById('gameBox').classList.remove('hidden');
+            document.getElementById('gameEndBox').classList.add('hidden');
+            document.getElementById('gameScoreDisplay').textContent = '0';
+
+            renderGameQuestion();
+        }
+
+        function renderGameQuestion() {
+            if (currentGameIndex >= currentGameQuestions.length) {
+                // Game Finished
+                document.getElementById('gameBox').classList.add('hidden');
+                document.getElementById('gameEndBox').classList.remove('hidden');
+                document.getElementById('finalScoreText').textContent = `${currentGameScore} / ${currentGameQuestions.length * 10}`;
+                return;
+            }
+
+            const current = currentGameQuestions[currentGameIndex];
+            document.getElementById('gameQuestionText').textContent = `"${current.q}"`;
+            document.getElementById('gameQuestionTracker').textContent = `Pertanyaan ${currentGameIndex + 1} dari ${currentGameQuestions.length}`;
+            
+            const progressPercent = Math.round(((currentGameIndex + 1) / currentGameQuestions.length) * 100);
+            document.getElementById('gameProgressPercent').textContent = `${progressPercent}%`;
+            document.getElementById('gameProgressBar').style.width = `${progressPercent}%`;
+        }
+
+        function submitGameAnswer(selectedDoc) {
+            const current = currentGameQuestions[currentGameIndex];
+            
+            if (selectedDoc === current.a) {
+                currentGameScore += 10;
+                document.getElementById('gameScoreDisplay').textContent = currentGameScore;
+            }
+
+            currentGameIndex++;
+            renderGameQuestion();
+        }
+
+        const docDetails = {
+            prota: {
+                title: "📅 Program Tahunan (Prota)",
+                fokus: "Perencanaan Makro 1 Tahun Ajaran",
+                fungsi: "Menetapkan alokasi waktu tahunan untuk seluruh Capaian Pembelajaran PAI agar terdistribusi merata.",
+                cakupan: "Semester Ganjil dan Semester Genap.",
+                contoh: "Tabel Alokasi Jam Pelajaran (JP) Al-Qur'an Hadis, Akidah Akhlak, Fikih, SKI dalam 1 tahun."
+            },
+            promes: {
+                title: "📆 Program Semester (Promes)",
+                fokus: "Perencanaan Mikro 1 Semester (6 Bulan)",
+                fungsi: "Memetakan Jam Pelajaran (JP) hasil Prota ke minggu-minggu efektif dalam tiap bulan.",
+                cakupan: "Matriks bulanan (Juli - Desember / Januari - Juni) dengan kolom minggu 1-4.",
+                contoh: "Penjadwalan materi Toleransi di minggu ke-1 & 2 bulan Agustus."
+            },
+            silabus: {
+                title: "📚 Silabus Pembelajaran",
+                fokus: "Rancangan Payung Kurikulum Mata Pelajaran",
+                fungsi: "Pedoman umum penyusunan skenario pembelajaran RPP dan instrumen penilaian.",
+                cakupan: "KD/CP, Indikator, Materi Pokok, Kegiatan Belajar, Penilaian, Alokasi Waktu, Sumber Belajar.",
+                contoh: "Format tabel linier standar kurikulum PAI."
+            },
+            rpp: {
+                title: "📝 Rencana Pelaksanaan Pembelajaran (RPP)",
+                fokus: "Skenario Operasional Tatap Muka Kelas",
+                fungsi: "Panduan langsung guru saat mengajar di depan murid jam demi jam.",
+                cakupan: "Langkah Pembukaan (Apersepsi), Kegiatan Inti (Praktek/Diskusi), dan Penutup (Refleksi).",
+                contoh: "RPP 1 Lembar / Skenario Sederhana PAI."
+            }
+        };
+
+        function openDocModal(docKey) {
+            const data = docDetails[docKey];
+            if (!data) return;
+
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `
+                <h3 class="text-xl font-extrabold text-slate-900 mb-2">${data.title}</h3>
+                <div class="inline-block bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded-md mb-4">${data.fokus}</div>
+                <div class="space-y-3 text-xs sm:text-sm text-slate-700">
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <strong class="text-slate-900 block font-bold mb-1">🎯 Fungsi Utama:</strong>
+                        <p>${data.fungsi}</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <strong class="text-slate-900 block font-bold mb-1">📊 Cakupan Waktu:</strong>
+                        <p>${data.cakupan}</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <strong class="text-slate-900 block font-bold mb-1">🔍 Contoh Tampilan:</strong>
+                        <p>${data.contoh}</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('docModal').classList.remove('hidden');
+        }
+
+        function closeDocModal() {
+            document.getElementById('docModal').classList.add('hidden');
+        }
+
+        function openEdlinkNotice() {
+            document.getElementById('edlinkModal').classList.remove('hidden');
+        }
+
+        function closeEdlinkModal() {
+            document.getElementById('edlinkModal').classList.add('hidden');
+        }
+
+        /* Projector Mode Toggle */
+        let isProjectorMode = false;
+        function toggleProjectorMode() {
+            isProjectorMode = !isProjectorMode;
+            if (isProjectorMode) {
+                document.body.classList.add('text-lg');
+                alertCustom('Mode Proyektor Diaktifkan (Ukuran Teks Diperbesar)');
+            } else {
+                document.body.classList.remove('text-lg');
+                alertCustom('Mode Normal Diaktifkan');
+            }
+        }
+
+        // Custom Notification Function (No alert allowed)
+        function alertCustom(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2 border border-slate-700 animate-bounce';
+            toast.innerHTML = `<i class="fa-solid fa-circle-info text-blue-400"></i> ${msg}`;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Beranda materi perkuliahan: Cyber Security, Kalkulus, Sistem Operasi, dan TIK.">
+  <title>Materi Perkuliahan | Aslam Mardin, S.Kom., M.Kom., Gr</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172b3a;
+      --muted: #647584;
+      --paper: #f5f7f5;
+      --card: #ffffff;
+      --line: #e2e9e6;
+      --green: #157b68;
+      --green-dark: #105e52;
+      --mint: #e1f3ed;
+      --shadow: 0 12px 32px rgb(23 43 58 / 7%);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    a { color: inherit; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 48px max(24px, calc((100% - 1120px) / 2)) 42px;
+      background:
+        radial-gradient(ellipse at 88% 8%, rgb(101 194 160 / 22%), transparent 34%),
+        linear-gradient(125deg, #102d3a, #174d4c 72%, #176a5b);
+      color: #fff;
+    }
+
+    .hero-inner { max-width: 1120px; margin: 0 auto; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 14px;
+      color: #b7e7d7;
+      font-size: .78rem;
+      font-weight: 750;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #75d7ae;
+      content: "";
+    }
+
+    h1 {
+      max-width: 720px;
+      margin: 0;
+      font-size: clamp(2.15rem, 5vw, 3.65rem);
+      letter-spacing: -.045em;
+      line-height: 1.08;
+    }
+
+    .intro {
+      max-width: 630px;
+      margin: 18px 0 0;
+      color: #d3e4df;
+      font-size: 1.05rem;
+    }
+
+    main { max-width: 1120px; margin: 0 auto; padding: 30px 24px 64px; }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 0 0 30px;
+    }
+
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .filter {
+      padding: 9px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: #445967;
+      cursor: pointer;
+      font: inherit;
+      font-size: .88rem;
+      font-weight: 650;
+      transition: background .18s ease, color .18s ease, border-color .18s ease;
+    }
+
+    .filter:hover, .filter[aria-pressed="true"] {
+      border-color: var(--green);
+      background: var(--green);
+      color: #fff;
+    }
+
+    .search {
+      width: min(100%, 290px);
+      padding: 11px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      outline: none;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .search:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgb(21 123 104 / 12%); }
+
+    .course { margin: 38px 0 0; }
+
+    .course-heading {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      margin: 0 0 16px;
+    }
+
+    .course-mark {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      flex: 0 0 42px;
+      place-items: center;
+      border-radius: 13px;
+      background: var(--mint);
+      color: var(--green-dark);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }
+
+    .course-heading h2 { margin: 0; font-size: 1.28rem; letter-spacing: -.02em; }
+    .course-heading p { margin: 2px 0 0; color: var(--muted); font-size: .9rem; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 245px), 1fr));
+      gap: 14px;
+    }
+
+    .material {
+      display: flex;
+      min-height: 156px;
+      flex-direction: column;
+      padding: 19px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--card);
+      box-shadow: 0 3px 12px rgb(23 43 58 / 3%);
+      text-decoration: none;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .material:hover {
+      transform: translateY(-3px);
+      border-color: #9acdbb;
+      box-shadow: var(--shadow);
+    }
+
+    .material:focus-visible, .filter:focus-visible {
+      outline: 3px solid #65c2a0;
+      outline-offset: 3px;
+    }
+
+    .material-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .tag {
+      padding: 4px 8px;
+      border-radius: 7px;
+      background: #eef4f1;
+      color: #466257;
+      font-size: .7rem;
+      font-weight: 750;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .arrow { color: var(--green); font-size: 1.1rem; font-weight: 700; }
+    .material h3 { margin: 0; font-size: 1rem; line-height: 1.35; }
+    .material p { margin: 7px 0 0; color: var(--muted); font-size: .84rem; }
+
+    .supplement {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .supplement a {
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+      color: var(--green-dark);
+      font-size: .82rem;
+      font-weight: 650;
+      text-decoration: none;
+    }
+
+    .supplement a:hover { border-color: var(--green); background: var(--mint); }
+    .empty { display: none; padding: 32px 16px; color: var(--muted); text-align: center; }
+    .empty.visible { display: block; }
+    [hidden] { display: none !important; }
+
+    footer {
+      padding: 20px 24px 30px;
+      color: var(--muted);
+      font-size: .82rem;
+      text-align: center;
+    }
+
+    @media (max-width: 720px) {
+      .hero { padding: 38px 22px 34px; }
+      main { padding: 24px 18px 48px; }
+      .toolbar { align-items: stretch; flex-direction: column-reverse; }
+      .search { width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">Materi Perkuliahan</p>
+      <h1>Aslam Mardin, S.Kom., M.Kom., Gr</h1>
+      <p class="intro">Pilih mata kuliah atau cari topik untuk membuka media pembelajaran. Pelajari seluruh materi ini sebelum UTS.</p>
+    </div>
+  </header>
+
+  <main>
+    <div class="toolbar" aria-label="Pencarian dan filter materi">
+      <nav class="filters" aria-label="Filter mata kuliah">
+        <button class="filter" type="button" data-filter="all" aria-pressed="true">Semua</button>
+        <button class="filter" type="button" data-filter="cyber" aria-pressed="false">Cyber Security</button>
+        <button class="filter" type="button" data-filter="kalkulus" aria-pressed="false">Kalkulus</button>
+        <button class="filter" type="button" data-filter="so" aria-pressed="false">Sistem Operasi</button>
+        <button class="filter" type="button" data-filter="tik" aria-pressed="false">TIK</button>
+      </nav>
+      <input class="search" id="search" type="search" placeholder="Cari materi..." aria-label="Cari materi">
+    </div>
+
+    <section class="course" data-course-section="cyber" aria-labelledby="cyber-title">
+      <div class="course-heading">
+        <span class="course-mark" aria-hidden="true">CS</span>
+        <div>
+          <h2 id="cyber-title">Cyber Security Management</h2>
+          <p>BWP5030 · Media pembelajaran interaktif</p>
+        </div>
+      </div>
+      <div class="grid">
+        <a class="material" href="./3%20cyber/index.html" data-course="cyber" data-search="portal cyber security management beranda">
+          <span class="material-top"><span class="tag">Portal</span><span class="arrow" aria-hidden="true">↗</span></span>
+          <h3>Portal Cyber Security</h3>
+          <p>Beranda khusus media pembelajaran Cyber Security Management.</p>
+        </a>
+        <a class="material" href="./3%20cyber/pertemuan-3/index.html" data-course="cyber" data-search="pertemuan 3 cia triad perlindungan data">
+          <span class="material-top"><span class="tag">Pertemuan 3</span><span class="arrow" aria-hidden="true">↗</span></span>
+          <h3>CIA Triad &amp; Perlindungan Data</h3>
+          <p>Konsep kerahasiaan, integritas, dan ketersediaan informasi.</p>
+        </a>
+        <a class="material" href="./3%20cyber/pertemuan-4/index.html" data-course="cyber" data-search="pertemuan 4 standar regulasi tata kelola keamanan siber">
+          <span class="material-top"><span class="tag">Pertemuan 4</span><span class="arrow" aria-hidden="true">↗</span></span>
+          <h3>Standar, Regulasi &amp; Tata Kelola</h3>
+          <p>Kerangka dan regulasi dalam pengelolaan keamanan siber.</p>
+        </a>
+        <a class="material" href="./3%20cyber/pertemuan-5/index.html" data-course="cyber" data-search="pertemuan 5 analisis penerapan standar regulasi tata kelola">
+          <span class="material-top"><span class="tag">Pertemuan 5</span><span class="arrow" aria-hidden="true">↗</span></span>
+          <h3>Analisis Penerapan Standar</h3>
+          <p>Analisis penerapan regulasi dan tata kelola keamanan.</p>
+        </a>
+        <a class="material" href="./3%20cyber/pertemuan-6/index.html" data-course="cyber" data-search="pertemuan 6 ancaman kerentanan sistem informasi">
+          <span class="material-top"><span class="tag">Pertemuan 6</span><span class="arrow" aria-hidden="true">↗</span></span>
+          <h3>Ancaman &amp; Kerentanan Sistem Informasi</h3>
+          <p>Mengenali ancaman dan kerentanan pada sistem informasi.</p>
+        </a>
+        <a class="material" href="./3%20cyber/pertemuan-7/cyber_security_analysis_lab.html" data-course="cyber" data-search="pertemuan 7 cyber security case analysis lab">
+          <span class="material-top"><span class="tag">Pertemuan 7</span><span class="arrow" aria-hidden="true">↗</span></span>
+          <h3>Cyber Security Case Analysis Lab</h3>
+          <p>Latihan analisis kasus keamanan siber.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="course" data-course-section="kalkulus" aria-labelledby="kalkulus-title">
+      <div class="course-heading">
+        <span class="course-mark" aria-hidden="true">KAL</span>
+        <div>
+          <h2 id="kalkulus-title">Kalkulus</h2>
+          <p>Media interaktif dan bahan tugas kelompok</p>
+        </div>
+      </div>
+      <div class="grid">
+        <a class="material" href="./kalkulus/pertemuan%204/kalkulus_pertemuan_2_interaktif.html" data-course="kalkulus" data-search="kalkulus pertemuan 2 sistem koordinat fungsi">
+          <span class="material-top"><span class="tag">Pertemuan 2</span><span class="arrow" aria-hidden="true">↗</span></span>
+          <h3>Sistem Koordinat &amp; Fungsi</h3>
+          <p>Media pembelajaran interaktif Kalkulus INF003.</p>
+        </a>
+      </div>
+      <div class="supplement" aria-label="Bahan tugas kelompok Kalkulus">
+        <a href="./kalkulus/pertemuan%204/tugas%20klp/materi%20klp%20kalkulus%201.PNG">Materi Tugas Kelompok 1</a>
+        <a href="./kalkulus/pertemuan%204/tugas%20klp/materi%20klp%20kalkulus%202.PNG">Materi Tugas Kelompok 2</a>
+      </div>
+    </section>
+
+    <section class="course" data-course-section="so" aria-labelledby="so-title">
+      <div class="course-heading">
+        <span class="course-mark" aria-hidden="true">SO</span>
+        <div>
+          <h2 id="so-title">Sistem Operasi</h2>
+          <p>Konsep dasar, struktur, manajemen proses, dan penjadwalan</p>
+        </div>
+      </div>
+      <div class="grid">
+        <a class="material" href="./so/pertemuan2/konsep_dasar_sistem_operasi.html" data-course="so" data-search="pertemuan 2 konsep dasar sistem operasi">
+          <span class="material-top"><span class="tag">Pertemuan 2</span><span class="arrow" aria-hidden="true">↗</span></span>
+          <h3>Konsep Dasar Sistem Operasi</h3>
+          <p>Pengantar konsep dan fungsi sistem operasi.</p>
+        </a>
+        <a class="material" href="./so/pertemuan3/struktur_dan_komponen_sistem_operasi.html" data-course="so" data-search="pertemuan 3 struktur komponen sistem operasi">
+          <span class="material-top"><span class="tag">Pertemuan 3</span><span class="arrow" aria-hidden="true">↗</span></span>
+          <h3>Struktur dan Komponen Sistem Operasi</h3>
+          <p>Mengenal struktur dan komponen utama sistem operasi.</p>
+        </a>
+        <a class="material" href="./so/petemuan4/index.html" data-course="so" data-search="pertemuan 4 manajemen proses">
+          <span class="material-top"><span class="tag">Pertemuan 4</span><span class="arrow" aria-hidden="true">↗</span></span>
+          <h3>Manajemen Proses</h3>
+          <p>Media pembelajaran interaktif Sistem Operasi.</p>
+        </a>
+        <a class="material" href="./so/PERTEMUAN5/website_process_scheduling.html" data-course="so" data-search="pertemuan 5 process scheduling penjadwalan proses">
+          <span class="material-top"><span class="tag">Pertemuan 5</span><span class="arrow" aria-hidden="true">↗</span></span>
+          <h3>Process Scheduling</h3>
+          <p>Konsep dan simulasi penjadwalan proses.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="course" data-course-section="tik" aria-labelledby="tik-title">
+      <div class="course-heading">
+        <span class="course-mark" aria-hidden="true">TIK</span>
+        <div>
+          <h2 id="tik-title">TIK dalam Pembelajaran PAI</h2>
+          <p>Administrasi pembelajaran dan media digital</p>
+        </div>
+      </div>
+      <div class="grid">
+        <a class="material" href="./TIK/pertemuan2/presentasi_web_tik_pai_pertemuan_2.html" data-course="tik" data-search="pertemuan 2 ruang lingkup tujuan fungsi administrasi pembelajaran pai">
+          <span class="material-top"><span class="tag">Pertemuan 2</span><span class="arrow" aria-hidden="true">↗</span></span>
+          <h3>Administrasi Pembelajaran PAI</h3>
+          <p>Ruang lingkup, tujuan, dan fungsi administrasi pembelajaran.</p>
+        </a>
+        <a class="material" href="./TIK/pertemuan3/website_pembelajaran_interaktif_pai_pertemuan_3.html" data-course="tik" data-search="pertemuan 3 jenis dokumen administrasi pembelajaran pai">
+          <span class="material-top"><span class="tag">Pertemuan 3</span><span class="arrow" aria-hidden="true">↗</span></span>
+          <h3>Jenis Dokumen Administrasi Pembelajaran</h3>
+          <p>Media interaktif tentang dokumen administrasi pembelajaran PAI.</p>
+        </a>
+        <a class="material" href="./TIK/pertemuan6/media_pembelajaran_interaktif_google_drive_s_id.html" data-course="tik" data-search="pertemuan 6 google drive s.id media pembelajaran interaktif">
+          <span class="material-top"><span class="tag">Pertemuan 6</span><span class="arrow" aria-hidden="true">↗</span></span>
+          <h3>Google Drive &amp; s.id</h3>
+          <p>Media pembelajaran dan berbagi sumber digital.</p>
+        </a>
+      </div>
+    </section>
+
+    <p class="empty" id="empty">Materi tidak ditemukan. Coba kata kunci lain.</p>
+  </main>
+
+  <footer>Beranda materi perkuliahan · Pilih kartu untuk membuka materi</footer>
+
+  <script>
+    const filterButtons = document.querySelectorAll(".filter");
+    const searchInput = document.querySelector("#search");
+    const materials = document.querySelectorAll(".material");
+    const sections = document.querySelectorAll(".course");
+    const emptyMessage = document.querySelector("#empty");
+    let activeFilter = "all";
+
+    function updateMaterials() {
+      const query = searchInput.value.trim().toLocaleLowerCase("id");
+      let visibleCount = 0;
+
+      materials.forEach((material) => {
+        const matchesCourse = activeFilter === "all" || material.dataset.course === activeFilter;
+        const searchableText = `${material.dataset.search} ${material.textContent}`.toLocaleLowerCase("id");
+        const matchesSearch = searchableText.includes(query);
+        const isVisible = matchesCourse && matchesSearch;
+        material.hidden = !isVisible;
+        if (isVisible) visibleCount += 1;
+      });
+
+      sections.forEach((section) => {
+        const hasVisibleMaterial = [...section.querySelectorAll(".material")].some((material) => !material.hidden);
+        section.hidden = !hasVisibleMaterial;
+      });
+      emptyMessage.classList.toggle("visible", visibleCount === 0);
+    }
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        activeFilter = button.dataset.filter;
+        filterButtons.forEach((filter) => {
+          filter.setAttribute("aria-pressed", String(filter === button));
+        });
+        updateMaterials();
+      });
+    });
+
+    searchInput.addEventListener("input", updateMaterials);
+  </script>
+</body>
+</html>

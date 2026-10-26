@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konsep Dasar Sistem Operasi | Perkuliahan Informatika</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate900: '#0B132B',
+                        slate800: '#1C2541',
+                        slate700: '#3A506B',
+                        cyanAccent: '#00F0FF',
+                        cyanHover: '#00ADB5',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Inter & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0B132B;
+            color: #F8FAFC;
+        }
+        .slide {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+        }
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+        @media print {
+            .no-print { display: none !important; }
+            .slide { display: flex !important; opacity: 1 !important; page-break-after: always; height: 100vh; }
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col justify-between overflow-hidden select-none">
+
+    <!-- Top Navigation Bar / Header -->
+    <header class="no-print bg-slate800/90 backdrop-blur border-b border-slate-700 px-6 py-3 flex items-center justify-between z-50">
+        <div class="flex items-center space-x-4">
+            <button onclick="toggleSidebar()" class="text-cyanAccent hover:text-white p-2 rounded-lg bg-slate700/50 hover:bg-slate700 transition" title="Daftar Isi">
+                <i class="fa-solid fa-bars text-lg"></i>
+            </button>
+            <div>
+                <span class="text-xs uppercase tracking-wider text-cyanAccent font-semibold">Sistem Operasi • Pertemuan 2</span>
+                <h1 class="text-sm font-bold text-white truncate max-w-xs sm:max-w-md">Konsep Dasar Sistem Operasi</h1>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <button onclick="window.print()" class="hidden sm:flex items-center space-x-2 px-3 py-1.5 bg-slate700 hover:bg-slate600 text-xs font-medium rounded-lg transition text-slate-200" title="Cetak atau Simpan PDF">
+                <i class="fa-solid fa-print"></i>
+                <span>Cetak / PDF</span>
+            </button>
+            <button onclick="toggleFullscreen()" class="flex items-center space-x-2 px-3 py-1.5 bg-slate700 hover:bg-slate600 text-xs font-medium rounded-lg transition text-slate-200" title="Layar Penuh (F)">
+                <i class="fa-solid fa-expand" id="fs-icon"></i>
+                <span class="hidden sm:inline">Fullscreen</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="no-print w-full bg-slate-800 h-1.5">
+        <div id="progress-bar" class="bg-cyanAccent h-1.5 transition-all duration-300" style="width: 6.25%;"></div>
+    </div>
+
+    <!-- Main Presentation Container (16:9 Aspect Ratio / Flex Fill) -->
+    <main class="flex-1 relative overflow-y-auto flex items-center justify-center p-4 sm:p-8">
+        <div class="w-full max-w-6xl h-full max-h-[85vh] bg-slate800/60 border border-slate-700/80 rounded-2xl shadow-2xl flex flex-col justify-between p-6 sm:p-10 relative overflow-hidden backdrop-blur-sm">
+            
+            <!-- WATERMARK / SLIDE NUMBER -->
+            <div class="absolute top-6 right-8 text-xs font-bold text-slate-500 uppercase tracking-widest">
+                Slide <span id="current-slide-num">1</span> dari <span id="total-slides-num">16</span>
+            </div>
+
+            <!-- ================= SLIDE 1: SAMPUL ================= -->
+            <div class="slide active flex-col justify-center items-center text-center h-full space-y-6" data-slide="1">
+                <div class="inline-flex items-center space-x-2 px-4 py-1.5 bg-cyanAccent/10 border border-cyanAccent/30 rounded-full text-cyanAccent text-xs font-semibold tracking-wider uppercase mb-2">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>Mata Kuliah Sistem Operasi • Informatika</span>
+                </div>
+                <h2 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight">
+                    Konsep Dasar <span class="text-cyanAccent">Sistem Operasi</span>
+                </h2>
+                <p class="text-lg sm:text-xl text-slate-300 max-w-2xl font-light">
+                    Mengenal Peran Sistem Operasi dalam Sistem Komputer, Pengelolaan Sumber Daya, dan Layanan Aplikasi.
+                </p>
+                <div class="pt-6 flex flex-wrap justify-center gap-6 text-sm text-slate-400">
+                    <div class="flex items-center space-x-2 bg-slate-900/60 px-4 py-2 rounded-lg border border-slate-700">
+                        <i class="fa-solid fa-calendar-days text-cyanAccent"></i>
+                        <span>Pertemuan 2</span>
+                    </div>
+                    <div class="flex items-center space-x-2 bg-slate-900/60 px-4 py-2 rounded-lg border border-slate-700">
+                        <i class="fa-solid fa-clock text-cyanAccent"></i>
+                        <span>100–150 Menit</span>
+                    </div>
+                    <div class="flex items-center space-x-2 bg-slate-900/60 px-4 py-2 rounded-lg border border-slate-700">
+                        <i class="fa-solid fa-chalkboard-user text-cyanAccent"></i>
+                        <span>Dosen Pengampu</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= SLIDE 2: PERTANYAAN PEMANTIK ================= -->
+            <div class="slide flex-col justify-between h-full" data-slide="2">
+                <div>
+                    <div class="text-xs font-semibold uppercase tracking-wider text-cyanAccent mb-1">Refleksi Awal</div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-6">Pertanyaan Pemantik Diskusi</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-auto">
+                    <div class="bg-slate-900/80 border border-slate-700 p-6 rounded-xl hover:border-cyanAccent/50 transition">
+                        <div class="w-10 h-10 rounded-lg bg-cyanAccent/10 text-cyanAccent flex items-center justify-center font-bold text-lg mb-4">1</div>
+                        <h3 class="font-semibold text-white mb-2">Tanpa Sistem Operasi?</h3>
+                        <p class="text-sm text-slate-300">Apa yang terjadi jika komputer dinyalakan tanpa memiliki sistem operasi sama sekali?</p>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-6 rounded-xl hover:border-cyanAccent/50 transition">
+                        <div class="w-10 h-10 rounded-lg bg-cyanAccent/10 text-cyanAccent flex items-center justify-center font-bold text-lg mb-4">2</div>
+                        <h3 class="font-semibold text-white mb-2">Peran Perantara</h3>
+                        <p class="text-sm text-slate-300">Mengapa aplikasi tidak langsung mengendalikan seluruh perangkat keras komputer?</p>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-6 rounded-xl hover:border-cyanAccent/50 transition">
+                        <div class="w-10 h-10 rounded-lg bg-cyanAccent/10 text-cyanAccent flex items-center justify-center font-bold text-lg mb-4">3</div>
+                        <h3 class="font-semibold text-white mb-2">Kinerja Menurun</h3>
+                        <p class="text-sm text-slate-300">Mengapa komputer bisa menjadi lambat ketika terlalu banyak aplikasi dibuka secara bersamaan?</p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <button onclick="toggleDiscussionPrompt()" class="px-4 py-2 bg-cyanAccent/10 hover:bg-cyanAccent/20 text-cyanAccent border border-cyanAccent/30 rounded-lg text-sm font-medium transition flex items-center space-x-2">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <span id="prompt-btn-text">Tampilkan Pertanyaan Diskusi Lanjutan</span>
+                    </button>
+                    <div id="advanced-prompt" class="hidden mt-3 p-4 bg-slate-900 border border-cyanAccent/40 rounded-xl text-sm text-slate-200">
+                        <strong class="text-cyanAccent">Diskusi Kelas:</strong> Bagaimana sistem operasi memastikan keadilan pembagian waktu CPU (Time-sharing) antar program agar tidak ada program monopoli yang membuat sistem *hang*?
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= SLIDE 3: CAPAIAN PEMBELAJARAN ================= -->
+            <div class="slide flex-col justify-between h-full" data-slide="3">
+                <div>
+                    <div class="text-xs font-semibold uppercase tracking-wider text-cyanAccent mb-1">Kurikulum</div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">Capaian Pembelajaran Pertemuan 2</h2>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-auto">
+                    <div class="bg-slate-900/70 border border-slate-700 p-5 rounded-xl flex items-start space-x-4">
+                        <div class="p-3 bg-cyanAccent/10 text-cyanAccent rounded-lg"><i class="fa-solid fa-book-open text-lg"></i></div>
+                        <div>
+                            <h3 class="font-semibold text-white text-sm mb-1">Pengertian & Tujuan</h3>
+                            <p class="text-xs text-slate-300">Menjelaskan definisi dan tujuan utama sistem operasi dengan bahasa sendiri.</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/70 border border-slate-700 p-5 rounded-xl flex items-start space-x-4">
+                        <div class="p-3 bg-cyanAccent/10 text-cyanAccent rounded-lg"><i class="fa-solid fa-gears text-lg"></i></div>
+                        <div>
+                            <h3 class="font-semibold text-white text-sm mb-1">Fungsi Utama</h3>
+                            <p class="text-xs text-slate-300">Mengidentifikasi fungsi inti manajemen sumber daya pada sistem komputer.</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/70 border border-slate-700 p-5 rounded-xl flex items-start space-x-4">
+                        <div class="p-3 bg-cyanAccent/10 text-cyanAccent rounded-lg"><i class="fa-solid fa-network-wired text-lg"></i></div>
+                        <div>
+                            <h3 class="font-semibold text-white text-sm mb-1">Peran Perantara</h3>
+                            <p class="text-xs text-slate-300">Menjelaskan posisi OS antara pengguna, aplikasi, dan perangkat keras.</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/70 border border-slate-700 p-5 rounded-xl flex items-start space-x-4">
+                        <div class="p-3 bg-cyanAccent/10 text-cyanAccent rounded-lg"><i class="fa-solid fa-laptop-code text-lg"></i></div>
+                        <div>
+                            <h3 class="font-semibold text-white text-sm mb-1">Jenis & Contoh</h3>
+                            <p class="text-xs text-slate-300">Mengidentifikasi berbagai jenis sistem operasi populer beserta karakteristiknya.</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/70 border border-slate-700 p-5 rounded-xl flex items-start space-x-4 sm:col-span-2 lg:col-span-2">
+                        <div class="p-3 bg-cyanAccent/10 text-cyanAccent rounded-lg"><i class="fa-solid fa-magnifying-glass-chart text-lg"></i></div>
+                        <div>
+                            <h3 class="font-semibold text-white text-sm mb-1">Analisis Permasalahan</h3>
+                            <p class="text-xs text-slate-300">Menganalisis permasalahan sederhana pada komputer berdasarkan fungsi dasar sistem operasi.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-xs text-slate-400 italic">Target: Mahasiswa Informatika mampu memahami fondasi kerja perangkat lunak sistem.</div>
+            </div>
+
+            <!-- ================= SLIDE 4: PENGERTIAN SISTEM OPERASI ================= -->
+            <div class="slide flex-col justify-between h-full" data-slide="4">
+                <div>
+                    <div class="text-xs font-semibold uppercase tracking-wider text-cyanAccent mb-1">Materi Inti</div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">Pengertian Sistem Operasi (Operating System)</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto">
+                    <div class="bg-slate-900/80 border border-slate-700 p-6 rounded-xl flex flex-col justify-center">
+                        <p class="text-sm sm:text-base text-slate-200 leading-relaxed mb-4">
+                            <strong class="text-cyanAccent">Sistem Operasi</strong> adalah perangkat lunak sistem (<span class="italic">system software</span>) yang mengelola sumber daya perangkat keras komputer, menyediakan layanan umum untuk aplikasi, dan bertindak sebagai perantara krusial.
+                        </p>
+                        <div class="border-l-4 border-cyanAccent pl-4 py-1 text-xs text-slate-300 italic">
+                            "Tanpa sistem operasi, perangkat keras hanyalah tumpukan komponen elektronik tanpa daya guna."
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-6 rounded-xl flex flex-col justify-center">
+                        <h3 class="text-sm font-semibold text-cyanAccent uppercase tracking-wide mb-3"><i class="fa-solid fa-desktop mr-2"></i>Contoh Sistem Operasi Populer</h3>
+                        <div class="grid grid-cols-2 gap-3 text-sm">
+                            <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 flex items-center space-x-2"><i class="fa-brands fa-windows text-blue-400"></i><span>Windows (PC/Kerja)</span></div>
+                            <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 flex items-center space-x-2"><i class="fa-brands fa-linux text-yellow-400"></i><span>Linux (Server/Desktop)</span></div>
+                            <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 flex items-center space-x-2"><i class="fa-brands fa-apple text-slate-200"></i><span>macOS (Mac Computer)</span></div>
+                            <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 flex items-center space-x-2"><i class="fa-brands fa-android text-green-400"></i><span>Android & iOS (Mobile)</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-xs text-slate-400">OS memastikan efisiensi, keamanan, dan kemudahan interaksi manusia dengan mesin.</div>
+            </div>
+
+            <!-- ================= SLIDE 5: POSISI SISTEM OPERASI ================= -->
+            <div class="slide flex-col justify-between h-full" data-slide="5">
+                <div>
+                    <div class="text-xs font-semibold uppercase tracking-wider text-cyanAccent mb-1">Arsitektur Komputer</div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">Posisi Sistem Operasi dalam Sistem Komputer</h2>
+                    <p class="text-xs text-slate-400">Klik setiap lapisan di bawah untuk melihat penjelasan interaktif fungsi lapisannya.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 my-auto items-center">
+                    <!-- Layer Stack -->
+                    <div class="flex flex-col space-y-2 max-w-md mx-auto w-full">
+                        <div onclick="showLayerInfo('user')" class="cursor-pointer bg-slate-900 hover:bg-slate-700 border border-slate-700 hover:border-cyanAccent p-4 rounded-xl text-center transition group">
+                            <span class="text-xs text-cyanAccent uppercase font-bold tracking-wider block mb-1">Lapisan 1</span>
+                            <h3 class="text-lg font-bold text-white group-hover:text-cyanAccent transition"><i class="fa-solid fa-user mr-2"></i>Pengguna (User)</h3>
+                        </div>
+                        <div onclick="showLayerInfo('app')" class="cursor-pointer bg-slate-900 hover:bg-slate-700 border border-slate-700 hover:border-cyanAccent p-4 rounded-xl text-center transition group">
+                            <span class="text-xs text-cyanAccent uppercase font-bold tracking-wider block mb-1">Lapisan 2</span>
+                            <h3 class="text-lg font-bold text-white group-hover:text-cyanAccent transition"><i class="fa-solid fa-window-maximize mr-2"></i>Aplikasi (Browser, Word, Game)</h3>
+                        </div>
+                        <div onclick="showLayerInfo('os')" class="cursor-pointer bg-cyanAccent/10 hover:bg-cyanAccent/20 border-2 border-cyanAccent p-4 rounded-xl text-center transition group shadow-lg shadow-cyanAccent/10">
+                            <span class="text-xs text-cyanAccent uppercase font-bold tracking-wider block mb-1">Lapisan 3 (Inti)</span>
+                            <h3 class="text-lg font-bold text-white group-hover:text-cyanAccent transition"><i class="fa-solid fa-microchip mr-2"></i>Sistem Operasi (OS)</h3>
+                        </div>
+                        <div onclick="showLayerInfo('hardware')" class="cursor-pointer bg-slate-900 hover:bg-slate-700 border border-slate-700 hover:border-cyanAccent p-4 rounded-xl text-center transition group">
+                            <span class="text-xs text-cyanAccent uppercase font-bold tracking-wider block mb-1">Lapisan 4</span>
+                            <h3 class="text-lg font-bold text-white group-hover:text-cyanAccent transition"><i class="fa-solid hard-drive mr-2"></i>Perangkat Keras (CPU, RAM, Disk)</h3>
+                        </div>
+                    </div>
+                    <!-- Info Box -->
+                    <div id="layer-info-box" class="bg-slate-900/90 border border-slate-700 p-6 rounded-xl flex flex-col justify-center min-h-[200px]">
+                        <h3 class="text-base font-bold text-cyanAccent mb-2" id="layer-title">Pilih Lapisan di Samping</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed" id="layer-desc">
+                            Klik salah satu kotak lapisan arsitektur komputer di sebelah kiri untuk memahami bagaimana sistem operasi menjadi penghubung sentral antara pengguna, aplikasi, dan perangkat keras.
+                        </p>
+                    </div>
+                </div>
+                <div class="text-xs text-slate-400">Aplikasi tidak mengakses hardware secara langsung demi keamanan dan stabilitas sistem.</div>
+            </div>
+
+            <!-- ================= SLIDE 6: TUJUAN SISTEM OPERASI ================= -->
+            <div class="slide flex-col justify-between h-full" data-slide="6">
+                <div>
+                    <div class="text-xs font-semibold uppercase tracking-wider text-cyanAccent mb-1">Analisis Tujuan</div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">Tujuan Utama Sistem Operasi</h2>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 my-auto">
+                    <div class="bg-slate-900/80 border border-slate-700 p-5 rounded-xl flex items-start space-x-4">
+                        <div class="p-3 bg-cyanAccent/10 text-cyanAccent rounded-lg text-lg"><i class="fa-solid fa-face-smile"></i></div>
+                        <div>
+                            <h3 class="font-bold text-white mb-1">Memudahkan Pengguna</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed">Menyediakan antarmuka (GUI/CLI) sehingga manusia dapat mengoperasikan komputer tanpa harus menulis bahasa mesin yang rumit.</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-5 rounded-xl flex items-start space-x-4">
+                        <div class="p-3 bg-cyanAccent/10 text-cyanAccent rounded-lg text-lg"><i class="fa-solid fa-gauge-high"></i></div>
+                        <div>
+                            <h3 class="font-bold text-white mb-1">Mengelola Sumber Daya Efisien</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed">Mengatur alokasi CPU, memori, dan perangkat I/O secara adil dan optimal agar performa komputer tetap terjaga.</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-5 rounded-xl flex items-start space-x-4">
+                        <div class="p-3 bg-cyanAccent/10 text-cyanAccent rounded-lg text-lg"><i class="fa-solid fa-cubes"></i></div>
+                        <div>
+                            <h3 class="font-bold text-white mb-1">Lingkungan Eksekusi Aplikasi</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed">Menyediakan pustaka layanan dan standar bagi programmer untuk merancang aplikasi yang dapat berjalan lintas perangkat.</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-5 rounded-xl flex items-start space-x-4">
+                        <div class="p-3 bg-cyanAccent/10 text-cyanAccent rounded-lg text-lg"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div>
+                            <h3 class="font-bold text-white mb-1">Keamanan dan Kestabilan</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed">Melindungi data pengguna, mengatur hak akses, dan mencegah satu aplikasi error yang merusak keseluruhan sistem.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-xs text-slate-400">Tujuan ini menjadikan komputer alat bantu produktivitas yang handal.</div>
+            </div>
+
+            <!-- ================= SLIDE 7: MANAJEMEN PROSES ================= -->
+            <div class="slide flex-col justify-between h-full" data-slide="7">
+                <div>
+                    <div class="text-xs font-semibold uppercase tracking-wider text-cyanAccent mb-1">Manajemen Sumber Daya (1)</div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">Fungsi Manajemen Proses</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto">
+                    <div class="bg-slate-900/80 border border-slate-700 p-6 rounded-xl flex flex-col justify-center">
+                        <h3 class="text-sm font-semibold text-cyanAccent uppercase tracking-wide mb-3"><i class="fa-solid fa-microchip mr-2"></i>Konsep Penjadwalan CPU</h3>
+                        <p class="text-sm text-slate-200 leading-relaxed mb-4">
+                            Sistem operasi mengatur jalannya program (<span class="italic">proses</span>). CPU dibagi waktunya dengan sangat cepat (<span class="italic">time-sharing</span>) sehingga seolah-olah puluhan aplikasi berjalan bersamaan.
+                        </p>
+                        <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 text-xs text-slate-300">
+                            <strong>Status Proses:</strong> Ready, Running, Waiting / Blocked, Terminated.
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-6 rounded-xl flex flex-col justify-center">
+                        <h3 class="text-sm font-semibold text-cyanAccent uppercase tracking-wide mb-3"><i class="fa-solid fa-laptop-code mr-2"></i>Contoh Aktivitas Mahasiswa</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed mb-3">
+                            Saat mahasiswa membuka <strong>Browser</strong> (untuk tugas kuliah), <strong>Microsoft Word</strong> (mengetik laporan), dan <strong>Pemutar Musik</strong> secara bersamaan:
+                        </p>
+                        <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside">
+                            <li>OS mengatur giliran CPU untuk melayani ketiga aplikasi tersebut secara bergantian dalam hitungan milidetik.</li>
+                            <li>Mencegah satu aplikasi memonopoli sumber daya prosesor.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="text-xs text-slate-400">Manajemen proses memastikan multitasking berjalan mulus tanpa macet total.</div>
+            </div>
+
+            <!-- ================= SLIDE 8: MANAJEMEN MEMORI ================= -->
+            <div class="slide flex-col justify-between h-full" data-slide="8">
+                <div>
+                    <div class="text-xs font-semibold uppercase tracking-wider text-cyanAccent mb-1">Manajemen Sumber Daya (2)</div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">Fungsi Manajemen Memori</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto">
+                    <div class="bg-slate-900/80 border border-slate-700 p-6 rounded-xl flex flex-col justify-center">
+                        <h3 class="text-sm font-semibold text-cyanAccent uppercase tracking-wide mb-3"><i class="fa-solid fa-memory mr-2"></i>Peran RAM Utama</h3>
+                        <p class="text-sm text-slate-200 leading-relaxed mb-3">
+                            Memori utama (RAM) adalah sumber daya kritis tempat data dan instruksi program dimuat sebelum dieksekusi CPU.
+                        </p>
+                        <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+                            <li>Alokasi dan pelepasan memori saat aplikasi dibuka atau ditutup.</li>
+                            <li>Melindungi ruang memori antar aplikasi agar tidak saling tumpang tindih.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-6 rounded-xl flex flex-col justify-center">
+                        <h3 class="text-sm font-semibold text-cyanAccent uppercase tracking-wide mb-3"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Dampak Keterbatasan RAM</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed mb-3">
+                            Ketika RAM hampir habis, OS menggunakan teknik <span class="italic">Virtual Memory</span> (Swap space pada SSD/HDD).
+                        </p>
+                        <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 text-xs text-slate-300">
+                            <strong>Akibat:</strong> Kinerja komputer menjadi sangat lambat (<span class="italic">lagging</span>) karena proses baca-tulis media penyimpanan jauh lebih lambat dibanding RAM fisik.
+                        </div>
+                    </div>
+                </div>
+                <div class="text-xs text-slate-400">Pengelolaan memori yang baik memaksimalkan stabilitas eksekusi program.</div>
+            </div>
+
+            <!-- ================= SLIDE 9: MANAJEMEN FILE DAN PENYIMPANAN ================= -->
+            <div class="slide flex-col justify-between h-full" data-slide="9">
+                <div>
+                    <div class="text-xs font-semibold uppercase tracking-wider text-cyanAccent mb-1">Manajemen Sumber Daya (3)</div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">Manajemen File dan Penyimpanan</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto">
+                    <div class="bg-slate-900/80 border border-slate-700 p-6 rounded-xl flex flex-col justify-center">
+                        <h3 class="text-sm font-semibold text-cyanAccent uppercase tracking-wide mb-3"><i class="fa-solid fa-folder-tree mr-2"></i>Tugas Sistem Berkas (File System)</h3>
+                        <ul class="text-xs sm:text-sm text-slate-300 space-y-2 list-disc list-inside">
+                            <li>Pembuatan, penghapusan, pembacaan, dan penulisan file.</li>
+                            <li>Pengorganisasian direktori dan folder hierarkis.</li>
+                            <li>Pengaturan hak akses file (<span class="italic">read, write, execute</span>).</li>
+                            <li>Abstraksi perangkat fisik penyimpanan (SSD/HDD/Flashdisk).</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-6 rounded-xl flex flex-col justify-center">
+                        <h3 class="text-sm font-semibold text-cyanAccent uppercase tracking-wide mb-3"><i class="fa-solid fa-folder-open mr-2"></i>Contoh Struktur Folder Kuliah</h3>
+                        <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 font-mono text-xs text-cyanAccent space-y-1">
+                            <div>📁 Semester2/</div>
+                            <div class="pl-4">├── 📁 SistemOperasi/</div>
+                            <div class="pl-8">│   ├── 📄 Materi_Pertemuan2.pdf</div>
+                            <div class="pl-8">│   └── 📁 TugasKlp/</div>
+                            <div class="pl-4">└── 📁 PemrogramanWeb/</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-xs text-slate-400">Memastikan data tersimpan terstruktur, aman, dan mudah diakses kembali.</div>
+            </div>
+
+            <!-- ================= SLIDE 10: MANAJEMEN PERANGKAT I/O ================= -->
+            <div class="slide flex-col justify-between h-full" data-slide="10">
+                <div>
+                    <div class="text-xs font-semibold uppercase tracking-wider text-cyanAccent mb-1">Manajemen Sumber Daya (4)</div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">Manajemen Perangkat Input / Output (I/O)</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
+                    <div class="bg-slate-900/80 border border-slate-700 p-5 rounded-xl">
+                        <div class="text-cyanAccent text-xl mb-3"><i class="fa-solid fa-keyboard"></i></div>
+                        <h3 class="font-bold text-white text-sm mb-2">Input Devices</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">Mengelola sinyal dari keyboard, mouse, mikrofon, dan sensor agar dapat dipahami oleh sistem.</p>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-5 rounded-xl">
+                        <div class="text-cyanAccent text-xl mb-3"><i class="fa-solid fa-print"></i></div>
+                        <h3 class="font-bold text-white text-sm mb-2">Output & Storage</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">Mengontrol monitor, printer, speaker, serta media eksternal melalui mekanisme antarmuka standar.</p>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-5 rounded-xl">
+                        <div class="text-cyanAccent text-xl mb-3"><i class="fa-solid fa-plug"></i></div>
+                        <h3 class="font-bold text-white text-sm mb-2">Device Driver</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">OS menggunakan perangkat lunak perantara (<span class="italic">driver</span>) untuk berkomunikasi langsung dengan berbagai merek perangkat keras.</p>
+                    </div>
+                </div>
+                <div class="text-xs text-slate-400">Pengguna cukup mencolokkan perangkat tanpa pusing memikirkan protokol sirkuit elektronik.</div>
+            </div>
+
+            <!-- ================= SLIDE 11: KEAMANAN DAN PROTEKSI ================= -->
+            <div class="slide flex-col justify-between h-full" data-slide="11">
+                <div>
+                    <div class="text-xs font-semibold uppercase tracking-wider text-cyanAccent mb-1">Integritas Sistem</div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">Keamanan, Proteksi, dan Pembaruan Sistem</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto">
+                    <div class="bg-slate-900/80 border border-slate-700 p-6 rounded-xl flex flex-col justify-center">
+                        <h3 class="text-sm font-semibold text-cyanAccent uppercase tracking-wide mb-3"><i class="fa-solid fa-shield-cat mr-2"></i>Mekanisme Proteksi OS</h3>
+                        <ul class="text-xs sm:text-sm text-slate-300 space-y-2 list-disc list-inside">
+                            <li><strong>Akun Pengguna & Autentikasi:</strong> Pemisahan hak akses antar user (Admin vs Regular User).</li>
+                            <li><strong>Perlindungan Memori:</strong> Mencegah aplikasi liar mengakses data aplikasi lain.</li>
+                            <li><strong>Pembaruan Sistem:</strong> Menambal celah keamanan (<span class="italic">security patch</span>).</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-6 rounded-xl flex flex-col justify-center">
+                        <h3 class="text-sm font-semibold text-cyanAccent uppercase tracking-wide mb-3"><i class="fa-solid fa-circle-exclamation mr-2"></i>Catatan Akademik Penting</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed mb-3">
+                            <strong class="text-white">Jangan menyamakan Sistem Operasi dengan Antivirus!</strong>
+                        </p>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Sistem operasi menyediakan fondasi proteksi dan kontrol akses secara menyeluruh, sedangkan antivirus adalah aplikasi tambahan pihak ketiga yang khusus memindai ancaman malware.
+                        </p>
+                    </div>
+                </div>
+                <div class="text-xs text-slate-400">Integritas sistem menjaga kerahasiaan dan ketersediaan data pengguna.</div>
+            </div>
+
+            <!-- ================= SLIDE 12: JENIS DAN CONTOH SISTEM OPERASI ================= -->
+            <div class="slide flex-col justify-between h-full" data-slide="12">
+                <div>
+                    <div class="text-xs font-semibold uppercase tracking-wider text-cyanAccent mb-1">Klasifikasi OS</div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">Jenis dan Contoh Sistem Operasi</h2>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-auto">
+                    <div class="bg-slate-900/80 border border-slate-700 p-4 rounded-xl">
+                        <div class="flex items-center space-x-2 text-blue-400 font-bold mb-2"><i class="fa-brands fa-windows"></i><span>Windows</span></div>
+                        <p class="text-xs text-slate-300">Dominan pada komputer pribadi (PC), laptop kerja, dan gaming. Antarmuka intuitif dan dukungan aplikasi luas.</p>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-4 rounded-xl">
+                        <div class="flex items-center space-x-2 text-yellow-400 font-bold mb-2"><i class="fa-brands fa-linux"></i><span>Linux</span></div>
+                        <p class="text-xs text-slate-300">Standar industri untuk server web, superkomputer, cloud, serta sistem tertanam (<span class="italic">embedded systems</span>).</p>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-4 rounded-xl">
+                        <div class="flex items-center space-x-2 text-slate-200 font-bold mb-2"><i class="fa-brands fa-apple"></i><span>macOS</span></div>
+                        <p class="text-xs text-slate-300">Sistem operasi eksklusif untuk jajaran komputer Mac buatan Apple dengan stabilitas tinggi dan desain elegan.</p>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-4 rounded-xl">
+                        <div class="flex items-center space-x-2 text-green-400 font-bold mb-2"><i class="fa-brands fa-android"></i><span>Android</span></div>
+                        <p class="text-xs text-slate-300">Sistem operasi berbasis Linux untuk perangkat seluler cerdas, tablet, dan perangkat sandang.</p>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-4 rounded-xl sm:col-span-2 lg:col-span-2">
+                        <div class="flex items-center space-x-2 text-slate-100 font-bold mb-2"><i class="fa-brands fa-apple"></i><span>iOS</span></div>
+                        <p class="text-xs text-slate-300">Sistem operasi seluler tertutup yang sangat teroptimasi khusus untuk perangkat iPhone dan iPad.</p>
+                    </div>
+                </div>
+                <div class="text-xs text-slate-400">Setiap OS memiliki karakteristik arsitektur dan ekosistem tersendiri.</div>
+            </div>
+
+            <!-- ================= SLIDE 13: STUDI KASUS ================= -->
+            <div class="slide flex-col justify-between h-full" data-slide="13">
+                <div>
+                    <div class="text-xs font-semibold uppercase tracking-wider text-cyanAccent mb-1">Studi Kasus Analisis</div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">Analisis Permasalahan Kinerja Komputer</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto">
+                    <div class="bg-slate-900/80 border border-slate-700 p-6 rounded-xl flex flex-col justify-center">
+                        <h3 class="text-sm font-semibold text-cyanAccent uppercase tracking-wide mb-3"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Skenario Masalah</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                            Sebuah laptop mahasiswa terasa sangat lambat (<span class="italic">lagging</span>) ketika browser dibuka dengan 30 tab aktif, aplikasi presentasi berjalan, dan beberapa program musik beroperasi di latar belakang.
+                        </p>
+                        <div class="text-xs text-slate-400">Diskusikan dengan teman sebangku sebelum membuka pembahasan.</div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-6 rounded-xl flex flex-col justify-center">
+                        <button onclick="toggleCaseStudy()" class="w-full py-3 bg-cyanAccent/10 hover:bg-cyanAccent/20 text-cyanAccent border border-cyanAccent/30 rounded-xl font-medium text-sm transition flex items-center justify-center space-x-2 mb-3">
+                            <i class="fa-solid fa-eye" id="case-icon"></i>
+                            <span id="case-btn-text">Tampilkan Pembahasan Kasus</span>
+                        </button>
+                        <div id="case-study-answer" class="hidden text-xs text-slate-300 space-y-2 bg-slate-800 p-4 rounded-xl border border-slate-700">
+                            <div><strong>1. Fungsi Terkait:</strong> Manajemen Memori & Manajemen Proses.</div>
+                            <div><strong>2. Sumber Terbebani:</strong> RAM utama habis, memicu penggunaan Virtual Memory (Swap) pada SSD/HDD.</div>
+                            <div><strong>3. Pemeriksaan:</strong> Buka Task Manager / Activity Monitor untuk melihat persentase penggunaan RAM & CPU.</div>
+                            <div><strong>4. Solusi:</strong> Tutup tab browser yang tidak perlu atau tambah kapasitas RAM fisik.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-xs text-slate-400">Menerapkan konsep dasar OS untuk troubleshooting praktis.</div>
+            </div>
+
+            <!-- ================= SLIDE 14: AKTIVITAS DISKUSI KELOMPOK & TIMER ================= -->
+            <div class="slide flex-col justify-between h-full" data-slide="14">
+                <div>
+                    <div class="text-xs font-semibold uppercase tracking-wider text-cyanAccent mb-1">Aktivitas Kolaboratif</div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">Tugas Diskusi Kelompok</h2>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 my-auto items-center">
+                    <div class="lg:col-span-2 bg-slate-900/80 border border-slate-700 p-6 rounded-xl">
+                        <h3 class="text-sm font-semibold text-cyanAccent uppercase tracking-wide mb-3"><i class="fa-solid fa-users mr-2"></i>Instruksi Tugas</h3>
+                        <ol class="text-xs sm:text-sm text-slate-300 space-y-2 list-decimal list-inside">
+                            <li>Pilih satu perangkat yang Anda gunakan sehari-hari (Laptop, Smartphone, Smartwatch).</li>
+                            <li>Identifikasi sistem operasi yang digunakan.</li>
+                            <li>Jelaskan minimal tiga fungsi sistem operasi pada perangkat tersebut.</li>
+                            <li>Berikan satu contoh masalah nyata dan solusi berkaitan dengan OS perangkat tersebut.</li>
+                        </ol>
+                    </div>
+                    <!-- Timer Widget -->
+                    <div class="bg-slate-900 border border-cyanAccent/40 p-5 rounded-xl text-center flex flex-col justify-center shadow-lg">
+                        <span class="text-xs uppercase tracking-wider text-cyanAccent font-bold mb-1"><i class="fa-solid fa-stopwatch mr-1"></i> Timer Diskusi</span>
+                        <div id="timer-display" class="text-4xl sm:text-5xl font-extrabold text-white my-3 font-mono">15:00</div>
+                        <div class="flex justify-center space-x-2">
+                            <button onclick="startTimer()" class="px-3 py-1.5 bg-cyanAccent hover:bg-cyanHover text-slate900 font-bold text-xs rounded-lg transition">Mulai</button>
+                            <button onclick="pauseTimer()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white font-bold text-xs rounded-lg transition">Jeda</button>
+                            <button onclick="resetTimer()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white font-bold text-xs rounded-lg transition">Reset</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-xs text-slate-400">Gunakan waktu diskusi dengan efektif sebelum sesi presentasi hasil kelompok.</div>
+            </div>
+
+            <!-- ================= SLIDE 15: KUIS INTERAKTIF ================= -->
+            <div class="slide flex-col justify-between h-full overflow-y-auto" data-slide="15">
+                <div>
+                    <div class="text-xs font-semibold uppercase tracking-wider text-cyanAccent mb-1">Evaluasi Mandiri</div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-white mb-2">Kuis Interaktif Sistem Operasi</h2>
+                </div>
+                
+                <div id="quiz-container" class="my-auto space-y-4">
+                    <!-- Dynamic Question Loaded via JS -->
+                    <div id="quiz-question-box" class="bg-slate-900/90 border border-slate-700 p-5 rounded-xl">
+                        <div class="text-xs text-cyanAccent font-semibold mb-1" id="quiz-progress-text">Soal 1 dari 5</div>
+                        <h3 class="text-base font-bold text-white mb-4" id="quiz-question-title">Memuat pertanyaan...</h3>
+                        <div id="quiz-options" class="space-y-2">
+                            <!-- Options generated by script -->
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div id="quiz-feedback" class="text-xs font-medium"></div>
+                        <button id="quiz-next-btn" onclick="nextQuizQuestion()" class="hidden px-5 py-2 bg-cyanAccent hover:bg-cyanHover text-slate900 font-bold rounded-lg text-xs transition">Soal Berikutnya</button>
+                    </div>
+                </div>
+
+                <div id="quiz-result-box" class="hidden my-auto text-center space-y-4 bg-slate-900/90 border border-slate-700 p-8 rounded-xl">
+                    <h3 class="text-2xl font-bold text-white">Kuis Selesai! 🎉</h3>
+                    <p class="text-lg text-slate-300">Skor Akhir Anda: <span id="quiz-final-score" class="text-cyanAccent font-bold">0</span> / 5</p>
+                    <button onclick="restartQuiz()" class="px-6 py-2.5 bg-cyanAccent hover:bg-cyanHover text-slate900 font-bold rounded-xl text-sm transition">Ulangi Kuis</button>
+                </div>
+
+                <div class="text-xs text-slate-400 mt-2">Uji pemahaman materi kuliah pertemuan 2 secara interaktif.</div>
+            </div>
+
+            <!-- ================= SLIDE 16: KESIMPULAN DAN REFLEKSI ================= -->
+            <div class="slide flex-col justify-between h-full" data-slide="16">
+                <div>
+                    <div class="text-xs font-semibold uppercase tracking-wider text-cyanAccent mb-1">Penutup</div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">Kesimpulan & Refleksi Pertemuan 2</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto">
+                    <div class="bg-slate-900/80 border border-slate-700 p-6 rounded-xl flex flex-col justify-center">
+                        <h3 class="text-sm font-semibold text-cyanAccent uppercase tracking-wide mb-3"><i class="fa-solid fa-circle-check mr-2"></i>Poin Inti Materi</h3>
+                        <ul class="text-xs sm:text-sm text-slate-300 space-y-2 list-disc list-inside">
+                            <li>OS adalah perangkat lunak pengelola sumber daya perangkat keras.</li>
+                            <li>Berperan sebagai perantara esensial antara Pengguna, Aplikasi, dan Hardware.</li>
+                            <li>Mengelola proses, memori, file, dan perangkat I/O secara aman.</li>
+                            <li>Menentukan performa, kestabilan, dan keamanan sistem komputer.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-6 rounded-xl flex flex-col justify-center border-l-4 border-l-cyanAccent">
+                        <h3 class="text-sm font-semibold text-cyanAccent uppercase tracking-wide mb-2"><i class="fa-solid fa-comment-dots mr-2"></i>Pertanyaan Refleksi</h3>
+                        <p class="text-sm text-white italic font-medium leading-relaxed mb-4">
+                            "Fungsi sistem operasi apa yang paling sering kalian gunakan tanpa menyadarinya dalam aktivitas perkuliahan sehari-hari?"
+                        </p>
+                        <div class="text-xs text-slate-400">Renungkan untuk diskusi kelompok minggu depan. Terima kasih!</div>
+                    </div>
+                </div>
+                <div class="text-xs text-slate-400">Sampai jumpa pada Pertemuan 3: Manajemen Proses & Penjadwalan Lanjutan.</div>
+            </div>
+
+            <!-- Bottom Navigation Bar Controls -->
+            <div class="no-print pt-4 border-t border-slate-700/80 flex items-center justify-between">
+                <button onclick="prevSlide()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-xs font-semibold transition flex items-center space-x-2">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span class="hidden sm:inline">Sebelumnya</span>
+                </button>
+                
+                <div class="text-xs text-slate-400 hidden sm:block">
+                    Gunakan tombol <kbd class="px-1.5 py-0.5 bg-slate-700 text-cyanAccent rounded">←</kbd> <kbd class="px-1.5 py-0.5 bg-slate-700 text-cyanAccent rounded">→</kbd> untuk navigasi
+                </div>
+
+                <button onclick="nextSlide()" class="px-4 py-2 bg-cyanAccent hover:bg-cyanHover text-slate900 rounded-lg text-xs font-bold transition flex items-center space-x-2">
+                    <span class="hidden sm:inline">Berikutnya</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Sidebar Table of Contents Drawer -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 w-80 bg-slate900 border-r border-slate-700 z-50 transform -translate-x-full transition-transform duration-300 flex flex-col shadow-2xl">
+        <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+            <h3 class="font-bold text-white text-sm"><i class="fa-solid fa-list-ul mr-2 text-cyanAccent"></i>Daftar Isi Slide</h3>
+            <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <div class="flex-1 overflow-y-auto p-3 space-y-1" id="sidebar-list">
+            <!-- Populated via JS -->
+        </div>
+    </div>
+    <div id="sidebar-backdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-black/60 z-40 hidden backdrop-blur-sm"></div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Presentation State
+        let currentSlide = 1;
+        const totalSlides = 16;
+
+        // Slide titles for TOC
+        const slideTitles = [
+            "1. Sampul: Konsep Dasar OS",
+            "2. Pertanyaan Pemantik",
+            "3. Capaian Pembelajaran",
+            "4. Pengertian Sistem Operasi",
+            "5. Posisi Sistem Operasi",
+            "6. Tujuan Sistem Operasi",
+            "7. Manajemen Proses",
+            "8. Manajemen Memori",
+            "9. Manajemen File & Penyimpanan",
+            "10. Manajemen Perangkat I/O",
+            "11. Keamanan & Proteksi",
+            "12. Jenis & Contoh OS",
+            "13. Studi Kasus Kinerja",
+            "14. Tugas Diskusi Kelompok",
+            "15. Kuis Interaktif",
+            "16. Kesimpulan & Refleksi"
+        ];
+
+        // Initialize App
+        document.addEventListener("DOMContentLoaded", () => {
+            initSidebar();
+            updateSlideView();
+            initQuiz();
+        });
+
+        // Navigation Functions
+        function showSlide(slideNum) {
+            if (slideNum < 1 || slideNum > totalSlides) return;
+            currentSlide = slideNum;
+            updateSlideView();
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideView();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideView();
+            }
+        }
+
+        function updateSlideView() {
+            // Hide all slides
+            document.querySelectorAll('.slide').forEach(el => el.classList.remove('active'));
+            // Show active slide
+            const activeEl = document.querySelector(`.slide[data-slide="${currentSlide}"]`);
+            if (activeEl) activeEl.classList.add('active');
+
+            // Update header indicators
+            document.getElementById('current-slide-num').innerText = currentSlide;
+            document.getElementById('total-slides-num').innerText = totalSlides;
+
+            // Update progress bar
+            const percent = (currentSlide / totalSlides) * 100;
+            document.getElementById('progress-bar').style.width = percent + '%';
+
+            // Highlight sidebar item
+            document.querySelectorAll('.toc-item').forEach((item, idx) => {
+                if (idx + 1 === currentSlide) {
+                    item.classList.add('bg-cyanAccent/10', 'border-cyanAccent', 'text-cyanAccent');
+                    item.classList.remove('border-slate-800', 'text-slate-300');
+                } else {
+                    item.classList.remove('bg-cyanAccent/10', 'border-cyanAccent', 'text-cyanAccent');
+                    item.classList.add('border-slate-800', 'text-slate-300');
+                }
+            });
+
+            // Scroll active slide container to top
+            const container = document.querySelector('main');
+            if (container) container.scrollTop = 0;
+        }
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                prevSlide();
+            } else if (e.key === 'f' || e.key === 'F') {
+                toggleFullscreen();
+            }
+        });
+
+        // Fullscreen Toggle
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error("Error attempting to enable fullscreen:", err);
+                });
+                document.getElementById('fs-icon').className = "fa-solid fa-compress";
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+                document.getElementById('fs-icon').className = "fa-solid fa-expand";
+            }
+        }
+
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            sidebar.classList.toggle('-translate-x-full');
+            backdrop.classList.toggle('hidden');
+        }
+
+        function initSidebar() {
+            const listContainer = document.getElementById('sidebar-list');
+            listContainer.innerHTML = '';
+            slideTitles.forEach((title, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "toc-item w-full text-left px-3 py-2.5 rounded-lg text-xs font-medium border border-slate-800 hover:bg-slate800 transition flex items-center space-x-2 text-slate-300";
+                btn.innerHTML = `<span class="font-mono text-cyanAccent">${idx + 1}.</span> <span class="truncate">${title.split('. ')[1]}</span>`;
+                btn.onclick = () => {
+                    showSlide(idx + 1);
+                    toggleSidebar();
+                };
+                listContainer.appendChild(btn);
+            });
+        }
+
+        // Slide 2 Interactive Prompt
+        function toggleDiscussionPrompt() {
+            const box = document.getElementById('advanced-prompt');
+            const btnText = document.getElementById('prompt-btn-text');
+            box.classList.toggle('hidden');
+            if (box.classList.contains('hidden')) {
+                btnText.innerText = "Tampilkan Pertanyaan Diskusi Lanjutan";
+            } else {
+                btnText.innerText = "Sembunyikan Pertanyaan Diskusi";
+            }
+        }
+
+        // Slide 5 Interactive Layer Info
+        function showLayerInfo(layer) {
+            const titleEl = document.getElementById('layer-title');
+            const descEl = document.getElementById('layer-desc');
+            
+            const info = {
+                user: {
+                    title: "Lapisan 1: Pengguna (User)",
+                    desc: "Manusia atau operator yang berinteraksi langsung dengan komputer melalui antarmuka grafis (GUI) atau baris perintah (CLI) untuk menyelesaikan tugas atau pekerjaan."
+                },
+                app: {
+                    title: "Lapisan 2: Perangkat Lunak Aplikasi (Application Software)",
+                    desc: "Program seperti Browser, Microsoft Word, Game, dan Pemutar Musik yang diciptakan untuk membantu tugas spesifik pengguna. Aplikasi tidak mengakses perangkat keras secara langsung, melainkan melalui layanan API sistem operasi."
+                },
+                os: {
+                    title: "Lapisan 3: Sistem Operasi (Operating System)",
+                    desc: "Inti pengendali (Kernel) yang mengatur penjadwalan proses CPU, alokasi memori RAM, manajemen file, proteksi keamanan, dan komunikasi dengan driver perangkat keras."
+                },
+                hardware: {
+                    title: "Lapisan 4: Perangkat Keras (Hardware)",
+                    desc: "Komponen fisik komputer meliputi Processor (CPU), Memori Utama (RAM), Media Penyimpanan (SSD/HDD), serta perangkat Input/Output (Keyboard, Mouse, Monitor)."
+                }
+            };
+
+            if (info[layer]) {
+                titleEl.innerText = info[layer].title;
+                descEl.innerText = info[layer].desc;
+            }
+        }
+
+        // Slide 13 Case Study Answer Toggle
+        function toggleCaseStudy() {
+            const box = document.getElementById('case-study-answer');
+            const btnText = document.getElementById('case-btn-text');
+            const icon = document.getElementById('case-icon');
+            box.classList.toggle('hidden');
+            if (box.classList.contains('hidden')) {
+                btnText.innerText = "Tampilkan Pembahasan Kasus";
+                icon.className = "fa-solid fa-eye";
+            } else {
+                btnText.innerText = "Sembunyikan Pembahasan Kasus";
+                icon.className = "fa-solid fa-eye-slash";
+            }
+        }
+
+        // Slide 14 Timer Logic
+        let timerInterval = null;
+        let timeLeft = 15 * 60; // 15 minutes in seconds
+
+        function startTimer() {
+            if (timerInterval) return;
+            timerInterval = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timeLeft = 15 * 60;
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer-display').innerText = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        // Slide 15 Quiz Logic
+        const quizQuestions = [
+            {
+                q: "Apa definisi utama dari Sistem Operasi (Operating System)?",
+                options: [
+                    "Aplikasi pengolah kata untuk membuat dokumen laporan tugas",
+                    "Perangkat lunak sistem yang mengelola sumber daya hardware dan layanan aplikasi",
+                    "Perangkat keras tambahan untuk mempercepat kinerja prosesor",
+                    "Antivirus untuk mendeteksi malware pada komputer"
+                ],
+                correct: 1
+            },
+            {
+                q: "Manakah yang BUKAN merupakan fungsi utama dari sistem operasi?",
+                options: [
+                    "Manajemen proses dan penjadwalan CPU",
+                    "Manajemen memori utama (RAM)",
+                    "Membuat desain grafis logo perusahaan",
+                    "Manajemen file dan sistem penyimpanan"
+                ],
+                correct: 2
+            },
+            {
+                q: "Mengapa aplikasi tidak diizinkan mengakses perangkat keras secara langsung?",
+                options: [
+                    "Agar aplikasi berjalan lebih lambat",
+                    "Demi menjaga keamanan, kestabilan, dan mencegah konflik sumber daya sistem",
+                    "Karena kapasitas CPU tidak mencukupi",
+                    "Karena tidak didukung oleh bahasa pemrograman modern"
+                ],
+                correct: 1
+            },
+            {
+                q: "Apa dampak utama ketika kapasitas RAM fisik hampir habis karena terlalu banyak aplikasi dibuka?",
+                options: [
+                    "Komputer menjadi sangat cepat",
+                    "Sistem operasi menggunakan Virtual Memory (Swap) yang membuat kinerja lambat",
+                    "Kapasitas harddisk bertambah secara otomatis",
+                    "Layar monitor otomatis mati"
+                ],
+                correct: 1
+            },
+            {
+                q: "Manakah pernyataan yang tepat mengenai perbedaan Sistem Operasi dan Antivirus?",
+                options: [
+                    "Sistem operasi dan antivirus adalah software yang sama persis",
+                    "Sistem operasi adalah fondasi pengelola sistem, sedangkan antivirus adalah aplikasi pihak ketiga pemindai malware",
+                    "Antivirus adalah inti kernel utama dari sistem komputer",
+                    "Sistem operasi hanya berfungsi jika ada antivirus aktif"
+                ],
+                correct: 1
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let quizScore = 0;
+        let answeredCurrent = false;
+
+        function initQuiz() {
+            currentQuizIndex = 0;
+            quizScore = 0;
+            loadQuizQuestion();
+        }
+
+        function loadQuizQuestion() {
+            answeredCurrent = false;
+            const qData = quizQuestions[currentQuizIndex];
+            document.getElementById('quiz-progress-text').innerText = `Soal ${currentQuizIndex + 1} dari ${quizQuestions.length}`;
+            document.getElementById('quiz-question-title').innerText = qData.q;
+            
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            
+            qData.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3 rounded-xl bg-slate800 hover:bg-slate-700 border border-slate-700 text-xs sm:text-sm text-slate-200 transition flex items-center space-x-3";
+                btn.innerHTML = `<span class="w-6 h-6 rounded-full bg-slate-700 text-cyanAccent flex items-center justify-center font-bold text-xs shrink-0">${String.fromCharCode(65 + idx)}</span><span>${opt}</span>`;
+                btn.onclick = () => selectQuizAnswer(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-feedback').innerText = '';
+            document.getElementById('quiz-next-btn').classList.add('hidden');
+        }
+
+        function selectQuizAnswer(selectedIdx, btnElement) {
+            if (answeredCurrent) return;
+            answeredCurrent = true;
+
+            const qData = quizQuestions[currentQuizIndex];
+            const allBtns = document.getElementById('quiz-options').children;
+
+            if (selectedIdx === qData.correct) {
+                btnElement.classList.remove('bg-slate800', 'hover:bg-slate-700', 'border-slate-700');
+                btnElement.classList.add('bg-green-900/40', 'border-green-500', 'text-green-200');
+                document.getElementById('quiz-feedback').innerHTML = `<span class="text-green-400 font-semibold"><i class="fa-solid fa-check-circle mr-1"></i> Jawaban Benar!</span>`;
+                quizScore++;
+            } else {
+                btnElement.classList.remove('bg-slate800', 'hover:bg-slate-700', 'border-slate-700');
+                btnElement.classList.add('bg-red-900/40', 'border-red-500', 'text-red-200');
+                // Highlight correct
+                allBtns[qData.correct].classList.remove('bg-slate800', 'hover:bg-slate-700', 'border-slate-700');
+                allBtns[qData.correct].classList.add('bg-green-900/40', 'border-green-500', 'text-green-200');
+                document.getElementById('quiz-feedback').innerHTML = `<span class="text-red-400 font-semibold"><i class="fa-solid fa-xmark-circle mr-1"></i> Jawaban Kurang Tepat.</span>`;
+            }
+
+            // Disable all buttons
+            for (let b of allBtns) {
+                b.style.pointerEvents = 'none';
+            }
+
+            // Show next button or finish
+            const nextBtn = document.getElementById('quiz-next-btn');
+            nextBtn.classList.remove('hidden');
+            if (currentQuizIndex === quizQuestions.length - 1) {
+                nextBtn.innerText = "Lihat Hasil Kuis";
+            } else {
+                nextBtn.innerText = "Soal Berikutnya";
+            }
+        }
+
+        function nextQuizQuestion() {
+            currentQuizIndex++;
+            if (currentQuizIndex < quizQuestions.length) {
+                loadQuizQuestion();
+            } else {
+                // Show Result
+                document.getElementById('quiz-question-box').classList.add('hidden');
+                document.getElementById('quiz-next-btn').classList.add('hidden');
+                document.getElementById('quiz-feedback').innerText = '';
+                document.getElementById('quiz-final-score').innerText = quizScore;
+                document.getElementById('quiz-result-box').classList.remove('hidden');
+            }
+        }
+
+        function restartQuiz() {
+            document.getElementById('quiz-result-box').classList.add('hidden');
+            document.getElementById('quiz-question-box').classList.remove('hidden');
+            initQuiz();
+        }
+    </script>
+</body>
+</html>

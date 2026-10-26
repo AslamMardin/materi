@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulus INF003 - Pertemuan 2: Sistem Koordinat & Fungsi</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax for rendering Mathematical LaTeX formulas -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            user-select: none;
+        }
+        .slide-card {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        .fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Custom scrollbar for drawer & containers */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        .canvas-bg {
+            background-color: #1e293b;
+            background-image: radial-gradient(#334155 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col justify-between bg-slate-950 text-slate-100">
+
+    <!-- Top Navigation Header -->
+    <header class="h-16 bg-slate-900 border-b border-slate-800 px-4 md:px-8 flex items-center justify-between z-20 shadow-lg">
+        <div class="flex items-center space-x-3">
+            <button id="homeBtn" onclick="goToSlide(1)" class="p-2 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-400 hover:text-indigo-300 transition flex items-center gap-2 text-sm font-semibold border border-indigo-500/30">
+                <i class="fa-solid fa-house"></i>
+                <span class="hidden md:inline">Sampul</span>
+            </button>
+            <div class="h-6 w-px bg-slate-800 hidden sm:block"></div>
+            <div>
+                <span class="text-xs text-indigo-400 font-semibold tracking-wider uppercase block">Kalkulus (INF003) &bull; Pertemuan 2</span>
+                <h1 id="currentSlideTitle" class="text-sm md:text-base font-bold text-slate-200 truncate max-w-[200px] sm:max-w-md">Sistem Koordinat & Fungsi</h1>
+            </div>
+        </div>
+
+        <!-- Progress Bar and Action Controls -->
+        <div class="flex items-center space-x-4">
+            <div class="hidden sm:flex items-center space-x-2 bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700/50">
+                <span id="slideCounter" class="text-xs font-bold text-indigo-400">1 / 22</span>
+                <div class="w-24 bg-slate-700 rounded-full h-2 overflow-hidden">
+                    <div id="progressBar" class="bg-indigo-500 h-2 rounded-full transition-all duration-300" style="width: 4.54%"></div>
+                </div>
+            </div>
+
+            <button onclick="toggleToc()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-2 text-sm font-medium border border-slate-700" title="Daftar Materi">
+                <i class="fa-solid fa-list"></i>
+                <span class="hidden md:inline">Daftar Isi</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Slide Content Wrapper -->
+    <main class="flex-1 relative overflow-y-auto p-4 md:p-8 flex items-center justify-center">
+        <div id="slideContainer" class="w-full max-w-6xl h-full flex flex-col justify-center items-center">
+            <!-- Slide content rendered via JavaScript -->
+        </div>
+    </main>
+
+    <!-- Bottom Footer Controls -->
+    <footer class="h-16 bg-slate-900 border-t border-slate-800 px-4 md:px-8 flex items-center justify-between z-20">
+        <button id="prevBtn" onclick="prevSlide()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white transition flex items-center gap-2 text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed border border-slate-700">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Sebelumnya</span>
+        </button>
+
+        <div class="text-xs text-slate-500 hidden md:block">
+            Gunakan tombol panah keyboard <kbd class="px-1.5 py-0.5 bg-slate-800 rounded text-slate-400 border border-slate-700">&larr;</kbd> <kbd class="px-1.5 py-0.5 bg-slate-800 rounded text-slate-400 border border-slate-700">&rarr;</kbd> untuk navigasi
+        </div>
+
+        <button id="nextBtn" onclick="nextSlide()" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white transition flex items-center gap-2 text-sm font-semibold shadow-lg shadow-indigo-600/20 disabled:opacity-40 disabled:cursor-not-allowed">
+            <span>Selanjutnya</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </button>
+    </footer>
+
+    <!-- Table of Contents Modal Drawer -->
+    <div id="tocModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-300 flex justify-end">
+        <div class="w-full max-w-md bg-slate-900 h-full shadow-2xl border-l border-slate-800 flex flex-col p-6 overflow-y-auto">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold">
+                        <i class="fa-solid fa-book-open text-sm"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Daftar Materi</h3>
+                </div>
+                <button onclick="toggleToc()" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <nav id="tocList" class="space-y-1 flex-1">
+                <!-- TOC list items dynamically created -->
+            </nav>
+        </div>
+    </div>
+
+    <script>
+        // Slide Definitions
+        const slides = [
+            {
+                id: 1,
+                title: "Cover / Sampul",
+                render: () => `
+                    <div class="text-center space-y-6 fade-in max-w-3xl">
+                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 font-semibold text-sm">
+                            <i class="fa-solid fa-graduation-cap"></i> MATEMATIKA / KALKULUS (INF003)
+                        </div>
+                        <h1 class="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-indigo-300 leading-tight">
+                            PERTEMUAN 2
+                        </h1>
+                        <h2 class="text-2xl md:text-3xl font-bold text-indigo-400">
+                            Sistem Koordinat, Fungsi dan Grafiknya, Operasi pada Fungsi
+                        </h2>
+                        <p class="text-slate-400 text-base md:text-lg max-w-2xl mx-auto">
+                            Panduan Kuliah Interaktif untuk Memahami Dasar-Dasar Analisis Fungsi dan Geometri Analitis.
+                        </p>
+                        <div class="pt-6 flex flex-wrap justify-center gap-4">
+                            <span class="px-4 py-2 rounded-lg bg-slate-800/80 border border-slate-700 text-xs font-semibold text-slate-300">
+                                <i class="fa-solid fa-bullseye text-indigo-400 mr-2"></i> Sub CPMK 1.2
+                            </span>
+                            <span class="px-4 py-2 rounded-lg bg-slate-800/80 border border-slate-700 text-xs font-semibold text-slate-300">
+                                <i class="fa-solid fa-layer-group text-indigo-400 mr-2"></i> 22 Modul Slide
+                            </span>
+                        </div>
+                        <div class="pt-8">
+                            <button onclick="goToSlide(2)" class="px-8 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold shadow-lg shadow-indigo-600/30 transition transform hover:-translate-y-0.5">
+                                Mulai Pembelajaran <i class="fa-solid fa-circle-play ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 2,
+                title: "Tujuan Pembelajaran",
+                render: () => `
+                    <div class="w-full max-w-4xl space-y-6 fade-in">
+                        <div class="text-center md:text-left">
+                            <span class="text-xs font-bold text-indigo-400 tracking-wider uppercase">Capaian Pembelajaran</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white mt-1">Tujuan Pembelajaran (Sub CPMK 1.2)</h2>
+                            <p class="text-slate-400 text-sm mt-1">Di akhir sesi ini, mahasiswa diharapkan mampu menguasai 6 indikator berikut:</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            ${[
+                                { icon: "fa-compass", title: "Sistem Koordinat", desc: "Memahami struktur bidang Koordinat Kartesius 2D secara akurat." },
+                                { icon: "fa-location-crosshairs", title: "Posisi Titik", desc: "Menentukan lokasi dan letak titik $(x, y)$ pada empat kuadran." },
+                                { icon: "fa-diagram-project", title: "Konsep Fungsi", desc: "Memahami definisi fungsi, domain, kodomain, dan range." },
+                                { icon: "fa-calculator", title: "Nilai Fungsi", desc: "Menghitung nilai fungsi $f(x)$ untuk masukan variabel tertentu." },
+                                { icon: "fa-chart-line", title: "Grafik Fungsi", desc: "Membuat dan menganalisis visualisasi grafik fungsi." },
+                                { icon: "fa-arrows-split-up-and-left", title: "Operasi Fungsi", desc: "Melakukan operasi penjumlahan, pengurangan, perkalian, dan pembagian fungsi." }
+                            ].map((item, idx) => `
+                                <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-start gap-4 hover:border-indigo-500/50 transition">
+                                    <div class="w-10 h-10 rounded-lg bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0 font-bold">
+                                        <i class="fa-solid ${item.icon}"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-slate-200 text-base">${idx+1}. ${item.title}</h3>
+                                        <p class="text-xs text-slate-400 mt-1">${item.desc}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 3,
+                title: "Apersepsi",
+                render: () => `
+                    <div class="w-full max-w-3xl bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 space-y-6 fade-in text-center">
+                        <div class="inline-block p-4 rounded-full bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 mb-2">
+                            <i class="fa-solid fa-lightbulb text-3xl"></i>
+                        </div>
+                        <h2 class="text-2xl md:text-3xl font-bold text-white">Pertanyaan Apersepsi</h2>
+                        <div class="p-6 bg-slate-950 rounded-xl border border-slate-800">
+                            <p class="text-xl md:text-2xl font-semibold text-indigo-300">
+                                "Jika terdapat titik $A(3, 2)$, apa arti angka $3$ dan $2$ tersebut?"
+                            </p>
+                        </div>
+                        
+                        <div id="apersepsiAnswer" class="hidden p-5 bg-indigo-950/50 border border-indigo-500/30 rounded-xl text-left space-y-3 fade-in">
+                            <h4 class="font-bold text-indigo-300 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-circle-check text-emerald-400"></i> Jawaban & Penjelasan:
+                            </h4>
+                            <ul class="list-disc list-inside text-sm text-slate-300 space-y-2">
+                                <li>Angka <strong>3</strong> adalah nilai <strong>Absis (x)</strong>: berjarak $3$ satuan ke kanan dari titik asal $(0,0)$ sepanjang Sumbu-X.</li>
+                                <li>Angka <strong>2</strong> adalah nilai <strong>Ordinat (y)</strong>: berjarak $2$ satuan ke atas dari titik asal $(0,0)$ sepanjang Sumbu-Y.</li>
+                                <li>Pasangan $(3, 2)$ menunjukkan lokasi unik titik $A$ pada bidang Kartesius 2 dimensi.</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <button id="apersepsiBtn" onclick="toggleApersepsi()" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-sm shadow-md transition">
+                                Lihat Jawaban <i class="fa-solid fa-eye ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 4,
+                title: "Sistem Koordinat Kartesius",
+                render: () => `
+                    <div class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center fade-in">
+                        <div class="space-y-4">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Konsep Dasar</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white">Sistem Koordinat Kartesius</h2>
+                            <p class="text-sm text-slate-300 leading-relaxed">
+                                Bidang Kartesius dibentuk oleh dua garis bilangan riil saling tegak lurus yang berpotongan di satu titik pusat.
+                            </p>
+                            <ul class="space-y-3 text-sm">
+                                <li class="flex items-start gap-3 bg-slate-900 p-3 rounded-lg border border-slate-800">
+                                    <span class="font-bold text-indigo-400 min-w-[80px]">Sumbu X:</span>
+                                    <span class="text-slate-300">Garis horizontal (Mendatar). Arah kanan bernilai positif (+), kiri bernilai negatif (-).</span>
+                                </li>
+                                <li class="flex items-start gap-3 bg-slate-900 p-3 rounded-lg border border-slate-800">
+                                    <span class="font-bold text-teal-400 min-w-[80px]">Sumbu Y:</span>
+                                    <span class="text-slate-300">Garis vertikal (Tegak). Arah atas bernilai positif (+), bawah bernilai negatif (-).</span>
+                                </li>
+                                <li class="flex items-start gap-3 bg-slate-900 p-3 rounded-lg border border-slate-800">
+                                    <span class="font-bold text-emerald-400 min-w-[80px]">Titik Asal:</span>
+                                    <span class="text-slate-300">Titik potong kedua sumbu $(0,0)$, sering disimbolkan dengan $O$.</span>
+                                </li>
+                                <li class="flex items-start gap-3 bg-slate-900 p-3 rounded-lg border border-slate-800">
+                                    <span class="font-bold text-purple-400 min-w-[80px]">Format:</span>
+                                    <span class="text-slate-300">Ditulis $(x, y)$, dengan $x$ sebagai absis dan $y$ sebagai ordinat.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Visual Illustration Diagram -->
+                        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col items-center justify-center shadow-xl">
+                            <svg viewBox="-120 -120 240 240" class="w-full max-w-[280px] h-auto">
+                                <!-- Grid lines -->
+                                <path d="M-100,-100 H100 M-100,-50 H100 M-100,50 H100 M-100,100 H100 M-100,-100 V100 M-50,-100 V100 M50,-100 V100 M100,-100 V100" stroke="#334155" stroke-width="0.5" stroke-dasharray="2,2"/>
+                                <!-- Axes -->
+                                <line x1="-110" y1="0" x2="110" y2="0" stroke="#6366f1" stroke-width="2" stroke-linecap="round"/>
+                                <line x1="0" y1="-110" x2="0" y2="110" stroke="#14b8a6" stroke-width="2" stroke-linecap="round"/>
+                                <!-- Arrowheads -->
+                                <polygon points="110,0 102,-4 102,4" fill="#6366f1"/>
+                                <polygon points="0,-110 -4,-102 4,-102" fill="#14b8a6"/>
+                                <!-- Labels -->
+                                <text x="100" y="15" fill="#818cf8" font-size="10" font-weight="bold">X</text>
+                                <text x="-15" y="-100" fill="#2dd4bf" font-size="10" font-weight="bold">Y</text>
+                                <text x="-12" y="12" fill="#94a3b8" font-size="9">(0,0)</text>
+                                <!-- Example Point P(60, -40) -> x=3, y=-2 -->
+                                <circle cx="60" cy="-40" r="4" fill="#f43f5e"/>
+                                <line x1="60" y1="0" x2="60" y2="-40" stroke="#f43f5e" stroke-width="1" stroke-dasharray="2,2"/>
+                                <line x1="0" y1="-40" x2="60" y2="-40" stroke="#f43f5e" stroke-width="1" stroke-dasharray="2,2"/>
+                                <text x="65" y="-45" fill="#fb7185" font-size="9" font-weight="bold">P(3, 2)</text>
+                            </svg>
+                            <span class="text-xs text-slate-400 mt-3">Ilustrasi Sistem Koordinat Bidang $2D$</span>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 5,
+                title: "Simulasi Koordinat Interaktif",
+                render: () => `
+                    <div class="w-full max-w-4xl space-y-4 fade-in">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+                            <div>
+                                <h2 class="text-2xl font-bold text-white">Simulasi Interaktif Bidang Koordinat</h2>
+                                <p class="text-xs text-slate-400">Klik pada bidang koordinat di bawah untuk meletakkan titik dan menentukan posisinya.</p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 text-sm">
+                                    <span class="text-slate-400">Koordinat:</span> <strong id="simCoordText" class="text-indigo-400 font-mono">(0, 0)</strong>
+                                </div>
+                                <div class="bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 text-sm">
+                                    <span class="text-slate-400">Wilayah:</span> <strong id="simQuadrantText" class="text-emerald-400 font-semibold">Titik Asal (0,0)</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="relative w-full flex justify-center bg-slate-900 border border-slate-800 p-4 rounded-2xl shadow-xl">
+                            <canvas id="coordCanvas" width="500" height="350" class="canvas-bg rounded-xl border border-slate-700 cursor-crosshair w-full max-w-[500px] h-[320px] sm:h-[350px]"></canvas>
+                        </div>
+                    </div>
+                `,
+                init: () => initCoordSimulation()
+            },
+            {
+                id: 6,
+                title: "Kuadran Bidang Kartesius",
+                render: () => `
+                    <div class="w-full max-w-4xl space-y-6 fade-in">
+                        <div class="text-center md:text-left">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Pembagian Wilayah</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white mt-1">Empat Kuadran Kartesius</h2>
+                            <p class="text-sm text-slate-400">Dua sumbu koordinat membagi bidang menjadi $4$ wilayah yang dinamakan Kuadran.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-slate-900 p-4 rounded-xl border border-indigo-500/30 hover:bg-slate-800/80 transition">
+                                    <div class="text-indigo-400 font-bold text-lg">Kuadran I</div>
+                                    <div class="text-2xl font-extrabold text-white mt-1">( + , + )</div>
+                                    <p class="text-xs text-slate-400 mt-2">$x > 0$ dan $y > 0$ (Kanan-Atas)</p>
+                                </div>
+                                <div class="bg-slate-900 p-4 rounded-xl border border-teal-500/30 hover:bg-slate-800/80 transition">
+                                    <div class="text-teal-400 font-bold text-lg">Kuadran II</div>
+                                    <div class="text-2xl font-extrabold text-white mt-1">( - , + )</div>
+                                    <p class="text-xs text-slate-400 mt-2">$x < 0$ dan $y > 0$ (Kiri-Atas)</p>
+                                </div>
+                                <div class="bg-slate-900 p-4 rounded-xl border border-amber-500/30 hover:bg-slate-800/80 transition">
+                                    <div class="text-amber-400 font-bold text-lg">Kuadran III</div>
+                                    <div class="text-2xl font-extrabold text-white mt-1">( - , - )</div>
+                                    <p class="text-xs text-slate-400 mt-2">$x < 0$ dan $y < 0$ (Kiri-Bawah)</p>
+                                </div>
+                                <div class="bg-slate-900 p-4 rounded-xl border border-rose-500/30 hover:bg-slate-800/80 transition">
+                                    <div class="text-rose-400 font-bold text-lg">Kuadran IV</div>
+                                    <div class="text-2xl font-extrabold text-white mt-1">( + , - )</div>
+                                    <p class="text-xs text-slate-400 mt-2">$x > 0$ dan $y < 0$ (Kanan-Bawah)</p>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                                <h3 class="font-bold text-slate-200 text-sm mb-3">Tabel Ringkasan Tanda Koordinat</h3>
+                                <table class="w-full text-center text-sm border-collapse">
+                                    <thead>
+                                        <tr class="bg-slate-800 text-slate-300">
+                                            <th class="p-2 border border-slate-700">Kuadran</th>
+                                            <th class="p-2 border border-slate-700">Nilai $x$</th>
+                                            <th class="p-2 border border-slate-700">Nilai $y$</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-slate-300">
+                                        <tr class="hover:bg-slate-800/50">
+                                            <td class="p-2 border border-slate-800 font-semibold text-indigo-400">Kuadran I</td>
+                                            <td class="p-2 border border-slate-800 text-emerald-400 font-bold">+</td>
+                                            <td class="p-2 border border-slate-800 text-emerald-400 font-bold">+</td>
+                                        </tr>
+                                        <tr class="hover:bg-slate-800/50">
+                                            <td class="p-2 border border-slate-800 font-semibold text-teal-400">Kuadran II</td>
+                                            <td class="p-2 border border-slate-800 text-rose-400 font-bold">-</td>
+                                            <td class="p-2 border border-slate-800 text-emerald-400 font-bold">+</td>
+                                        </tr>
+                                        <tr class="hover:bg-slate-800/50">
+                                            <td class="p-2 border border-slate-800 font-semibold text-amber-400">Kuadran III</td>
+                                            <td class="p-2 border border-slate-800 text-rose-400 font-bold">-</td>
+                                            <td class="p-2 border border-slate-800 text-rose-400 font-bold">-</td>
+                                        </tr>
+                                        <tr class="hover:bg-slate-800/50">
+                                            <td class="p-2 border border-slate-800 font-semibold text-rose-400">Kuadran IV</td>
+                                            <td class="p-2 border border-slate-800 text-emerald-400 font-bold">+</td>
+                                            <td class="p-2 border border-slate-800 text-rose-400 font-bold">-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 7,
+                title: "Latihan Cepat Koordinat",
+                render: () => `
+                    <div class="w-full max-w-3xl bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 space-y-6 fade-in">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                            <div>
+                                <h2 class="text-xl md:text-2xl font-bold text-white">Latihan Cepat: Penentuan Kuadran</h2>
+                                <p class="text-xs text-slate-400">Pilih kuadran yang tepat untuk setiap titik koordinat berikut!</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs text-slate-400">Skor Latihan</span>
+                                <div id="quadrantScore" class="text-2xl font-black text-indigo-400">0 / 4</div>
+                            </div>
+                        </div>
+
+                        <div id="quadrantQuizList" class="space-y-4">
+                            <!-- Populated dynamically -->
+                        </div>
+
+                        <div class="pt-2 flex justify-end">
+                            <button onclick="resetQuadrantQuiz()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg border border-slate-700 transition">
+                                <i class="fa-solid fa-rotate-right mr-1"></i> Ulangi Latihan
+                            </button>
+                        </div>
+                    </div>
+                `,
+                init: () => initQuadrantQuiz()
+            },
+            {
+                id: 8,
+                title: "Konsep Fungsi",
+                render: () => `
+                    <div class="w-full max-w-4xl space-y-6 fade-in">
+                        <div class="text-center md:text-left">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Pemahaman Dasar</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white mt-1">Definisi & Istilah Fungsi</h2>
+                            <p class="text-sm text-slate-400">Fungsi $f$ dari himpunan $A$ ke $B$ adalah aturan yang mengaitkan <strong>setiap</strong> elemen di $A$ dengan tepat <strong>satu</strong> elemen di $B$.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-2">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-600/20 text-indigo-400 font-bold flex items-center justify-center text-sm">D</div>
+                                <h3 class="font-bold text-slate-200">Domain (Daerah Asal)</h3>
+                                <p class="text-xs text-slate-400 leading-relaxed">Himpunan semua nilai input $x$ yang diperbolehkan sehingga fungsi terdefinisi.</p>
+                            </div>
+                            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-2">
+                                <div class="w-8 h-8 rounded-lg bg-teal-600/20 text-teal-400 font-bold flex items-center justify-center text-sm">K</div>
+                                <h3 class="font-bold text-slate-200">Kodomain (Daerah Kawan)</h3>
+                                <p class="text-xs text-slate-400 leading-relaxed">Himpunan seluruh nilai target yang mungkin dihasilkan oleh fungsi.</p>
+                            </div>
+                            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-2">
+                                <div class="w-8 h-8 rounded-lg bg-emerald-600/20 text-emerald-400 font-bold flex items-center justify-center text-sm">R</div>
+                                <h3 class="font-bold text-slate-200">Range (Daerah Hasil)</h3>
+                                <p class="text-xs text-slate-400 leading-relaxed">Himpunan bagian dari Kodomain yang benar-benar menjadi pasangan dari nilai $x$.</p>
+                            </div>
+                        </div>
+
+                        <!-- Analogi Mesin Fungsi -->
+                        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
+                            <h3 class="font-bold text-center text-indigo-300 text-sm uppercase tracking-wider mb-4">Analogi "Mesin Fungsi"</h3>
+                            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 text-center">
+                                <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl w-full sm:w-1/3">
+                                    <span class="text-xs text-slate-400 block font-bold">INPUT</span>
+                                    <span class="text-lg font-extrabold text-white">Variabel Bebas ($x$)</span>
+                                </div>
+                                <div class="text-indigo-400 text-xl font-bold">
+                                    <i class="fa-solid fa-arrow-right hidden sm:block"></i>
+                                    <i class="fa-solid fa-arrow-down block sm:hidden"></i>
+                                </div>
+                                <div class="bg-indigo-600 p-4 rounded-xl w-full sm:w-1/3 text-white shadow-lg shadow-indigo-600/30">
+                                    <span class="text-xs text-indigo-200 block font-bold">PROSES ATURAN</span>
+                                    <span class="text-xl font-extrabold">Fungsi $f(x)$</span>
+                                </div>
+                                <div class="text-indigo-400 text-xl font-bold">
+                                    <i class="fa-solid fa-arrow-right hidden sm:block"></i>
+                                    <i class="fa-solid fa-arrow-down block sm:hidden"></i>
+                                </div>
+                                <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl w-full sm:w-1/3">
+                                    <span class="text-xs text-slate-400 block font-bold">OUTPUT</span>
+                                    <span class="text-lg font-extrabold text-emerald-400">Variabel Terikat ($y = f(x)$)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 9,
+                title: "Simulasi Mesin Fungsi",
+                render: () => `
+                    <div class="w-full max-w-3xl bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 space-y-6 fade-in">
+                        <div class="text-center">
+                            <span class="text-xs font-bold text-indigo-400 uppercase">Simulasi Interaktif</span>
+                            <h2 class="text-2xl font-bold text-white mt-1">Mesin Fungsi $f(x) = 2x + 3$</h2>
+                            <p class="text-xs text-slate-400 mt-1">Masukkan nilai masukan $x$ untuk melihat bagaimana proses perhitungan dalam mesin fungsi.</p>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-center justify-center gap-6 bg-slate-950 p-6 rounded-xl border border-slate-800">
+                            <div class="flex flex-col items-center space-y-2">
+                                <label class="text-xs text-slate-400 font-bold">Masukkan Nilai $x$:</label>
+                                <input type="number" id="machineInputX" value="2" oninput="runFunctionMachine()" class="w-24 text-center text-xl font-bold bg-slate-900 border border-indigo-500 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+
+                            <div class="text-indigo-400 text-2xl">
+                                <i class="fa-solid fa-gear fa-spin" style="--fa-animation-duration: 4s;"></i>
+                            </div>
+
+                            <div class="flex-1 bg-slate-900 p-4 rounded-xl border border-slate-800 text-center">
+                                <div class="text-xs text-slate-400">Proses Perhitungan:</div>
+                                <div id="machineProcess" class="text-lg font-mono font-bold text-indigo-300 mt-1">f(2) = 2(2) + 3</div>
+                            </div>
+
+                            <div class="text-indigo-400 text-2xl">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </div>
+
+                            <div class="flex flex-col items-center">
+                                <span class="text-xs text-slate-400 font-bold">Hasil $f(x)$:</span>
+                                <div id="machineOutput" class="text-3xl font-black text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 px-6 py-2 rounded-xl mt-1">7</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-indigo-950/30 border border-indigo-500/20 p-4 rounded-xl text-xs text-slate-300">
+                            <strong>Catatan:</strong> Setiap kali nilai masukan $x$ diubah, fungsi memprosesnya sesuai aturan $2 \cdot x + 3$ untuk mengahasilkan nilai tunggal $y$.
+                        </div>
+                    </div>
+                `,
+                init: () => runFunctionMachine()
+            },
+            {
+                id: 10,
+                title: "Menentukan Nilai Fungsi",
+                render: () => `
+                    <div class="w-full max-w-4xl space-y-6 fade-in">
+                        <div class="text-center md:text-left">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Langkah Bertahap</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white mt-1">Contoh Evaluasi Nilai Fungsi</h2>
+                            <p class="text-sm text-slate-400">Mengganti (substitusi) variabel $x$ dengan nilai numerik yang ditentukan.</p>
+                        </div>
+
+                        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-6">
+                            <div class="p-4 bg-slate-950 rounded-xl border border-indigo-500/30 text-center">
+                                <span class="text-xs text-slate-400">Diberikan Fungsi:</span>
+                                <div class="text-2xl font-bold text-indigo-300 mt-1">
+                                    $f(x) = x^2 + 2x - 3$
+                                </div>
+                                <span class="text-xs text-emerald-400 font-semibold block mt-2">Hitunglah nilai dari $f(2)$!</span>
+                            </div>
+
+                            <div class="space-y-3 text-sm">
+                                <div class="flex items-center gap-4 bg-slate-800/60 p-3 rounded-xl border border-slate-700">
+                                    <span class="w-7 h-7 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs shrink-0">1</span>
+                                    <div class="flex-1">
+                                        <span class="text-slate-400 block text-xs">Langkah 1: Substitusi $x = 2$ ke dalam fungsi</span>
+                                        <span class="font-mono text-slate-200">$f(2) = (2)^2 + 2(2) - 3$</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4 bg-slate-800/60 p-3 rounded-xl border border-slate-700">
+                                    <span class="w-7 h-7 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs shrink-0">2</span>
+                                    <div class="flex-1">
+                                        <span class="text-slate-400 block text-xs">Langkah 2: Hitung kuadrat dan perkalian</span>
+                                        <span class="font-mono text-slate-200">$f(2) = 4 + 4 - 3$</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4 bg-emerald-950/40 p-3 rounded-xl border border-emerald-500/30">
+                                    <span class="w-7 h-7 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs shrink-0">3</span>
+                                    <div class="flex-1">
+                                        <span class="text-slate-400 block text-xs">Langkah 3: Jumlahkan hasil akhir</span>
+                                        <span class="font-mono font-bold text-emerald-400">$f(2) = 5$</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 11,
+                title: "Latihan Nilai Fungsi",
+                render: () => `
+                    <div class="w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 space-y-6 fade-in">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                            <div>
+                                <h2 class="text-xl md:text-2xl font-bold text-white">Latihan Mandiri: Nilai Fungsi</h2>
+                                <p class="text-xs text-slate-400">Hitung dan masukkan jawaban numerik untuk setiap soal di bawah ini!</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs text-slate-400">Skor Latihan</span>
+                                <div id="funcValueScore" class="text-2xl font-black text-indigo-400">0 / 5</div>
+                            </div>
+                        </div>
+
+                        <div id="funcValueQuizList" class="space-y-4">
+                            <!-- Populated dynamically -->
+                        </div>
+
+                        <div class="pt-2 flex justify-end">
+                            <button onclick="resetFuncValueQuiz()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg border border-slate-700 transition">
+                                <i class="fa-solid fa-rotate-right mr-1"></i> Reset Jawaban
+                            </button>
+                        </div>
+                    </div>
+                `,
+                init: () => initFuncValueQuiz()
+            },
+            {
+                id: 12,
+                title: "Grafik Fungsi",
+                render: () => `
+                    <div class="w-full max-w-4xl space-y-6 fade-in">
+                        <div class="text-center md:text-left">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Visualisasi Geometris</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white mt-1">Konsep Grafik Fungsi</h2>
+                            <p class="text-sm text-slate-400">Grafik fungsi $f$ adalah himpunan semua titik $(x, y)$ pada bidang yang memenuhi pasangan $y = f(x)$.</p>
+                        </div>
+
+                        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                            <div class="space-y-4">
+                                <div class="bg-slate-950 p-4 rounded-xl border border-indigo-500/30">
+                                    <span class="text-xs text-slate-400 font-bold">Contoh Fungsi Lineari:</span>
+                                    <div class="text-xl font-bold text-indigo-300 mt-1">$f(x) = x + 2$</div>
+                                </div>
+
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Langkah melukis grafik:
+                                    <br>1. Tentukan beberapa nilai $x$ (Domain).
+                                    <br>2. Hitung $y = f(x)$ untuk mendapatkan pasangan titik $(x, y)$.
+                                    <br>3. Plot titik-titik tersebut lalu hubungkan dengan garis mulus.
+                                </p>
+                            </div>
+
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-center text-xs border-collapse">
+                                    <thead>
+                                        <tr class="bg-slate-800 text-indigo-300">
+                                            <th class="p-2 border border-slate-700">$x$</th>
+                                            <th class="p-2 border border-slate-700">$f(x) = x + 2$</th>
+                                            <th class="p-2 border border-slate-700">Titik $(x, y)$</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-slate-300 divide-y divide-slate-800">
+                                        <tr><td class="p-2 border border-slate-800 font-bold">-2</td><td class="p-2 border border-slate-800">0</td><td class="p-2 border border-slate-800 font-mono text-emerald-400">(-2, 0)</td></tr>
+                                        <tr><td class="p-2 border border-slate-800 font-bold">-1</td><td class="p-2 border border-slate-800">1</td><td class="p-2 border border-slate-800 font-mono text-emerald-400">(-1, 1)</td></tr>
+                                        <tr><td class="p-2 border border-slate-800 font-bold">0</td><td class="p-2 border border-slate-800">2</td><td class="p-2 border border-slate-800 font-mono text-emerald-400">(0, 2)</td></tr>
+                                        <tr><td class="p-2 border border-slate-800 font-bold">1</td><td class="p-2 border border-slate-800">3</td><td class="p-2 border border-slate-800 font-mono text-emerald-400">(1, 3)</td></tr>
+                                        <tr><td class="p-2 border border-slate-800 font-bold">2</td><td class="p-2 border border-slate-800">4</td><td class="p-2 border border-slate-800 font-mono text-emerald-400">(2, 4)</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 13,
+                title: "Simulasi Grafik Fungsi",
+                render: () => `
+                    <div class="w-full max-w-4xl space-y-4 fade-in">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                            <div>
+                                <h2 class="text-2xl font-bold text-white">Simulasi Plotter Grafik Interaktif</h2>
+                                <p class="text-xs text-slate-400">Pilih persamaan fungsi di bawah untuk melihat plot grafik secara otomatis.</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label class="text-xs text-slate-400 font-bold">Pilih Fungsi:</label>
+                                <select id="graphFuncSelect" onchange="drawGraphSimulation()" class="bg-slate-900 text-indigo-300 font-bold text-sm border border-indigo-500/50 rounded-lg px-3 py-1.5 focus:outline-none">
+                                    <option value="x+2">f(x) = x + 2</option>
+                                    <option value="2x">f(x) = 2x</option>
+                                    <option value="x-1">f(x) = x - 1</option>
+                                    <option value="-x+3">f(x) = -x + 3</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col items-center justify-center shadow-xl">
+                            <canvas id="graphCanvas" width="500" height="320" class="canvas-bg rounded-xl border border-slate-700 w-full max-w-[500px] h-[300px] sm:h-[320px]"></canvas>
+                        </div>
+                    </div>
+                `,
+                init: () => drawGraphSimulation()
+            },
+            {
+                id: 14,
+                title: "Membaca Grafik Fungsi",
+                render: () => `
+                    <div class="w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 space-y-6 fade-in">
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-bold text-white">Latihan Membaca Grafik</h2>
+                            <p class="text-xs text-slate-400">Analisis grafik garis $f(x) = 2x - 1$ di bawah dan jawab pertanyaan berikut.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                            <!-- SVG Plot Visualizer for f(x) = 2x - 1 -->
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col items-center">
+                                <svg viewBox="-100 -100 200 200" class="w-full max-w-[260px] h-auto">
+                                    <!-- Grid -->
+                                    <path d="M-80,-80 H80 M-80,-40 H80 M-80,40 H80 M-80,80 H80 M-80,-80 V80 M-40,-80 V80 M40,-80 V80 M80,-80 V80" stroke="#334155" stroke-width="0.5" stroke-dasharray="2,2"/>
+                                    <!-- Sumbu -->
+                                    <line x1="-90" y1="0" x2="90" y2="0" stroke="#6366f1" stroke-width="1.5"/>
+                                    <line x1="0" y1="-90" x2="0" y2="90" stroke="#14b8a6" stroke-width="1.5"/>
+                                    <!-- Line f(x)=2x-1 -> x=0, y=-1 (0, 20); x=2, y=3 (40, -60) -->
+                                    <line x1="-40" y1="100" x2="50" y2="-80" stroke="#f43f5e" stroke-width="2.5"/>
+                                    <!-- Points -->
+                                    <circle cx="0" cy="20" r="3.5" fill="#f43f5e"/> <!-- (0, -1) -->
+                                    <circle cx="40" cy="-60" r="3.5" fill="#f43f5e"/> <!-- (2, 3) -->
+                                    <text x="5" y="32" fill="#fda4af" font-size="8" font-weight="bold">(0, -1)</text>
+                                    <text x="45" y="-62" fill="#fda4af" font-size="8" font-weight="bold">(2, 3)</text>
+                                </svg>
+                                <span class="text-xs text-indigo-300 font-semibold mt-2">Grafik $f(x) = 2x - 1$</span>
+                            </div>
+
+                            <div id="readGraphQuiz" class="space-y-4 text-xs">
+                                <!-- Interaktivitas Pertanyaan Grafik -->
+                            </div>
+                        </div>
+                    </div>
+                `,
+                init: () => initReadGraphQuiz()
+            },
+            {
+                id: 15,
+                title: "Operasi pada Fungsi",
+                render: () => `
+                    <div class="w-full max-w-4xl space-y-6 fade-in">
+                        <div class="text-center md:text-left">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Operasi Aljabar</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white mt-1">4 Operasi Dasar Pada Fungsi</h2>
+                            <p class="text-sm text-slate-400">Dua fungsi $f$ dan $g$ dapat dikombinasikan untuk membentuk fungsi baru.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-slate-900 p-5 rounded-2xl border border-indigo-500/30 space-y-2">
+                                <div class="text-indigo-400 font-bold text-sm">1. Penjumlahan</div>
+                                <div class="text-lg font-mono text-white font-bold">$(f + g)(x) = f(x) + g(x)$</div>
+                                <p class="text-xs text-slate-400">Menjumlahkan nilai masing-masing fungsi pada input $x$.</p>
+                            </div>
+                            <div class="bg-slate-900 p-5 rounded-2xl border border-teal-500/30 space-y-2">
+                                <div class="text-teal-400 font-bold text-sm">2. Pengurangan</div>
+                                <div class="text-lg font-mono text-white font-bold">$(f - g)(x) = f(x) - g(x)$</div>
+                                <p class="text-xs text-slate-400">Mengurangi nilai fungsi $f(x)$ dengan $g(x)$.</p>
+                            </div>
+                            <div class="bg-slate-900 p-5 rounded-2xl border border-amber-500/30 space-y-2">
+                                <div class="text-amber-400 font-bold text-sm">3. Perkalian</div>
+                                <div class="text-lg font-mono text-white font-bold">$(f \cdot g)(x) = f(x) \cdot g(x)$</div>
+                                <p class="text-xs text-slate-400">Mengalikan nilai kedua fungsi pada masukan $x$.</p>
+                            </div>
+                            <div class="bg-slate-900 p-5 rounded-2xl border border-rose-500/30 space-y-2">
+                                <div class="text-rose-400 font-bold text-sm">4. Pembagian</div>
+                                <div class="text-lg font-mono text-white font-bold">$\left(\frac{f}{g}\right)(x) = \frac{f(x)}{g(x)}$</div>
+                                <p class="text-xs text-rose-300 font-semibold">Syarat Penting: $g(x) \neq 0$</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 16,
+                title: "Contoh Operasi Fungsi",
+                render: () => `
+                    <div class="w-full max-w-4xl space-y-6 fade-in">
+                        <div class="text-center md:text-left">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Langkah Contoh</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white mt-1">Penerapan Operasi Fungsi</h2>
+                            <p class="text-sm text-slate-400">Diketahui $f(x) = 2x + 1$ dan $g(x) = x - 3$.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="font-bold text-indigo-400 text-sm">Penjumlahan $(f+g)(x)$</span>
+                                <div class="bg-slate-950 p-3 rounded-lg font-mono text-slate-200">
+                                    $= (2x + 1) + (x - 3)$<br>
+                                    $= 2x + x + 1 - 3$<br>
+                                    <strong class="text-emerald-400 text-sm font-bold">= 3x - 2</strong>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="font-bold text-teal-400 text-sm">Pengurangan $(f-g)(x)$</span>
+                                <div class="bg-slate-950 p-3 rounded-lg font-mono text-slate-200">
+                                    $= (2x + 1) - (x - 3)$<br>
+                                    $= 2x - x + 1 + 3$<br>
+                                    <strong class="text-emerald-400 text-sm font-bold">= x + 4</strong>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="font-bold text-amber-400 text-sm">Perkalian $(f \cdot g)(x)$</span>
+                                <div class="bg-slate-950 p-3 rounded-lg font-mono text-slate-200">
+                                    $= (2x + 1)(x - 3)$<br>
+                                    $= 2x^2 - 6x + x - 3$<br>
+                                    <strong class="text-emerald-400 text-sm font-bold">= 2x² - 5x - 3</strong>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="font-bold text-rose-400 text-sm">Pembagian $(f/g)(x)$</span>
+                                <div class="bg-slate-950 p-3 rounded-lg font-mono text-slate-200">
+                                    $= \frac{2x + 1}{x - 3}$<br>
+                                    <span class="text-rose-300 font-semibold mt-1 block">Syarat Domain: $x \neq 3$</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 17,
+                title: "Simulasi Operasi Fungsi",
+                render: () => `
+                    <div class="w-full max-w-3xl bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 space-y-6 fade-in">
+                        <div class="text-center">
+                            <span class="text-xs font-bold text-indigo-400 uppercase">Kalkulator Operasi Aljabar</span>
+                            <h2 class="text-2xl font-bold text-white mt-1">Simulasi Operasi Dua Fungsi</h2>
+                            <p class="text-xs text-slate-400">Pilih dua fungsi linear dan jenis operasinya untuk melihat hasilnya secara otomatis.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-950 p-4 rounded-xl border border-slate-800 items-center">
+                            <div>
+                                <label class="text-xs text-slate-400 font-bold block mb-1">Fungsi $f(x)$:</label>
+                                <select id="opSelectF" onchange="calcOpSimulation()" class="w-full bg-slate-900 text-indigo-300 font-bold p-2 text-xs border border-indigo-500/40 rounded-lg">
+                                    <option value="2x+1">f(x) = 2x + 1</option>
+                                    <option value="3x-2">f(x) = 3x - 2</option>
+                                    <option value="x+4">f(x) = x + 4</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="text-xs text-slate-400 font-bold block mb-1">Operasi:</label>
+                                <select id="opSelectType" onchange="calcOpSimulation()" class="w-full bg-slate-900 text-white font-bold p-2 text-xs border border-teal-500/40 rounded-lg">
+                                    <option value="add">Penjumlahan (+)</option>
+                                    <option value="sub">Pengurangan (-)</option>
+                                    <option value="mul">Perkalian (&times;)</option>
+                                    <option value="div">Pembagian (&divide;)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="text-xs text-slate-400 font-bold block mb-1">Fungsi $g(x)$:</label>
+                                <select id="opSelectG" onchange="calcOpSimulation()" class="w-full bg-slate-900 text-indigo-300 font-bold p-2 text-xs border border-indigo-500/40 rounded-lg">
+                                    <option value="x-3">g(x) = x - 3</option>
+                                    <option value="2x+5">g(x) = 2x + 5</option>
+                                    <option value="x-1">g(x) = x - 1</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="p-5 bg-indigo-950/40 border border-indigo-500/30 rounded-xl space-y-2">
+                            <span class="text-xs text-slate-400 uppercase tracking-wider font-bold">Hasil Operasi Aljabar:</span>
+                            <div id="opResultText" class="text-xl font-mono font-bold text-emerald-400">
+                                (f + g)(x) = 3x - 2
+                            </div>
+                            <div id="opDomainNote" class="text-xs text-slate-300 pt-1 border-t border-slate-800/80">
+                                Domain terdefinisi untuk seluruh bilangan riil $\mathbb{R}$.
+                            </div>
+                        </div>
+                    </div>
+                `,
+                init: () => calcOpSimulation()
+            },
+            {
+                id: 18,
+                title: "Latihan Kelompok",
+                render: () => `
+                    <div class="w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 space-y-6 fade-in">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                            <div>
+                                <h2 class="text-xl md:text-2xl font-bold text-white">Latihan Kelompok (5 Soal)</h2>
+                                <p class="text-xs text-slate-400">Kerjakan soal-soal latihan berikut bersama kelompok Anda dan periksa kunci jawabannya!</p>
+                            </div>
+                            <button onclick="toggleGroupAnswers()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-md transition">
+                                <i class="fa-solid fa-key mr-1"></i> Periksa / Tampilkan Jawaban
+                            </button>
+                        </div>
+
+                        <div id="groupQuestionsList" class="space-y-4 text-xs">
+                            ${[
+                                { q: "1. Tentukan kuadran letak titik $A(-3, 4)$!", ans: "Kuadran II (karena $x < 0$ dan $y > 0$)." },
+                                { q: "2. Jika $f(x) = 2x + 1$, tentukan nilai dari $f(4)$!", ans: "$f(4) = 2(4) + 1 = 8 + 1 = 9$." },
+                                { q: "3. Buatlah tabel nilai fungsi $f(x) = x + 1$ untuk $x \in \{-2, -1, 0, 1, 2\}$!", ans: "Pasangan $(x,y)$: (-2, -1), (-1, 0), (0, 1), (1, 2), (2, 3)." },
+                                { q: "4. Jika $f(x) = 2x + 1$ dan $g(x) = x - 3$, tentukan bentuk $(f+g)(x)$!", ans: "$(f+g)(x) = (2x+1) + (x-3) = 3x - 2$." },
+                                { q: "5. Tentukan bentuk dari $(f-g)(x)$ untuk fungsi di atas!", ans: "$(f-g)(x) = (2x+1) - (x-3) = x + 4$." }
+                            ].map((item, idx) => `
+                                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                    <p class="font-semibold text-slate-200 text-sm">${item.q}</p>
+                                    <div class="groupAnswerBox hidden bg-indigo-950/40 border border-indigo-500/30 p-3 rounded-lg text-emerald-300 font-mono text-xs">
+                                        <strong>Kunci Jawaban:</strong> ${item.ans}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 19,
+                title: "Quiz Akhir",
+                render: () => `
+                    <div class="w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 space-y-6 fade-in">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                            <div>
+                                <h2 class="text-xl md:text-2xl font-bold text-white">Quiz Evaluasi Akhir (10 Pilihan Ganda)</h2>
+                                <p class="text-xs text-slate-400">Uji pemahaman menyeluruh Anda mengenai materi Pertemuan 2.</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs text-slate-400">Hasil Quiz</span>
+                                <div id="finalQuizScoreText" class="text-2xl font-black text-indigo-400">---</div>
+                            </div>
+                        </div>
+
+                        <div id="finalQuizContainer" class="space-y-6 max-h-[420px] overflow-y-auto pr-2">
+                            <!-- Dynamically generated 10 MCQs -->
+                        </div>
+
+                        <div class="pt-4 flex justify-between items-center border-t border-slate-800">
+                            <span id="finalQuizBadge" class="text-xs font-bold text-slate-400">Selesaikan seluruh 10 soal.</span>
+                            <button onclick="submitFinalQuiz()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm rounded-xl shadow-lg transition">
+                                Submit & Hitung Nilai <i class="fa-solid fa-paper-plane ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                `,
+                init: () => initFinalQuiz()
+            },
+            {
+                id: 20,
+                title: "Refleksi Pembelajaran",
+                render: () => `
+                    <div class="w-full max-w-3xl bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 space-y-6 fade-in">
+                        <div class="text-center">
+                            <span class="text-xs font-bold text-indigo-400 uppercase">Self-Reflection</span>
+                            <h2 class="text-2xl font-bold text-white mt-1">Refleksi Pembelajaran Hari Ini</h2>
+                            <p class="text-xs text-slate-400">Luangkan waktu sejenak untuk merenungkan pemahaman Anda.</p>
+                        </div>
+
+                        <div class="space-y-4 text-xs">
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <label class="font-bold text-indigo-300 block text-sm">1. Apa materi utama yang paling Anda pahami hari ini?</label>
+                                <textarea placeholder="Tuliskan pemahaman Anda di sini..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-200 focus:outline-none focus:border-indigo-500 h-20 resize-none"></textarea>
+                            </div>
+
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <label class="font-bold text-indigo-300 block text-sm">2. Bagian mana yang masih membingungkan atau memerlukan latihan tambahan?</label>
+                                <textarea placeholder="Tuliskan kendala Anda..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-200 focus:outline-none focus:border-indigo-500 h-20 resize-none"></textarea>
+                            </div>
+
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <label class="font-bold text-indigo-300 block text-sm">3. Menurut Anda, apa hubungan antara persamaan fungsi aljabar dengan grafik geometrisnya?</label>
+                                <textarea placeholder="Tuliskan pendapat Anda..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-200 focus:outline-none focus:border-indigo-500 h-20 resize-none"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 21,
+                title: "Rangkuman Materi",
+                render: () => `
+                    <div class="w-full max-w-4xl space-y-6 fade-in">
+                        <div class="text-center md:text-left">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Ringkasan Utama</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white mt-1">Rangkuman Pertemuan 2</h2>
+                            <p class="text-sm text-slate-400">Alur keterkaitan antarkonsep yang telah dipelajari.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-3 text-center">
+                            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2 flex flex-col justify-center">
+                                <div class="text-indigo-400 text-xl font-bold"><i class="fa-solid fa-map-pin"></i></div>
+                                <h3 class="font-bold text-slate-200 text-xs">1. Sistem Koordinat</h3>
+                                <p class="text-[11px] text-slate-400">Posisi titik $(x,y)$ & 4 Kuadran.</p>
+                            </div>
+
+                            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2 flex flex-col justify-center">
+                                <div class="text-teal-400 text-xl font-bold"><i class="fa-solid fa-diagram-project"></i></div>
+                                <h3 class="font-bold text-slate-200 text-xs">2. Konsep Fungsi</h3>
+                                <p class="text-[11px] text-slate-400">Aturan pemetaan Domain $\to$ Range.</p>
+                            </div>
+
+                            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2 flex flex-col justify-center">
+                                <div class="text-amber-400 text-xl font-bold"><i class="fa-solid fa-calculator"></i></div>
+                                <h3 class="font-bold text-slate-200 text-xs">3. Nilai Fungsi</h3>
+                                <p class="text-[11px] text-slate-400">Substitusi masukan $x$ untuk dapat $f(x)$.</p>
+                            </div>
+
+                            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2 flex flex-col justify-center">
+                                <div class="text-emerald-400 text-xl font-bold"><i class="fa-solid fa-chart-line"></i></div>
+                                <h3 class="font-bold text-slate-200 text-xs">4. Grafik Fungsi</h3>
+                                <p class="text-[11px] text-slate-400">Visualisasi himpunan $(x, f(x))$.</p>
+                            </div>
+
+                            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2 flex flex-col justify-center">
+                                <div class="text-rose-400 text-xl font-bold"><i class="fa-solid fa-arrows-split-up-and-left"></i></div>
+                                <h3 class="font-bold text-slate-200 text-xs">5. Operasi Fungsi</h3>
+                                <p class="text-[11px] text-slate-400">Kombinasi $+,-,\times,\div$.</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 22,
+                title: "Penutup",
+                render: () => `
+                    <div class="text-center space-y-6 fade-in max-w-3xl">
+                        <div class="inline-block p-5 rounded-full bg-indigo-600/20 text-indigo-400 border border-indigo-500/30">
+                            <i class="fa-solid fa-quote-left text-4xl"></i>
+                        </div>
+                        
+                        <h2 class="text-2xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-indigo-400 leading-relaxed">
+                            "Fungsi membantu kita memahami hubungan dan pola antar besaran dalam dunia nyata."
+                        </h2>
+
+                        <p class="text-slate-400 text-sm max-w-xl mx-auto">
+                            Selamat! Anda telah menyelesaikan seluruh rangkaian pembelajaran interaktif Pertemuan 2 Kalkulus (INF003). Sampai jumpa di Pertemuan 3!
+                        </p>
+
+                        <div class="pt-6">
+                            <button onclick="goToSlide(1)" class="px-8 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl font-bold border border-slate-700 transition">
+                                <i class="fa-solid fa-rotate-left mr-2"></i> Kembali ke Awal Slide
+                            </button>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        // Global App State
+        let currentSlide = 1;
+
+        // Initialize Navigation & Slide Rendering
+        function renderCurrentSlide() {
+            const slide = slides[currentSlide - 1];
+            const container = document.getElementById('slideContainer');
+            
+            // Set slide title & counter
+            document.getElementById('currentSlideTitle').innerText = slide.title;
+            document.getElementById('slideCounter').innerText = `${currentSlide} / ${slides.length}`;
+            document.getElementById('progressBar').style.width = `${(currentSlide / slides.length) * 100}%`;
+
+            // Enable/disable buttons
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === slides.length;
+
+            // Render HTML content
+            container.innerHTML = slide.render();
+
+            // Execute slide initializer if defined
+            if (slide.init) {
+                setTimeout(() => slide.init(), 50);
+            }
+
+            // Typeset MathJax formulas dynamically
+            if (window.MathJax && MathJax.typesetPromise) {
+                MathJax.typesetPromise([container]);
+            }
+
+            // Close TOC Drawer if open
+            document.getElementById('tocModal').classList.add('hidden');
+        }
+
+        function goToSlide(n) {
+            if (n >= 1 && n <= slides.length) {
+                currentSlide = n;
+                renderCurrentSlide();
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length) {
+                currentSlide++;
+                renderCurrentSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                renderCurrentSlide();
+            }
+        }
+
+        // Drawer TOC logic
+        function toggleToc() {
+            const modal = document.getElementById('tocModal');
+            modal.classList.toggle('hidden');
+        }
+
+        function buildTocList() {
+            const tocList = document.getElementById('tocList');
+            tocList.innerHTML = slides.map((s) => `
+                <button onclick="goToSlide(${s.id})" class="w-full text-left px-3 py-2 rounded-lg text-xs font-semibold flex items-center justify-between transition ${s.id === currentSlide ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'}">
+                    <span>${s.id}. ${s.title}</span>
+                    ${s.id === currentSlide ? '<i class="fa-solid fa-chevron-right text-xs"></i>' : ''}
+                </button>
+            `).join('');
+        }
+
+        // Slide 3: Apersepsi Toggle
+        function toggleApersepsi() {
+            const ans = document.getElementById('apersepsiAnswer');
+            const btn = document.getElementById('apersepsiBtn');
+            if (ans.classList.contains('hidden')) {
+                ans.classList.remove('hidden');
+                btn.innerHTML = 'Sembunyikan Jawaban <i class="fa-solid fa-eye-slash ml-2"></i>';
+            } else {
+                ans.classList.add('hidden');
+                btn.innerHTML = 'Lihat Jawaban <i class="fa-solid fa-eye ml-2"></i>';
+            }
+        }
+
+        // Slide 5: Coordinate Canvas Simulation
+        function initCoordSimulation() {
+            const canvas = document.getElementById('coordCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            const originX = width / 2;
+            const originY = height / 2;
+            const scale = 20; // 20px per 1 unit
+
+            function drawGrid(px = originX, py = originY) {
+                ctx.clearRect(0, 0, width, height);
+
+                // Grid lines
+                ctx.strokeStyle = '#334155';
+                ctx.lineWidth = 0.5;
+                for (let x = 0; x <= width; x += scale) {
+                    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
+                }
+                for (let y = 0; y <= height; y += scale) {
+                    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
+                }
+
+                // Sumbu X & Y
+                ctx.strokeStyle = '#818cf8';
+                ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(0, originY); ctx.lineTo(width, originY); ctx.stroke();
+                ctx.strokeStyle = '#2dd4bf';
+                ctx.beginPath(); ctx.moveTo(originX, 0); ctx.lineTo(originX, height); ctx.stroke();
+
+                // Plot active point
+                if (px !== null && py !== null) {
+                    const mathX = Math.round((px - originX) / scale);
+                    const mathY = Math.round((originY - py) / scale);
+
+                    const snapPx = originX + mathX * scale;
+                    const snapPy = originY - mathY * scale;
+
+                    // Dashed projection lines
+                    ctx.strokeStyle = '#f43f5e';
+                    ctx.setLineDash([3, 3]);
+                    ctx.beginPath(); ctx.moveTo(snapPx, originY); ctx.lineTo(snapPx, snapPy); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(originX, snapPy); ctx.lineTo(snapPx, snapPy); ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    // Point
+                    ctx.fillStyle = '#f43f5e';
+                    ctx.beginPath(); ctx.arc(snapPx, snapPy, 6, 0, Math.PI * 2); ctx.fill();
+
+                    // Text labels
+                    document.getElementById('simCoordText').innerText = `(${mathX}, ${mathY})`;
+                    
+                    let qText = "Titik Asal (0,0)";
+                    if (mathX > 0 && mathY > 0) qText = "Kuadran I";
+                    else if (mathX < 0 && mathY > 0) qText = "Kuadran II";
+                    else if (mathX < 0 && mathY < 0) qText = "Kuadran III";
+                    else if (mathX > 0 && mathY < 0) qText = "Kuadran IV";
+                    else if (mathX !== 0 || mathY !== 0) qText = "Sumbu Koordinat";
+
+                    document.getElementById('simQuadrantText').innerText = qText;
+                }
+            }
+
+            canvas.onclick = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                const px = (e.clientX - rect.left) * scaleX;
+                const py = (e.clientY - rect.top) * scaleY;
+                drawGrid(px, py);
+            };
+
+            drawGrid(originX + 3 * scale, originY - 2 * scale); // default A(3,2)
+        }
+
+        // Slide 7: Quadrant Quiz Logic
+        const quadQuestions = [
+            { pt: "A(3, 4)", correct: "I" },
+            { pt: "B(-2, 5)", correct: "II" },
+            { pt: "C(-4, -3)", correct: "III" },
+            { pt: "D(5, -2)", correct: "IV" }
+        ];
+        let userQuadAnswers = {};
+
+        function initQuadrantQuiz() {
+            const list = document.getElementById('quadrantQuizList');
+            if (!list) return;
+            list.innerHTML = quadQuestions.map((q, idx) => `
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <span class="font-bold text-slate-200 text-sm">Titik ${q.pt} terletak di:</span>
+                    <div class="flex flex-wrap gap-2">
+                        ${["I", "II", "III", "IV"].map(quad => `
+                            <button onclick="answerQuad(${idx}, '${quad}')" id="qbtn_${idx}_${quad}" class="px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs font-bold text-slate-300 hover:border-indigo-500 transition">
+                                Kuadran ${quad}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+            updateQuadScore();
+        }
+
+        function answerQuad(idx, quad) {
+            userQuadAnswers[idx] = quad;
+            const q = quadQuestions[idx];
+            ["I", "II", "III", "IV"].forEach(qName => {
+                const btn = document.getElementById(`qbtn_${idx}_${qName}`);
+                btn.className = "px-3 py-1.5 rounded-lg border text-xs font-bold transition ";
+                if (qName === quad) {
+                    if (quad === q.correct) {
+                        btn.className += "bg-emerald-600 border-emerald-500 text-white";
+                    } else {
+                        btn.className += "bg-rose-600 border-rose-500 text-white";
+                    }
+                } else {
+                    btn.className += "border-slate-700 bg-slate-900 text-slate-400 opacity-50";
+                }
+            });
+            updateQuadScore();
+        }
+
+        function updateQuadScore() {
+            let score = 0;
+            quadQuestions.forEach((q, idx) => {
+                if (userQuadAnswers[idx] === q.correct) score++;
+            });
+            const scEl = document.getElementById('quadrantScore');
+            if (scEl) scEl.innerText = `${score} / ${quadQuestions.length}`;
+        }
+
+        function resetQuadrantQuiz() {
+            userQuadAnswers = {};
+            initQuadrantQuiz();
+        }
+
+        // Slide 9: Function Machine Logic
+        function runFunctionMachine() {
+            const inputEl = document.getElementById('machineInputX');
+            if (!inputEl) return;
+            const val = parseFloat(inputEl.value) || 0;
+            const result = 2 * val + 3;
+            document.getElementById('machineProcess').innerText = `f(${val}) = 2(${val}) + 3`;
+            document.getElementById('machineOutput').innerText = result;
+        }
+
+        // Slide 11: Function Value Quiz Logic
+        const funcValueQuestions = [
+            { q: "1. Jika $f(x) = 2x + 1$, tentukan $f(3)$:", ans: 7 },
+            { q: "2. Jika $f(x) = x^2 - 4$, tentukan $f(3)$:", ans: 5 },
+            { q: "3. Jika $f(x) = -3x + 5$, tentukan $f(2)$:", ans: -1 },
+            { q: "4. Jika $f(x) = 2x^2 + x$, tentukan $f(-1)$:", ans: 1 },
+            { q: "5. Jika $f(x) = \\frac{10}{x}$, tentukan $f(5)$:", ans: 2 }
+        ];
+
+        function initFuncValueQuiz() {
+            const list = document.getElementById('funcValueQuizList');
+            if (!list) return;
+            list.innerHTML = funcValueQuestions.map((q, idx) => `
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <span class="font-semibold text-slate-200 text-xs">${q.q}</span>
+                    <div class="flex items-center gap-2">
+                        <input type="number" id="fvAns_${idx}" oninput="checkFuncValAnswer(${idx})" placeholder="Jawaban" class="w-24 text-center text-xs font-bold bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:border-indigo-500">
+                        <span id="fvStatus_${idx}" class="text-xs font-bold w-6"></span>
+                    </div>
+                </div>
+            `).join('');
+            if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([list]);
+        }
+
+        function checkFuncValAnswer(idx) {
+            const input = document.getElementById(`fvAns_${idx}`);
+            const status = document.getElementById(`fvStatus_${idx}`);
+            const val = parseFloat(input.value);
+            if (!isNaN(val) && val === funcValueQuestions[idx].ans) {
+                status.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i>';
+            } else if (input.value.trim() !== "") {
+                status.innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-400"></i>';
+            } else {
+                status.innerHTML = '';
+            }
+            updateFuncValScore();
+        }
+
+        function updateFuncValScore() {
+            let score = 0;
+            funcValueQuestions.forEach((q, idx) => {
+                const input = document.getElementById(`fvAns_${idx}`);
+                if (input && parseFloat(input.value) === q.ans) score++;
+            });
+            const scEl = document.getElementById('funcValueScore');
+            if (scEl) scEl.innerText = `${score} / ${funcValueQuestions.length}`;
+        }
+
+        function resetFuncValueQuiz() {
+            initFuncValueQuiz();
+            updateFuncValScore();
+        }
+
+        // Slide 13: Graph Simulation Logic
+        function drawGraphSimulation() {
+            const canvas = document.getElementById('graphCanvas');
+            const select = document.getElementById('graphFuncSelect');
+            if (!canvas || !select) return;
+
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+            const ox = w / 2;
+            const oy = h / 2;
+            const scale = 25;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Grid
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 0.5;
+            for (let x = 0; x <= w; x += scale) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+            }
+            for (let y = 0; y <= h; y += scale) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+            }
+
+            // Axes
+            ctx.strokeStyle = '#818cf8'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(w, oy); ctx.stroke();
+            ctx.strokeStyle = '#2dd4bf';
+            ctx.beginPath(); ctx.moveTo(ox, 0); ctx.lineTo(ox, h); ctx.stroke();
+
+            // Evaluate function: f(x)
+            const type = select.value;
+            const getF = (x) => {
+                if (type === 'x+2') return x + 2;
+                if (type === '2x') return 2 * x;
+                if (type === 'x-1') return x - 1;
+                if (type === '-x+3') return -x + 3;
+                return x;
+            };
+
+            // Draw function line
+            ctx.strokeStyle = '#f43f5e';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let px = 0; px <= w; px++) {
+                const mathX = (px - ox) / scale;
+                const mathY = getF(mathX);
+                const py = oy - mathY * scale;
+                if (px === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+
+            // Plot sample points x in [-3..3]
+            for (let x = -3; x <= 3; x++) {
+                const y = getF(x);
+                const px = ox + x * scale;
+                const py = oy - y * scale;
+
+                ctx.fillStyle = '#f59e0b';
+                ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI * 2); ctx.fill();
+            }
+        }
+
+        // Slide 14: Read Graph Quiz Logic
+        function initReadGraphQuiz() {
+            const container = document.getElementById('readGraphQuiz');
+            if (!container) return;
+            container.innerHTML = `
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                    <p class="font-bold text-slate-200">1. Berapa nilai $f(0)$ berdasarkan grafik?</p>
+                    <div class="flex gap-2 mt-1">
+                        <button onclick="ansReadGraph(1, -1)" id="rg_1_-1" class="px-3 py-1 rounded bg-slate-900 border border-slate-700 hover:border-indigo-500 font-bold">-1</button>
+                        <button onclick="ansReadGraph(1, 0)" id="rg_1_0" class="px-3 py-1 rounded bg-slate-900 border border-slate-700 hover:border-indigo-500 font-bold">0</button>
+                        <button onclick="ansReadGraph(1, 1)" id="rg_1_1" class="px-3 py-1 rounded bg-slate-900 border border-slate-700 hover:border-indigo-500 font-bold">1</button>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                    <p class="font-bold text-slate-200">2. Berapa nilai $f(2)$ berdasarkan grafik?</p>
+                    <div class="flex gap-2 mt-1">
+                        <button onclick="ansReadGraph(2, 2)" id="rg_2_2" class="px-3 py-1 rounded bg-slate-900 border border-slate-700 hover:border-indigo-500 font-bold">2</button>
+                        <button onclick="ansReadGraph(2, 3)" id="rg_2_3" class="px-3 py-1 rounded bg-slate-900 border border-slate-700 hover:border-indigo-500 font-bold">3</button>
+                        <button onclick="ansReadGraph(2, 4)" id="rg_2_4" class="px-3 py-1 rounded bg-slate-900 border border-slate-700 hover:border-indigo-500 font-bold">4</button>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                    <p class="font-bold text-slate-200">3. Titik mana yang berada pada grafik fungsi ini?</p>
+                    <div class="flex gap-2 mt-1">
+                        <button onclick="ansReadGraph(3, 'A')" id="rg_3_A" class="px-3 py-1 rounded bg-slate-900 border border-slate-700 hover:border-indigo-500 font-bold">(1, 1)</button>
+                        <button onclick="ansReadGraph(3, 'B')" id="rg_3_B" class="px-3 py-1 rounded bg-slate-900 border border-slate-700 hover:border-indigo-500 font-bold">(0, 1)</button>
+                        <button onclick="ansReadGraph(3, 'C')" id="rg_3_C" class="px-3 py-1 rounded bg-slate-900 border border-slate-700 hover:border-indigo-500 font-bold">(2, 2)</button>
+                    </div>
+                </div>
+            `;
+            if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([container]);
+        }
+
+        function ansReadGraph(qNum, choice) {
+            const key = { 1: -1, 2: 3, 3: 'A' };
+            const isCorrect = choice === key[qNum];
+            alert(isCorrect ? "Benar! Pembacaan grafik Anda tepat." : "Kurang tepat, coba perhatikan titik potong pada grafik.");
+        }
+
+        // Slide 17: Operation Simulator Calculation
+        function calcOpSimulation() {
+            const fVal = document.getElementById('opSelectF')?.value;
+            const opVal = document.getElementById('opSelectType')?.value;
+            const gVal = document.getElementById('opSelectG')?.value;
+
+            const resEl = document.getElementById('opResultText');
+            const noteEl = document.getElementById('opDomainNote');
+            if (!resEl || !noteEl) return;
+
+            let resultStr = "";
+            let domainStr = "Domain terdefinisi untuk seluruh $x \\in \\mathbb{R}$.";
+
+            if (opVal === 'add') {
+                if (fVal === '2x+1' && gVal === 'x-3') resultStr = "(f + g)(x) = 3x - 2";
+                else if (fVal === '3x-2' && gVal === '2x+5') resultStr = "(f + g)(x) = 5x + 3";
+                else resultStr = "(f + g)(x) = ( " + fVal + " ) + ( " + gVal + " )";
+            } else if (opVal === 'sub') {
+                if (fVal === '2x+1' && gVal === 'x-3') resultStr = "(f - g)(x) = x + 4";
+                else resultStr = "(f - g)(x) = ( " + fVal + " ) - ( " + gVal + " )";
+            } else if (opVal === 'mul') {
+                if (fVal === '2x+1' && gVal === 'x-3') resultStr = "(f \\cdot g)(x) = 2x^2 - 5x - 3";
+                else resultStr = "(f \\cdot g)(x) = (" + fVal + ")(" + gVal + ")";
+            } else if (opVal === 'div') {
+                resultStr = "\\left(\\frac{f}{g}\\right)(x) = \\frac{" + fVal + "}{" + gVal + "}";
+                domainStr = "<strong class='text-rose-400'>Syarat Domain:</strong> Penyebut $g(x) \\neq 0$.";
+            }
+
+            resEl.innerHTML = `$${resultStr}$`;
+            noteEl.innerHTML = domainStr;
+
+            if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([resEl, noteEl]);
+        }
+
+        // Slide 18: Group Answers Toggle
+        function toggleGroupAnswers() {
+            const boxes = document.querySelectorAll('.groupAnswerBox');
+            boxes.forEach(b => b.classList.toggle('hidden'));
+        }
+
+        // Slide 19: Final Quiz Data & Logic
+        const finalQuizQuestions = [
+            { q: "Titik $P(-3, 5)$ terletak pada kuadran ke-...", options: ["Kuadran I", "Kuadran II", "Kuadran III", "Kuadran IV"], ans: 1 },
+            { q: "Titik $Q(4, -2)$ terletak pada kuadran ke-...", options: ["Kuadran I", "Kuadran II", "Kuadran III", "Kuadran IV"], ans: 3 },
+            { q: "Manakah notasi fungsi baku di bawah ini?", options: ["y = f(x)", "f = x(y)", "x = f(x)", "y(x) = x"], ans: 0 },
+            { q: "Jika $f(x) = 3x - 5$, maka nilai $f(4)$ adalah...", options: ["5", "7", "12", "17"], ans: 1 },
+            { q: "Jika $f(x) = x^2 + 2$, maka nilai $f(-3)$ adalah...", options: ["-7", "7", "11", "9"], ans: 2 },
+            { q: "Himpunan semua nilai input $x$ yang diperbolehkan disebut...", options: ["Kodomain", "Domain", "Range", "Relasi"], ans: 1 },
+            { q: "Jika $f(x) = 2x + 1$ dan $g(x) = x - 4$, bentuk $(f+g)(x)$ adalah...", options: ["3x - 3", "3x + 5", "x + 5", "2x - 3"], ans: 0 },
+            { q: "Jika $f(x) = 2x + 1$ dan $g(x) = x - 4$, bentuk $(f-g)(x)$ adalah...", options: ["x - 3", "x + 5", "3x - 3", "x - 5"], ans: 1 },
+            { q: "Pada fungsi pembagian $(f/g)(x) = \\frac{f(x)}{g(x)}$, syarat utamanya adalah...", options: ["f(x) = 0", "g(x) ≠ 0", "f(x) > 0", "g(x) > 0"], ans: 1 },
+            { q: "Titik potong grafik $f(x) = x + 3$ dengan Sumbu-Y terjadi saat $x = 0$, yaitu di titik...", options: ["(0, 3)", "(3, 0)", "(0, -3)", "(-3, 0)"], ans: 0 }
+        ];
+
+        let userFinalAnswers = {};
+
+        function initFinalQuiz() {
+            const container = document.getElementById('finalQuizContainer');
+            if (!container) return;
+
+            container.innerHTML = finalQuizQuestions.map((q, idx) => `
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                    <p class="font-bold text-slate-200 text-sm">${idx + 1}. ${q.q}</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        ${q.options.map((opt, oIdx) => `
+                            <button onclick="selectFinalOption(${idx}, ${oIdx})" id="fq_${idx}_${oIdx}" class="text-left p-2.5 rounded-lg border border-slate-800 bg-slate-900 text-xs text-slate-300 hover:border-indigo-500 transition">
+                                <span class="font-bold text-indigo-400 mr-2">${String.fromCharCode(65 + oIdx)}.</span> ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([container]);
+        }
+
+        function selectFinalOption(qIdx, oIdx) {
+            userFinalAnswers[qIdx] = oIdx;
+            finalQuizQuestions[qIdx].options.forEach((_, optIdx) => {
+                const btn = document.getElementById(`fq_${qIdx}_${optIdx}`);
+                if (optIdx === oIdx) {
+                    btn.className = "text-left p-2.5 rounded-lg border border-indigo-500 bg-indigo-600/20 text-indigo-200 text-xs font-semibold";
+                } else {
+                    btn.className = "text-left p-2.5 rounded-lg border border-slate-800 bg-slate-900 text-xs text-slate-400 opacity-60";
+                }
+            });
+        }
+
+        function submitFinalQuiz() {
+            let correctCount = 0;
+            finalQuizQuestions.forEach((q, idx) => {
+                if (userFinalAnswers[idx] === q.ans) correctCount++;
+            });
+
+            const totalScore = (correctCount / finalQuizQuestions.length) * 100;
+            document.getElementById('finalQuizScoreText').innerText = `${totalScore} / 100`;
+
+            let category = "";
+            let colorClass = "";
+            if (totalScore >= 90) { category = "Sangat Baik"; colorClass = "text-emerald-400"; }
+            else if (totalScore >= 80) { category = "Baik"; colorClass = "text-teal-400"; }
+            else if (totalScore >= 70) { category = "Cukup"; colorClass = "text-amber-400"; }
+            else { category = "Perlu Belajar Lagi"; colorClass = "text-rose-400"; }
+
+            const badge = document.getElementById('finalQuizBadge');
+            badge.innerHTML = `Kategori Hasil: <span class="${colorClass} font-bold text-sm">${category}</span> (${correctCount} dari 10 Benar)`;
+        }
+
+        // Global Event Listeners for Keyboard Navigation
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // Application Startup
+        window.onload = function() {
+            buildTocList();
+            renderCurrentSlide();
+        };
+    </script>
+</body>
+</html>

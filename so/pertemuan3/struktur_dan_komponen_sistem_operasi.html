@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Struktur dan Komponen Sistem Operasi — Pertemuan 3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    },
+                    colors: {
+                        slate950: '#020617',
+                        cyan400: '#22d3ee',
+                        cyan500: '#06b6d4',
+                        blue900: '#1e3a8a',
+                        blue950: '#0f172a'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .slide { display: none; }
+        .slide.active { display: flex; animation: fadeIn 0.4s ease-in-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        @media print {
+            .no-print { display: none !important; }
+            .slide { display: block !important; page-break-after: always; height: auto !important; background: #0f172a !important; color: white !important; }
+        }
+    </style>
+</head>
+<body class="h-full bg-slate-950 text-slate-100 flex flex-col justify-between overflow-hidden">
+
+    <!-- TOP NAVIGATION & CONTROLS (No Print) -->
+    <header class="no-print bg-slate-900/80 backdrop-blur border-b border-slate-800 px-6 py-3 flex items-center justify-between z-50">
+        <div class="flex items-center space-x-3">
+            <div class="bg-cyan-500/10 border border-cyan-500/30 p-2 rounded-lg text-cyan-400 font-bold text-sm">
+                SO-P3
+            </div>
+            <div>
+                <h1 class="text-sm font-bold text-white tracking-wide">Sistem Operasi • Pertemuan 3</h1>
+                <p class="text-xs text-slate-400">Struktur dan Komponen Sistem Operasi</p>
+            </div>
+        </div>
+
+        <!-- Center Controls / Progress -->
+        <div class="hidden md:flex items-center space-x-4">
+            <button onclick="openTOC()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center space-x-1.5">
+                <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                <span>Daftar Isi</span>
+            </button>
+            <div class="flex items-center space-x-2 text-xs text-slate-400">
+                <span id="currentSlideNum" class="font-bold text-cyan-400 text-sm">1</span>
+                <span>/</span>
+                <span id="totalSlideNum" class="font-bold text-slate-200">16</span>
+            </div>
+        </div>
+
+        <!-- Right Controls -->
+        <div class="flex items-center space-x-2">
+            <button onclick="window.print()" class="hidden sm:flex items-center space-x-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-3 py-2 rounded-lg border border-slate-700 transition" title="Cetak / Simpan PDF">
+                <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                <span class="hidden lg:inline">PDF</span>
+            </button>
+            <button onclick="toggleFullscreen()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 p-2 rounded-lg border border-slate-700 transition" title="Layar Penuh (F)">
+                <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- PROGRESS BAR -->
+    <div class="no-print w-full bg-slate-900 h-1">
+        <div id="progressBar" class="bg-gradient-to-r from-cyan-500 to-blue-600 h-1 transition-all duration-300" style="width: 6.25%;"></div>
+    </div>
+
+    <!-- MAIN SLIDE CONTAINER -->
+    <main class="flex-1 relative overflow-y-auto overflow-x-hidden flex flex-col justify-center p-4 sm:p-8 lg:p-12">
+        <div class="max-w-6xl w-full mx-auto h-full flex flex-col justify-center">
+
+            <!-- SLIDE 1: SAMPUL -->
+            <section id="slide-1" class="slide active flex-col justify-center items-center text-center py-6">
+                <div class="inline-flex items-center space-x-2 bg-cyan-500/10 border border-cyan-500/30 px-4 py-1.5 rounded-full text-cyan-400 text-xs sm:text-sm font-semibold mb-6 shadow-lg shadow-cyan-500/5">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                    <span>Mata Kuliah: Sistem Informatika • Pertemuan 3</span>
+                </div>
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight mb-4 leading-tight">
+                    Struktur dan Komponen <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Sistem Operasi</span>
+                </h1>
+                <p class="text-base sm:text-xl text-slate-300 max-w-2xl mx-auto mb-10 font-light">
+                    Memahami Bagaimana Sistem Operasi Bekerja di Balik Layar Mengelola Perangkat Keras dan Perangkat Lunak.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto w-full text-left">
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl">
+                        <div class="text-cyan-400 font-bold text-lg">Kernel</div>
+                        <div class="text-xs text-slate-400">Inti Pengelola Sumber Daya</div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl">
+                        <div class="text-cyan-400 font-bold text-lg">Shell & GUI</div>
+                        <div class="text-xs text-slate-400">Antarmuka Pengguna</div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl">
+                        <div class="text-cyan-400 font-bold text-lg">System Call</div>
+                        <div class="text-xs text-slate-400">Jembatan Layanan Sistem</div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl">
+                        <div class="text-cyan-400 font-bold text-lg">Driver</div>
+                        <div class="text-xs text-slate-400">Pengendali Perangkat Keras</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 2: APERSEPSI PERTEMUAN SEBELUMNYA -->
+            <section id="slide-2" class="slide flex-col justify-center">
+                <div class="mb-6">
+                    <span class="text-xs font-bold text-cyan-400 tracking-wider uppercase">Apersepsi & Review</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Koneksi dengan Pertemuan 2</h2>
+                    <p class="text-sm text-slate-400">Mari ingat kembali konsep dasar dan fungsi utama sistem operasi.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl flex flex-col justify-between">
+                        <div>
+                            <div class="text-cyan-400 font-bold text-base mb-2">Pertanyaan 1</div>
+                            <p class="text-slate-300 text-sm">Siapa yang mengatur penggunaan CPU dan alokasi memori RAM saat banyak aplikasi berjalan?</p>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-slate-800/80">
+                            <button onclick="toggleCardAnswer('ans-1', this)" class="text-xs bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-3 py-1.5 rounded-lg transition font-medium">Tampilkan Pembahasan</button>
+                            <div id="ans-1" class="hidden mt-3 text-xs text-slate-300 bg-slate-950 p-3 rounded-lg border border-slate-800">
+                                <strong class="text-cyan-400">Jawab:</strong> Sistem operasi melalui manajemen proses dan manajemen memori di dalam kernel.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl flex flex-col justify-between">
+                        <div>
+                            <div class="text-cyan-400 font-bold text-base mb-2">Pertanyaan 2</div>
+                            <p class="text-slate-300 text-sm">Bagaimana sebuah aplikasi teks editor meminta sistem operasi untuk membuka dan membaca file?</p>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-slate-800/80">
+                            <button onclick="toggleCardAnswer('ans-2', this)" class="text-xs bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-3 py-1.5 rounded-lg transition font-medium">Tampilkan Pembahasan</button>
+                            <div id="ans-2" class="hidden mt-3 text-xs text-slate-300 bg-slate-950 p-3 rounded-lg border border-slate-800">
+                                <strong class="text-cyan-400">Jawab:</strong> Melalui mekanisme <em>System Call</em> yang memicu perpindahan ke mode kernel untuk mengakses media penyimpanan.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl flex flex-col justify-between">
+                        <div>
+                            <div class="text-cyan-400 font-bold text-base mb-2">Pertanyaan 3</div>
+                            <p class="text-slate-300 text-sm">Bagaimana sistem operasi berkomunikasi dengan beragam perangkat keras seperti printer dan kartu grafis?</p>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-slate-800/80">
+                            <button onclick="toggleCardAnswer('ans-3', this)" class="text-xs bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-3 py-1.5 rounded-lg transition font-medium">Tampilkan Pembahasan</button>
+                            <div id="ans-3" class="hidden mt-3 text-xs text-slate-300 bg-slate-950 p-3 rounded-lg border border-slate-800">
+                                <strong class="text-cyan-400">Jawab:</strong> Menggunakan perangkat lunak khusus bernama <em>Device Driver</em> yang menjadi penerjemah perintah sistem ke hardware.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 3: CAPAIAN PEMBELAJARAN -->
+            <section id="slide-3" class="slide flex-col justify-center">
+                <div class="mb-6">
+                    <span class="text-xs font-bold text-cyan-400 tracking-wider uppercase">Tujuan Instruksional</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Capaian Pembelajaran Pertemuan 3</h2>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex items-start space-x-3">
+                        <div class="bg-cyan-500/10 text-cyan-400 p-2.5 rounded-lg font-bold text-sm">01</div>
+                        <div>
+                            <h3 class="text-white font-semibold text-sm">Struktur & Hubungan</h3>
+                            <p class="text-xs text-slate-400 mt-1">Menjelaskan struktur sistem operasi dan hubungan antarkomponennya.</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex items-start space-x-3">
+                        <div class="bg-cyan-500/10 text-cyan-400 p-2.5 rounded-lg font-bold text-sm">02</div>
+                        <div>
+                            <h3 class="text-white font-semibold text-sm">Fungsi Kernel</h3>
+                            <p class="text-xs text-slate-400 mt-1">Menjelaskan fungsi kernel sebagai inti pengelola sumber daya sistem.</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex items-start space-x-3">
+                        <div class="bg-cyan-500/10 text-cyan-400 p-2.5 rounded-lg font-bold text-sm">03</div>
+                        <div>
+                            <h3 class="text-white font-semibold text-sm">Shell & GUI</h3>
+                            <p class="text-xs text-slate-400 mt-1">Membedakan shell berbasis CLI dan antarmuka pengguna grafis (GUI).</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex items-start space-x-3">
+                        <div class="bg-cyan-500/10 text-cyan-400 p-2.5 rounded-lg font-bold text-sm">04</div>
+                        <div>
+                            <h3 class="text-white font-semibold text-sm">System Call</h3>
+                            <p class="text-xs text-slate-400 mt-1">Memahami mekanisme permintaan layanan sistem operasi oleh aplikasi.</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex items-start space-x-3">
+                        <div class="bg-cyan-500/10 text-cyan-400 p-2.5 rounded-lg font-bold text-sm">05</div>
+                        <div>
+                            <h3 class="text-white font-semibold text-sm">User & Kernel Mode</h3>
+                            <p class="text-xs text-slate-400 mt-1">Membedakan tingkat hak akses eksekusi dalam sistem operasi.</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex items-start space-x-3">
+                        <div class="bg-cyan-500/10 text-cyan-400 p-2.5 rounded-lg font-bold text-sm">06</div>
+                        <div>
+                            <h3 class="text-white font-semibold text-sm">Driver & Alur Kerja</h3>
+                            <p class="text-xs text-slate-400 mt-1">Menjelaskan device driver dan menganalisis alur permintaan layanan aplikasi.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 4: PENGERTIAN STRUKTUR SISTEM OPERASI -->
+            <section id="slide-4" class="slide flex-col justify-center">
+                <div class="mb-6">
+                    <span class="text-xs font-bold text-cyan-400 tracking-wider uppercase">Konsep Dasar</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Pengertian Struktur Sistem Operasi</h2>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+                    <div class="space-y-4 text-slate-300 text-sm leading-relaxed">
+                        <p>
+                            <strong class="text-white">Struktur Sistem Operasi</strong> adalah cara bagaimana berbagai komponen sistem operasi disusun, diorganisasikan, dan saling berinteraksi untuk menyediakan layanan kepada aplikasi dan pengguna.
+                        </p>
+                        <p>
+                            Sistem operasi modern tidak dibuat sebagai satu kesatuan monolitik raksasa tanpa batas, melainkan dibagi menjadi subsistem dan modul dengan tugas spesifik.
+                        </p>
+                        <div class="bg-cyan-500/10 border-l-4 border-cyan-400 p-4 rounded-r-xl text-xs text-slate-200">
+                            <strong>Catatan Penting:</strong> Susunan dan implementasi aktual antar sistem operasi (seperti Linux, Windows, dan macOS) dapat berbeda berdasarkan arsitektur desainnya (monolitik, mikrokernel, hibrida, dll).
+                        </div>
+                    </div>
+                    <!-- Diagram Umum -->
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col space-y-3 text-center text-xs font-medium">
+                        <div class="bg-slate-800 text-slate-200 p-3 rounded-lg border border-slate-700">👤 Pengguna (User)</div>
+                        <div class="text-cyan-400 text-base">↓</div>
+                        <div class="bg-slate-800 text-slate-200 p-3 rounded-lg border border-slate-700">💻 Aplikasi / Program Pengguna (Browser, Editor, Game)</div>
+                        <div class="text-cyan-400 text-base">↓</div>
+                        <div class="bg-blue-950 text-cyan-300 p-3 rounded-lg border border-cyan-500/40">⚙️ Antarmuka / API & System Call</div>
+                        <div class="text-cyan-400 text-base">↓</div>
+                        <div class="bg-slate-800 text-slate-200 p-3 rounded-lg border border-slate-700">🧠 Kernel Sistem Operasi</div>
+                        <div class="text-cyan-400 text-base">↓</div>
+                        <div class="bg-slate-800 text-slate-200 text-slate-300 p-3 rounded-lg border border-slate-700">🔌 Perangkat Keras (Hardware)</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 5: GAMBARAN ARSITEKTUR SISTEM KOMPUTER -->
+            <section id="slide-5" class="slide flex-col justify-center">
+                <div class="mb-4">
+                    <span class="text-xs font-bold text-cyan-400 tracking-wider uppercase">Arsitektur Berlapis</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Gambaran Arsitektur Sistem Komputer</h2>
+                    <p class="text-xs text-slate-400">Klik setiap lapisan di bawah untuk melihat penjelasan detail fungsi dan hubungannya.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+                    <!-- Layer Stack (Clickable) -->
+                    <div class="lg:col-span-2 space-y-2.5">
+                        <div onclick="selectLayer(1)" id="layer-btn-1" class="cursor-pointer bg-slate-900 hover:bg-slate-800 border-2 border-cyan-500/50 p-3.5 rounded-xl transition flex items-center justify-between shadow-md">
+                            <span class="font-semibold text-white text-sm">Lapisan 5: Pengguna (User)</span>
+                            <span class="text-xs bg-cyan-500/20 text-cyan-400 px-2.5 py-1 rounded">Interaksi Manusia</span>
+                        </div>
+                        <div onclick="selectLayer(2)" id="layer-btn-2" class="cursor-pointer bg-slate-900 hover:bg-slate-800 border border-slate-800 p-3.5 rounded-xl transition flex items-center justify-between">
+                            <span class="font-semibold text-white text-sm">Lapisan 4: Aplikasi (Application Software)</span>
+                            <span class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded">User Mode</span>
+                        </div>
+                        <div onclick="selectLayer(3)" id="layer-btn-3" class="cursor-pointer bg-slate-900 hover:bg-slate-800 border border-slate-800 p-3.5 rounded-xl transition flex items-center justify-between">
+                            <span class="font-semibold text-white text-sm">Lapisan 3: Layanan Sistem Operasi (OS Services)</span>
+                            <span class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded">User/Kernel Mode</span>
+                        </div>
+                        <div onclick="selectLayer(4)" id="layer-btn-4" class="cursor-pointer bg-slate-900 hover:bg-slate-800 border border-slate-800 p-3.5 rounded-xl transition flex items-center justify-between">
+                            <span class="font-semibold text-white text-sm">Lapisan 2: Kernel (Inti OS)</span>
+                            <span class="text-xs bg-blue-900/60 text-cyan-300 px-2.5 py-1 rounded font-bold">Kernel Mode</span>
+                        </div>
+                        <div onclick="selectLayer(5)" id="layer-btn-5" class="cursor-pointer bg-slate-900 hover:bg-slate-800 border border-slate-800 p-3.5 rounded-xl transition flex items-center justify-between">
+                            <span class="font-semibold text-white text-sm">Lapisan 1: Perangkat Keras (Hardware)</span>
+                            <span class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded">CPU, RAM, I/O</span>
+                        </div>
+                    </div>
+                    <!-- Detail Box -->
+                    <div class="bg-slate-900 border border-cyan-500/30 p-5 rounded-2xl h-full flex flex-col justify-center">
+                        <div id="layer-title" class="text-cyan-400 font-bold text-base mb-2">Lapisan 5: Pengguna</div>
+                        <p id="layer-desc" class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4">
+                            Manusia atau sistem eksternal yang berinteraksi langsung dengan komputer melalui antarmuka grafis atau perintah teks untuk mencapai tujuan tertentu.
+                        </p>
+                        <div class="text-xs text-slate-400 bg-slate-950 p-3 rounded-lg border border-slate-800">
+                            <span class="text-cyan-400 font-semibold">Hubungan:</span> Mengontrol aplikasi, yang kemudian memicu permintaan layanan kepada kernel melalui system call.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 6: KERNEL -->
+            <section id="slide-6" class="slide flex-col justify-center">
+                <div class="mb-6">
+                    <span class="text-xs font-bold text-cyan-400 tracking-wider uppercase">Inti Sistem Operasi</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Kernel: Pengelola Utama Sumber Daya</h2>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-1 bg-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col justify-center text-center">
+                        <div class="bg-cyan-500/10 border border-cyan-500/30 p-4 rounded-xl text-cyan-400 font-bold text-xl mb-3">
+                            🧠 KERNEL
+                        </div>
+                        <p class="text-xs text-slate-300">
+                            Bagian sentral yang selalu aktif di memori utama selama komputer menyala, memiliki hak istimewa tertinggi untuk mengontrol perangkat keras.
+                        </p>
+                    </div>
+                    <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl">
+                            <div class="text-cyan-400 font-semibold text-sm mb-1">⚡ Penjadwalan CPU</div>
+                            <p class="text-xs text-slate-400">Mengatur giliran proses aplikasi mana yang dieksekusi oleh CPU.</p>
+                        </div>
+                        <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl">
+                            <div class="text-cyan-400 font-semibold text-sm mb-1">💾 Pengelolaan Memori</div>
+                            <p class="text-xs text-slate-400">Mengalokasikan dan membebaskan ruang memori RAM untuk setiap proses.</p>
+                        </div>
+                        <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl">
+                            <div class="text-cyan-400 font-semibold text-sm mb-1">🔄 Pengelolaan Proses</div>
+                            <p class="text-xs text-slate-400">Membuat, menghentikan, dan menyinkronkan jalannya proses program.</p>
+                        </div>
+                        <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl">
+                            <div class="text-cyan-400 font-semibold text-sm mb-1">🛡️ Mekanisme Proteksi</div>
+                            <p class="text-xs text-slate-400">Menegakkan aturan hak akses dan keamanan data antar aplikasi.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 7: SHELL DAN ANTARMUKA PENGGUNA -->
+            <section id="slide-7" class="slide flex-col justify-center">
+                <div class="mb-6">
+                    <span class="text-xs font-bold text-cyan-400 tracking-wider uppercase">User Interface</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Shell dan Antarmuka Pengguna (GUI)</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- CLI / Shell -->
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-white font-bold text-base">Command Line Interface (CLI / Shell)</h3>
+                                <span class="text-xs bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded">Text Based</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-300 mb-4 leading-relaxed">
+                                Antarmuka berbasis teks di mana pengguna mengetik perintah (commands) yang kemudian ditafsirkan dan dieksekusi oleh <em>shell</em> (contoh: Bash, Zsh, PowerShell).
+                            </p>
+                            <div class="bg-slate-950 p-3 rounded-lg font-mono text-xs text-cyan-400 border border-slate-800 mb-4">
+                                user@ubuntu:~$ sudo apt update && apt upgrade
+                            </div>
+                        </div>
+                        <div class="text-xs text-slate-400 border-t border-slate-800 pt-3">
+                            <strong class="text-slate-200">Karakteristik:</strong> Cepat, efisien untuk skrip otomatisasi dan administrator sistem.
+                        </div>
+                    </div>
+                    <!-- GUI -->
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-white font-bold text-base">Graphical User Interface (GUI)</h3>
+                                <span class="text-xs bg-blue-900/60 text-cyan-300 px-2 py-1 rounded">Visual Based</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-300 mb-4 leading-relaxed">
+                                Antarmuka visual menggunakan elemen grafis seperti jendela (window), ikon, menu, dan pointer mouse (WIMP) untuk berinteraksi dengan sistem.
+                            </p>
+                            <div class="bg-slate-950 p-3 rounded-lg text-xs text-slate-300 border border-slate-800 mb-4 flex items-center space-x-3">
+                                <span class="text-lg">📁</span>
+                                <div>
+                                    <div class="font-bold text-white">Desktop Windows / GNOME</div>
+                                    <div class="text-slate-400 text-[10px]">Klik ikon untuk membuka aplikasi atau file.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-xs text-slate-400 border-t border-slate-800 pt-3">
+                            <strong class="text-slate-200">Catatan:</strong> Shell bukan bagian dari kernel; shell berjalan di ruang pengguna dan menerjemahkan perintah ke system call.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 8: SYSTEM CALL -->
+            <section id="slide-8" class="slide flex-col justify-center">
+                <div class="mb-6">
+                    <span class="text-xs font-bold text-cyan-400 tracking-wider uppercase">Mekanisme Layanan</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">System Call (Panggilan Sistem)</h2>
+                    <p class="text-xs text-slate-400">Jembatan vital antara program aplikasi dan kernel sistem operasi.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+                    <div class="space-y-3 text-slate-300 text-xs sm:text-sm leading-relaxed">
+                        <p>
+                            <strong class="text-white">System Call</strong> adalah antarmuka pemrogram ke layanan yang disediakan oleh kernel. Ketika aplikasi ingin membuka file, membuat proses baru, atau mengirim data jaringan, aplikasi tidak mengakses hardware secara langsung.
+                        </p>
+                        <p>
+                            Aplikasi memanggil fungsi pustaka (<strong class="text-cyan-400">API</strong> seperti Win32 atau POSIX), yang kemudian mengeksekusi instruksi system call.
+                        </p>
+                    </div>
+                    <!-- Diagram Alur System Call -->
+                    <div class="lg:col-span-2 bg-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col space-y-3 text-center text-xs font-medium">
+                        <div class="bg-slate-800 text-slate-200 p-2.5 rounded-lg border border-slate-700">💻 Aplikasi Pengguna</div>
+                        <div class="text-cyan-400">↓ 1. Memanggil Fungsi API (misal: fopen())</div>
+                        <div class="bg-slate-800 text-slate-200 p-2.5 rounded-lg border border-slate-700">📚 Pustaka Sistem (Standard C Library / API)</div>
+                        <div class="text-cyan-400">↓ 2. Eksekusi Perintah System Call</div>
+                        <div class="bg-blue-950 text-cyan-300 p-3 rounded-lg border border-cyan-500/40 font-bold">⚙️ KERNEL MODE (Menjalankan Layanan File System)</div>
+                        <div class="text-cyan-400">↓ 3. Data File Dikembalikan ke Aplikasi</div>
+                        <div class="bg-slate-800 text-slate-200 p-2.5 rounded-lg border border-slate-700">💻 Aplikasi Menerima Hasil</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 9: USER MODE DAN KERNEL MODE -->
+            <section id="slide-9" class="slide flex-col justify-center">
+                <div class="mb-6">
+                    <span class="text-xs font-bold text-cyan-400 tracking-wider uppercase">Tingkat Hak Akses</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">User Mode dan Kernel Mode</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-white font-bold text-base">User Mode</h3>
+                            <span class="text-xs bg-slate-800 text-slate-300 px-2 py-1 rounded">Hak Terbatas</span>
+                        </div>
+                        <ul class="space-y-2 text-xs sm:text-sm text-slate-300">
+                            <li class="flex items-start space-x-2">
+                                <span class="text-cyan-400">•</span>
+                                <span>Digunakan oleh aplikasi biasa dan program pengguna.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-cyan-400">•</span>
+                                <span>Memiliki akses terbatas terhadap memori dan perangkat keras.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-cyan-400">•</span>
+                                <span>Jika aplikasi crash, sistem keseluruhan tidak ikut runtuh.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-900 border border-cyan-500/30 p-5 rounded-2xl">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-cyan-400 font-bold text-base">Kernel Mode</h3>
+                            <span class="text-xs bg-blue-900/60 text-cyan-300 px-2 py-1 rounded">Hak Istimewa (Privileged)</span>
+                        </div>
+                        <ul class="space-y-2 text-xs sm:text-sm text-slate-300">
+                            <li class="flex items-start space-x-2">
+                                <span class="text-cyan-400">•</span>
+                                <span>Digunakan oleh inti kernel dan driver perangkat keras.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-cyan-400">•</span>
+                                <span>Memiliki akses penuh ke seluruh instruksi mesin dan memori.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-cyan-400">•</span>
+                                <span>Kesalahan di mode ini dapat menyebabkan <em>Kernel Panic</em> / <em>BSOD</em>.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="bg-slate-900/80 border border-slate-800 p-3.5 rounded-xl text-xs text-slate-300 text-center">
+                    💡 <strong class="text-white">Catatan:</strong> Perpindahan mode dari User Mode ke Kernel Mode tidak hanya terjadi karena System Call, tetapi juga dipicu oleh <em>Interrupt</em> (interupsi perangkat) dan <em>Exception</em> (error program).
+                </div>
+            </section>
+
+            <!-- SLIDE 10: DEVICE DRIVER -->
+            <section id="slide-10" class="slide flex-col justify-center">
+                <div class="mb-6">
+                    <span class="text-xs font-bold text-cyan-400 tracking-wider uppercase">Pengendali Perangkat</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Device Driver (Pengendali Perangkat)</h2>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+                    <div class="space-y-4 text-slate-300 text-sm leading-relaxed">
+                        <p>
+                            <strong class="text-white">Device Driver</strong> adalah modul perangkat lunak khusus yang memungkinkan sistem operasi berkomunikasi dan mengendalikan perangkat keras tertentu (seperti printer, GPU, kartu suara, dan SSD).
+                        </p>
+                        <p>
+                            Driver bertindak sebagai penerjemah universal: mengubah perintah standar sistem operasi menjadi instruksi spesifik yang dipahami oleh chipset hardware tersebut.
+                        </p>
+                        <div class="bg-cyan-500/10 border-l-4 border-cyan-400 p-3.5 rounded-r-xl text-xs text-slate-200">
+                            <strong>Contoh:</strong> Driver Printer Epson menerjemahkan dokumen PDF dari komputer menjadi sinyal perintah dot-matrix / inkjet yang akurat.
+                        </div>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col space-y-3 text-center text-xs">
+                        <div class="bg-slate-800 text-slate-200 p-3 rounded-lg border border-slate-700 font-semibold">💻 Aplikasi Pengguna (MS Word)</div>
+                        <div class="text-cyan-400 font-bold">↓</div>
+                        <div class="bg-slate-800 text-slate-200 p-3 rounded-lg border border-slate-700 font-semibold">⚙️ Layanan Sistem Operasi (Print Spooler)</div>
+                        <div class="text-cyan-400 font-bold">↓</div>
+                        <div class="bg-blue-950 text-cyan-300 p-3 rounded-lg border border-cyan-500/40 font-bold">🔌 Device Driver (Printer Driver)</div>
+                        <div class="text-cyan-400 font-bold">↓</div>
+                        <div class="bg-slate-800 text-slate-200 p-3 rounded-lg border border-slate-700 font-semibold">🖨️ Perangkat Keras (Printer)</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 11: LAYANAN SISTEM OPERASI -->
+            <section id="slide-11" class="slide flex-col justify-center">
+                <div class="mb-6">
+                    <span class="text-xs font-bold text-cyan-400 tracking-wider uppercase">Fasilitas Sistem</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Layanan yang Disediakan Sistem Operasi</h2>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl">
+                        <div class="text-cyan-400 font-bold text-sm mb-1">🚀 Eksekusi Program</div>
+                        <p class="text-xs text-slate-400">Memuat program ke memori dan menjalankannya hingga selesai.</p>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl">
+                        <div class="text-cyan-400 font-bold text-sm mb-1">📁 Operasi File</div>
+                        <p class="text-xs text-slate-400">Membaca, menulis, membuat, dan menghapus file serta direktori.</p>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl">
+                        <div class="text-cyan-400 font-bold text-sm mb-1">💬 Komunikasi Antarproses</div>
+                        <p class="text-xs text-slate-400">Memungkinkan pertukaran data antar aplikasi (IPC / sockets).</p>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl">
+                        <div class="text-cyan-400 font-bold text-sm mb-1">⚠️ Penanganan Kesalahan</div>
+                        <p class="text-xs text-slate-400">Mendeteksi error pada CPU, memori, atau perangkat I/O.</p>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl">
+                        <div class="text-cyan-400 font-bold text-sm mb-1">🔒 Keamanan & Proteksi</div>
+                        <p class="text-xs text-slate-400">Mengontrol akses terhadap sumber daya sistem dan data pengguna.</p>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl">
+                        <div class="text-cyan-400 font-bold text-sm mb-1">🌐 Jaringan (Networking)</div>
+                        <p class="text-xs text-slate-400">Mengelola koneksi dan pertukaran paket data antar komputer.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 12: PERBANDINGAN KOMPONEN -->
+            <section id="slide-12" class="slide flex-col justify-center">
+                <div class="mb-4">
+                    <span class="text-xs font-bold text-cyan-400 tracking-wider uppercase">Ringkasan Konseptual</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Perbandingan Komponen Sistem Operasi</h2>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs sm:text-sm">
+                            <thead class="bg-slate-800 text-cyan-400 font-semibold border-b border-slate-700">
+                                <tr>
+                                    <th class="p-3">Komponen</th>
+                                    <th class="p-3">Fungsi Utama</th>
+                                    <th class="p-3">Contoh Nyata</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800 text-slate-300">
+                                <tr class="hover:bg-slate-800/50">
+                                    <td class="p-3 font-semibold text-white">Kernel</td>
+                                    <td class="p-3">Mengelola sumber daya dan operasi inti sistem</td>
+                                    <td class="p-3 text-cyan-400 font-mono">Penjadwalan CPU</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50">
+                                    <td class="p-3 font-semibold text-white">Shell</td>
+                                    <td class="p-3">Menerima dan menafsirkan perintah teks pengguna</td>
+                                    <td class="p-3 text-cyan-400 font-mono">Bash, PowerShell</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50">
+                                    <td class="p-3 font-semibold text-white">GUI</td>
+                                    <td class="p-3">Menyediakan antarmuka grafis visual</td>
+                                    <td class="p-3 text-cyan-400 font-mono">Desktop Windows / GNOME</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50">
+                                    <td class="p-3 font-semibold text-white">System Call</td>
+                                    <td class="p-3">Mekanisme permintaan layanan tingkat sistem</td>
+                                    <td class="p-3 text-cyan-400 font-mono">Syscall read() / open()</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50">
+                                    <td class="p-3 font-semibold text-white">Device Driver</td>
+                                    <td class="p-3">Menghubungkan OS dengan perangkat keras</td>
+                                    <td class="p-3 text-cyan-400 font-mono">Driver NVIDIA / Printer</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 13: SIMULASI ALUR KERJA SYSTEM CALL -->
+            <section id="slide-13" class="slide flex-col justify-center">
+                <div class="mb-4">
+                    <span class="text-xs font-bold text-cyan-400 tracking-wider uppercase">Simulasi Interaktif</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Alur Kerja: Aplikasi Membaca File</h2>
+                    <p class="text-xs text-slate-400">Gunakan tombol kontrol untuk melihat tahapan perpindahan proses secara berurutan.</p>
+                </div>
+                
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl mb-6">
+                    <div id="sim-step-box" class="text-center min-h-[90px] flex flex-col justify-center">
+                        <div id="sim-step-num" class="text-xs font-bold text-cyan-400 mb-1">Tahap 1 dari 6</div>
+                        <div id="sim-step-title" class="text-lg font-bold text-white mb-1">Pengguna Menjalankan Aplikasi</div>
+                        <p id="sim-step-desc" class="text-xs sm:text-sm text-slate-300">Pengguna membuka teks editor (misal: Notepad) dari desktop GUI sistem operasi.</p>
+                    </div>
+                    <!-- Visual indicators -->
+                    <div class="grid grid-cols-6 gap-2 mt-6">
+                        <div id="ind-1" class="h-2 rounded-full bg-cyan-400 transition-all"></div>
+                        <div id="ind-2" class="h-2 rounded-full bg-slate-800 transition-all"></div>
+                        <div id="ind-3" class="h-2 rounded-full bg-slate-800 transition-all"></div>
+                        <div id="ind-4" class="h-2 rounded-full bg-slate-800 transition-all"></div>
+                        <div id="ind-5" class="h-2 rounded-full bg-slate-800 transition-all"></div>
+                        <div id="ind-6" class="h-2 rounded-full bg-slate-800 transition-all"></div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-center space-x-4">
+                    <button onclick="prevSimStep()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-4 py-2.5 rounded-xl border border-slate-700 transition flex items-center space-x-1">
+                        <span>← Langkah Sebelumnya</span>
+                    </button>
+                    <button onclick="resetSim()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-3 py-2.5 rounded-xl border border-slate-700 transition">
+                        Ulangi
+                    </button>
+                    <button onclick="nextSimStep()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-bold px-5 py-2.5 rounded-xl transition flex items-center space-x-1 shadow-lg shadow-cyan-500/20">
+                        <span>Langkah Berikutnya →</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- SLIDE 14: STUDI KASUS -->
+            <section id="slide-14" class="slide flex-col justify-center">
+                <div class="mb-4">
+                    <span class="text-xs font-bold text-cyan-400 tracking-wider uppercase">Analisis Kasus Nyata</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Studi Kasus: Mencetak Dokumen</h2>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl mb-4 text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    <p class="mb-3">
+                        <strong class="text-white">Skenario:</strong> Seorang mahasiswa menekan tombol "Print" pada aplikasi pengolah kata untuk mencetak tugas makalah ke printer kantor.
+                    </p>
+                    <p>
+                        Identifikasikan peran masing-masing komponen berikut dalam alur pencetakan tersebut: Aplikasi, System Call, Kernel & Layanan OS, Device Driver, dan Perangkat Keras.
+                    </p>
+                </div>
+                <div>
+                    <button onclick="toggleCardAnswer('case-ans', this)" class="text-xs bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-4 py-2 rounded-xl transition font-medium">Tampilkan Pembahasan Komprehensif</button>
+                    <div id="case-ans" class="hidden mt-3 text-xs text-slate-300 bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <div><strong class="text-cyan-400">1. Peran Aplikasi:</strong> Membuat dokumen dan mengirim perintah cetak awal.</div>
+                        <div><strong class="text-cyan-400">2. System Call:</strong> Meminta layanan pembuatan file antrian cetak (print spooler) kepada kernel.</div>
+                        <div><strong class="text-cyan-400">3. Kernel & Layanan OS:</strong> Mengatur alokasi proses dan memori untuk tugas pencetakan.</div>
+                        <div><strong class="text-cyan-400">4. Device Driver:</strong> Menerjemahkan data cetak ke format byte printer spesifik.</div>
+                        <div><strong class="text-cyan-400">5. Perangkat Keras:</strong> Printer fisik menarik kertas dan mencetak dokumen.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 15: KUIS INTERAKTIF -->
+            <section id="slide-15" class="slide flex-col justify-center">
+                <div class="mb-4">
+                    <span class="text-xs font-bold text-cyan-400 tracking-wider uppercase">Evaluasi Pemahaman</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Kuis Interaktif Pertemuan 3</h2>
+                    <p id="quiz-progress-text" class="text-xs text-slate-400">Soal 1 dari 5</p>
+                </div>
+
+                <!-- Quiz Box -->
+                <div id="quiz-container" class="bg-slate-900 border border-slate-800 p-6 rounded-2xl mb-4">
+                    <div id="quiz-question" class="text-sm sm:text-base font-semibold text-white mb-4">
+                        Pertanyaan kuis akan dimuat di sini...
+                    </div>
+                    <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                        <!-- Options injected by JS -->
+                    </div>
+                    <div id="quiz-feedback" class="hidden text-xs p-3 rounded-lg border mb-4"></div>
+                    <div class="flex justify-end">
+                        <button id="quiz-action-btn" onclick="submitQuizAnswer()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-5 py-2.5 rounded-xl transition shadow-lg shadow-cyan-500/20">
+                            Periksa Jawaban
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quiz Summary Box (Hidden initially) -->
+                <div id="quiz-summary" class="hidden bg-slate-900 border border-cyan-500/30 p-6 rounded-2xl text-center">
+                    <div class="text-cyan-400 font-bold text-xl mb-2">🎉 Kuis Selesai!</div>
+                    <p id="quiz-score-text" class="text-slate-300 text-sm mb-4">Skor Anda: 5/5</p>
+                    <button onclick="restartQuiz()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-5 py-2.5 rounded-xl transition">
+                        Ulangi Kuis
+                    </button>
+                </div>
+            </section>
+
+            <!-- SLIDE 16: KESIMPULAN DAN REFLEKSI -->
+            <section id="slide-16" class="slide flex-col justify-center">
+                <div class="mb-6">
+                    <span class="text-xs font-bold text-cyan-400 tracking-wider uppercase">Penutup</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Kesimpulan & Refleksi</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3 text-xs sm:text-sm text-slate-300">
+                        <div class="text-cyan-400 font-bold text-base mb-1">Rangkuman Materi</div>
+                        <p>• Struktur sistem operasi mengatur kolaborasi harmonis antara kernel, shell, GUI, system call, dan device driver.</p>
+                        <p>• Kernel mengelola sumber daya kritis dalam kernel mode yang terlindungi dari aplikasi biasa (user mode).</p>
+                        <p>• Permintaan layanan dilakukan melalui system call secara aman dan terstruktur.</p>
+                    </div>
+                    <div class="bg-slate-900 border border-cyan-500/30 p-5 rounded-2xl space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="text-cyan-400 font-bold text-base mb-1">Pertanyaan Refleksi</div>
+                            <p class="text-xs sm:text-sm text-slate-300 italic">
+                                "Ketika aplikasi membaca file atau mencetak dokumen, komponen apa saja yang terlibat dan bagaimana alur komunikasinya?"
+                            </p>
+                        </div>
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs text-slate-400">
+                            <strong class="text-white">Materi Pertemuan Berikutnya:</strong> Pembahasan mendalam mengenai Manajemen Proses dan Penjadwalan CPU.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- BOTTOM NAVIGATION BAR (No Print) -->
+    <footer class="no-print bg-slate-900/90 backdrop-blur border-t border-slate-800 px-6 py-3 flex items-center justify-between z-50">
+        <button onclick="prevSlide()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-4 py-2 rounded-xl border border-slate-700 transition flex items-center space-x-1.5">
+            <span>← Sebelumnya</span>
+        </button>
+        <div class="text-xs text-slate-400 hidden sm:block">
+            Gunakan tombol panah keyboard <kbd class="bg-slate-800 px-1.5 py-0.5 rounded text-cyan-400 font-mono">←</kbd> <kbd class="bg-slate-800 px-1.5 py-0.5 rounded text-cyan-400 font-mono">→</kbd> untuk navigasi
+        </div>
+        <button onclick="nextSlide()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-bold px-5 py-2 rounded-xl transition flex items-center space-x-1.5 shadow-lg shadow-cyan-500/25">
+            <span>Berikutnya →</span>
+        </button>
+    </footer>
+
+    <!-- TOC MODAL -->
+    <div id="tocModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden z-50 items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-2xl rounded-2xl p-6 shadow-2xl max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+                <h3 class="text-white font-bold text-base">Daftar Isi Materi Presentasi</h3>
+                <button onclick="closeTOC()" class="text-slate-400 hover:text-white text-lg font-bold px-2">&times;</button>
+            </div>
+            <div id="tocList" class="overflow-y-auto space-y-1.5 pr-2">
+                <!-- TOC items injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const totalSlides = 16;
+        let currentSlide = 1;
+
+        const slideTitles = [
+            "1. Sampul: Struktur & Komponen Sistem Operasi",
+            "2. Apersepsi Pertemuan Sebelumnya",
+            "3. Capaian Pembelajaran",
+            "4. Pengertian Struktur Sistem Operasi",
+            "5. Gambaran Arsitektur Sistem Komputer",
+            "6. Kernel: Pengelola Utama Sumber Daya",
+            "7. Shell dan Antarmuka Pengguna (GUI)",
+            "8. System Call (Panggilan Sistem)",
+            "9. User Mode dan Kernel Mode",
+            "10. Device Driver",
+            "11. Layanan yang Disediakan Sistem Operasi",
+            "12. Perbandingan Komponen Sistem Operasi",
+            "13. Simulasi Alur Kerja System Call",
+            "14. Studi Kasus: Mencetak Dokumen",
+            "15. Kuis Interaktif Pertemuan 3",
+            "16. Kesimpulan & Refleksi"
+        ];
+
+        function showSlide(n) {
+            if (n < 1) n = 1;
+            if (n > totalSlides) n = totalSlides;
+            currentSlide = n;
+
+            // Hide all slides
+            for (let i = 1; i <= totalSlides; i++) {
+                const el = document.getElementById(`slide-${i}`);
+                if (el) el.classList.remove('active');
+            }
+
+            // Show current slide
+            const activeEl = document.getElementById(`slide-${currentSlide}`);
+            if (activeEl) activeEl.classList.add('active');
+
+            // Update header indicators
+            document.getElementById('currentSlideNum').innerText = currentSlide;
+            document.getElementById('progressBar').style.width = `${(currentSlide / totalSlides) * 100}%`;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                prevSlide();
+            } else if (e.key === 'f' || e.key === 'F') {
+                toggleFullscreen();
+            }
+        });
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log("Error attempting to enable fullscreen:", err);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        function openTOC() {
+            const list = document.getElementById('tocList');
+            list.innerHTML = '';
+            slideTitles.forEach((title, idx) => {
+                const sNum = idx + 1;
+                const item = document.createElement('div');
+                item.className = `p-3 rounded-xl cursor-pointer text-xs sm:text-sm flex items-center justify-between transition ${sNum === currentSlide ? 'bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 font-semibold' : 'bg-slate-950/50 hover:bg-slate-800 text-slate-300'}`;
+                item.innerHTML = `<span>${title}</span> <span class="text-xs text-slate-500">Slide ${sNum}</span>`;
+                item.onclick = () => {
+                    showSlide(sNum);
+                    closeTOC();
+                };
+                list.appendChild(item);
+            });
+            document.getElementById('tocModal').classList.remove('hidden');
+            document.getElementById('tocModal').classList.add('flex');
+        }
+
+        function closeTOC() {
+            document.getElementById('tocModal').classList.remove('flex');
+            document.getElementById('tocModal').classList.add('hidden');
+        }
+
+        function toggleCardAnswer(id, btn) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                btn.innerText = 'Sembunyikan Pembahasan';
+            } else {
+                el.classList.add('hidden');
+                btn.innerText = 'Tampilkan Pembahasan';
+            }
+        }
+
+        // Layer selection for Slide 5
+        const layerData = {
+            1: { title: "Lapisan 5: Pengguna (User)", desc: "Manusia atau sistem eksternal yang berinteraksi langsung dengan komputer melalui antarmuka grafis atau perintah teks untuk mencapai tujuan tertentu.", rel: "Mengontrol aplikasi, yang kemudian memicu permintaan layanan kepada kernel melalui system call." },
+            2: { title: "Lapisan 4: Aplikasi (Application Software)", desc: "Program perangkat lunak seperti web browser, text editor, game, dan compiler yang berjalan di User Mode dengan hak akses terbatas.", rel: "Meminta layanan sistem operasi melalui pemanggilan fungsi API dan system call." },
+            3: { title: "Lapisan 3: Layanan Sistem Operasi (OS Services)", desc: "Subsistem yang menyediakan fasilitas pendukung seperti manajemen file, utilitas sistem, dan pustaka antarmuka pemrograman (API).", rel: "Menghubungkan permintaan aplikasi dengan inti kernel di bawahnya." },
+            4: { title: "Lapisan 2: Kernel (Inti OS)", desc: "Inti sistem operasi yang selalu aktif di memori utama, mengelola penjadwalan CPU, memori RAM, proses, dan proteksi perangkat keras dalam Kernel Mode.", rel: "Mengontrol langsung perangkat keras dan melayani system call dari aplikasi." },
+            5: { title: "Lapisan 1: Perangkat Keras (Hardware)", desc: "Komponen fisik komputer termasuk CPU, RAM, perangkat penyimpanan (SSD/HDD), dan perangkat I/O (keyboard, mouse, printer, monitor).", rel: "Menjalankan instruksi tingkat rendah yang diperintahkan oleh kernel dan device driver." }
+        };
+
+        function selectLayer(num) {
+            for (let i = 1; i <= 5; i++) {
+                const btn = document.getElementById(`layer-btn-${i}`);
+                if (btn) {
+                    btn.className = "cursor-pointer bg-slate-900 hover:bg-slate-800 border border-slate-800 p-3.5 rounded-xl transition flex items-center justify-between";
+                }
+            }
+            const activeBtn = document.getElementById(`layer-btn-${num}`);
+            if (activeBtn) {
+                activeBtn.className = "cursor-pointer bg-slate-900 hover:bg-slate-800 border-2 border-cyan-500/50 p-3.5 rounded-xl transition flex items-center justify-between shadow-md";
+            }
+            const data = layerData[num];
+            document.getElementById('layer-title').innerText = data.title;
+            document.getElementById('layer-desc').innerText = data.desc;
+        }
+
+        // Simulation steps for Slide 13
+        const simSteps = [
+            { num: "Tahap 1 dari 6", title: "Pengguna Menjalankan Aplikasi", desc: "Pengguna membuka aplikasi editor teks dari desktop GUI sistem operasi." },
+            { num: "Tahap 2 dari 6", title: "Aplikasi Meminta Operasi File", desc: "Aplikasi memanggil fungsi pustaka (API) untuk membuka file dokumen tertentu." },
+            { num: "Tahap 3 dari 6", title: "Eksekusi System Call", desc: "Permintaan diteruskan melalui mekanisme system call yang memicu transisi ke kernel mode." },
+            { num: "Tahap 4 dari 6", title: "Pemeriksaan Kernel & Hak Akses", desc: "Kernel memeriksa keabsahan permintaan dan hak akses pengguna terhadap file tersebut." },
+            { num: "Tahap 5 dari 6", title: "Operasi Perangkat I/O / Storage", desc: "Sistem operasi membaca data dari media penyimpanan melalui subsistem file dan driver." },
+            { num: "Tahap 6 dari 6", title: "Data Dikembalikan ke Aplikasi", desc: "Kernel mengembalikan data file ke aplikasi melalui mode pengguna, dan teks siap ditampilkan." }
+        ];
+        let currentSimStep = 0;
+
+        function updateSimUI() {
+            const step = simSteps[currentSimStep];
+            document.getElementById('sim-step-num').innerText = step.num;
+            document.getElementById('sim-step-title').innerText = step.title;
+            document.getElementById('sim-step-desc').innerText = step.desc;
+
+            for (let i = 1; i <= 6; i++) {
+                const ind = document.getElementById(`ind-${i}`);
+                if (i <= currentSimStep + 1) {
+                    ind.className = "h-2 rounded-full bg-cyan-400 transition-all";
+                } else {
+                    ind.className = "h-2 rounded-full bg-slate-800 transition-all";
+                }
+            }
+        }
+
+        function nextSimStep() {
+            if (currentSimStep < simSteps.length - 1) {
+                currentSimStep++;
+                updateSimUI();
+            }
+        }
+
+        function prevSimStep() {
+            if (currentSimStep > 0) {
+                currentSimStep--;
+                updateSimUI();
+            }
+        }
+
+        function resetSim() {
+            currentSimStep = 0;
+            updateSimUI();
+        }
+
+        // Quiz Data & Logic (Slide 15)
+        const quizData = [
+            {
+                q: "1. Apa fungsi utama dari kernel dalam sistem operasi?",
+                options: [
+                    "Menyediakan ikon desktop grafis yang menarik bagi pengguna",
+                    "Mengelola sumber daya kritis sistem seperti CPU, memori, dan proses",
+                    "Menerjemahkan bahasa pemrograman tingkat tinggi menjadi byte code",
+                    "Menyediakan antarmuka pengetikan perintah teks (CLI)"
+                ],
+                correct: 1
+            },
+            {
+                q: "2. Pernyataan manakah yang paling tepat membedakan shell dan kernel?",
+                options: [
+                    "Shell adalah bagian inti OS, sedangkan kernel adalah aplikasi penampil file",
+                    "Kernel berjalan di user mode, sedangkan shell berjalan di kernel mode dengan hak istimewa penuh",
+                    "Shell adalah antarmuka yang menerima perintah pengguna, sedangkan kernel adalah inti pengelola sumber daya sistem",
+                    "Shell dan kernel adalah modul yang sama dan tidak dapat dipisahkan"
+                ],
+                correct: 2
+            },
+            {
+                q: "3. Apa yang dimaksud dengan System Call?",
+                options: [
+                    "Panggilan telepon darurat antar komputer dalam jaringan lokal",
+                    "Mekanisme bagi program aplikasi untuk meminta layanan yang disediakan oleh kernel",
+                    "Perintah shutdown otomatis saat CPU mengalami panas berlebih",
+                    "Fungsi grafis untuk membuat tombol interaktif pada jendela aplikasi"
+                ],
+                correct: 1
+            },
+            {
+                q: "4. Manakah pernyataan yang benar mengenai User Mode dan Kernel Mode?",
+                options: [
+                    "User mode memiliki hak akses penuh terhadap seluruh instruksi perangkat keras",
+                    "Kernel mode digunakan oleh aplikasi biasa agar lebih cepat dieksekusi",
+                    "User mode memiliki akses terbatas dan terisolasi, sedangkan kernel mode memiliki hak istimewa penuh",
+                    "Kernel mode dan user mode adalah jenis sistem operasi yang berbeda"
+                ],
+                correct: 2
+            },
+            {
+                q: "5. Apa fungsi utama dari sebuah device driver?",
+                options: [
+                    "Mengemudikan komputer agar dapat terhubung ke internet nirkabel",
+                    "Membantu sistem operasi mengendalikan dan berkomunikasi dengan perangkat keras tertentu",
+                    "Mempercepat kinerja grafis game 3D tanpa bantuan kartu GPU",
+                    "Mengamankan database dari serangan malware eksternal"
+                ],
+                correct: 1
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let userAnswers = {};
+        let quizSubmitted = false;
+
+        function loadQuiz() {
+            const q = quizData[currentQuizIndex];
+            document.getElementById('quiz-progress-text').innerText = `Soal ${currentQuizIndex + 1} dari ${quizData.length}`;
+            document.getElementById('quiz-question').innerText = q.q;
+
+            const optContainer = document.getElementById('quiz-options');
+            optContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const isSelected = userAnswers[currentQuizIndex] === idx;
+                const btn = document.createElement('button');
+                btn.className = `p-3.5 rounded-xl text-left text-xs sm:text-sm border transition flex items-start space-x-3 ${isSelected ? 'bg-cyan-500/20 border-cyan-400 text-white font-medium' : 'bg-slate-950/60 border-slate-800 text-slate-300 hover:bg-slate-800'}`;
+                btn.innerHTML = `<span class="font-bold text-cyan-400">${String.fromCharCode(65 + idx)}.</span> <span>${opt}</span>`;
+                btn.onclick = () => {
+                    if (!quizSubmitted) {
+                        userAnswers[currentQuizIndex] = idx;
+                        loadQuiz();
+                    }
+                };
+                optContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('quiz-action-btn').innerText = currentQuizIndex === quizData.length - 1 ? "Selesai & Lihat Skor" : "Periksa / Lanjut";
+        }
+
+        function submitQuizAnswer() {
+            if (userAnswers[currentQuizIndex] === undefined) {
+                alert("Silakan pilih salah satu jawaban terlebih dahulu.");
+                return;
+            }
+
+            if (currentQuizIndex < quizData.length - 1) {
+                currentQuizIndex++;
+                loadQuiz();
+            } else {
+                // Calculate score
+                let score = 0;
+                quizData.forEach((q, idx) => {
+                    if (userAnswers[idx] === q.correct) score++;
+                });
+
+                document.getElementById('quiz-container').classList.add('hidden');
+                document.getElementById('quiz-summary').classList.remove('hidden');
+                document.getElementById('quiz-score-text').innerText = `Skor Anda: ${score} dari ${quizData.length} (${(score/quizData.length)*100}%)`;
+            }
+        }
+
+        function restartQuiz() {
+            currentQuizIndex = 0;
+            userAnswers = {};
+            quizSubmitted = false;
+            document.getElementById('quiz-summary').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            loadQuiz();
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            showSlide(1);
+            loadQuiz();
+            updateSimUI();
+        }
+    </script>
+</body>
+</html>

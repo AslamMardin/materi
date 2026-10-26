@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistem Operasi — Pertemuan 4: Manajemen Proses</title>
+  <meta name="description" content="Website pembelajaran interaktif Manajemen Proses untuk Mata Kuliah Sistem Operasi Pertemuan 4. Simulator, animasi, mini game, dan kuis."/>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<button id="hamburger">☰</button>
+<div id="sidebar-overlay"></div>
+
+<div id="app">
+
+  <!-- ═══════════════ SIDEBAR ═══════════════ -->
+  <nav id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-badge">⚙️ Sistem Operasi</div>
+      <h2>Pertemuan 4<br/>Manajemen Proses</h2>
+    </div>
+
+    <div class="sidebar-progress">
+      <div class="progress-label">
+        <span>Progress Belajar</span>
+        <span id="progress-label">0%</span>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="nav-section-title">Materi</div>
+
+      <button class="nav-item" data-section="hero">
+        <span class="nav-icon">🏠</span> Beranda <span class="nav-check">✓</span>
+      </button>
+      <button class="nav-item" data-section="tujuan">
+        <span class="nav-icon">🎯</span> Tujuan <span class="nav-check">✓</span>
+      </button>
+      <button class="nav-item" data-section="prog-vs-proc">
+        <span class="nav-icon">📁</span> Program vs Process <span class="nav-check">✓</span>
+      </button>
+      <button class="nav-item" data-section="process">
+        <span class="nav-icon">⚙️</span> Apa itu Process? <span class="nav-check">✓</span>
+      </button>
+      <button class="nav-item" data-section="process-state">
+        <span class="nav-icon">🔄</span> Process State <span class="nav-check">✓</span>
+      </button>
+      <button class="nav-item" data-section="simulator">
+        <span class="nav-icon">🎮</span> Process Management <span class="nav-check">✓</span>
+      </button>
+      <button class="nav-item" data-section="context-switch">
+        <span class="nav-icon">🔀</span> Context Switch <span class="nav-check">✓</span>
+      </button>
+      <button class="nav-item" data-section="pcb">
+        <span class="nav-icon">📋</span> PCB <span class="nav-check">✓</span>
+      </button>
+      <button class="nav-item" data-section="cpu-ram">
+        <span class="nav-icon">💾</span> CPU &amp; RAM <span class="nav-check">✓</span>
+      </button>
+      <button class="nav-item" data-section="thread">
+        <span class="nav-icon">🧵</span> Process &amp; Thread <span class="nav-check">✓</span>
+      </button>
+      <button class="nav-item" data-section="studi-kasus">
+        <span class="nav-icon">📚</span> Studi Kasus <span class="nav-check">✓</span>
+      </button>
+
+      <div class="nav-section-title" style="margin-top:8px;">Evaluasi</div>
+      <button class="nav-item" data-section="mini-game">
+        <span class="nav-icon">🕹️</span> Mini Game <span class="nav-check">✓</span>
+      </button>
+      <button class="nav-item" data-section="latihan">
+        <span class="nav-icon">✏️</span> Latihan Cepat <span class="nav-check">✓</span>
+      </button>
+
+      <div class="nav-section-title" style="margin-top:8px;">Lainnya</div>
+      <button class="nav-item" data-section="tugas">
+        <span class="nav-icon">📝</span> Tugas <span class="nav-check">✓</span>
+      </button>
+      <button class="nav-item" data-section="rangkuman">
+        <span class="nav-icon">📌</span> Rangkuman <span class="nav-check">✓</span>
+      </button>
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="dark-toggle-btn" id="theme-toggle">
+        <span>🌙</span> Dark Mode
+      </button>
+    </div>
+  </nav>
+
+  <!-- ═══════════════ MAIN ═══════════════ -->
+  <main id="main">
+
+    <!-- ─── HERO ─── -->
+    <section class="section active" id="section-hero">
+      <div class="hero-eyebrow">
+        <span class="hero-pill blue">Sistem Operasi</span>
+        <span class="hero-pill purple">Pertemuan 4</span>
+      </div>
+      <h1 class="hero-title">
+        Manajemen<br/><span class="accent">Proses</span>
+      </h1>
+      <p class="hero-subtitle">Process Management</p>
+      <p class="hero-desc">
+        Memahami bagaimana sistem operasi mengelola program yang sedang berjalan,
+        menggunakan CPU dan RAM, serta berpindah dari satu keadaan proses ke keadaan lainnya.
+      </p>
+
+      <div class="hero-flow">
+        <div class="hero-flow-item">
+          <span class="fi-icon">📄</span>
+          <span class="fi-label">Program</span>
+        </div>
+        <span class="hero-flow-arrow">→</span>
+        <div class="hero-flow-item">
+          <span class="fi-icon">▶️</span>
+          <span class="fi-label">Dijalankan</span>
+        </div>
+        <span class="hero-flow-arrow">→</span>
+        <div class="hero-flow-item">
+          <span class="fi-icon">⚙️</span>
+          <span class="fi-label">Process</span>
+        </div>
+        <span class="hero-flow-arrow">→</span>
+        <div class="hero-flow-item">
+          <span class="fi-icon">🖥️</span>
+          <span class="fi-label">CPU + RAM</span>
+        </div>
+      </div>
+
+      <button class="hero-btn" id="btn-mulai">
+        Mulai Belajar <span>→</span>
+      </button>
+    </section>
+
+    <!-- ─── TUJUAN PEMBELAJARAN ─── -->
+    <section class="section" id="section-tujuan">
+      <div class="hdr-numbered">
+        <div class="hdr-num">01</div>
+        <div class="hdr-num-content">
+          <div class="hdr-label">Capaian Pembelajaran</div>
+          <h2>Tujuan Pembelajaran</h2>
+          <p>Setelah mengikuti pembelajaran ini, mahasiswa mampu menguasai kompetensi-kompetensi kunci manajemen proses berikut:</p>
+        </div>
+      </div>
+      <div class="obj-list">
+        <div class="obj-item">
+          <div class="obj-num">1</div>
+          <div class="obj-text">Menganalisis konsep <strong>proses</strong> pada sistem operasi.</div>
+        </div>
+        <div class="obj-item">
+          <div class="obj-num">2</div>
+          <div class="obj-text">Membedakan <strong>program</strong> dan <strong>proses</strong>.</div>
+        </div>
+        <div class="obj-item">
+          <div class="obj-num">3</div>
+          <div class="obj-text">Menganalisis perubahan <strong>state</strong> suatu proses (NEW → READY → RUNNING → WAITING → TERMINATED).</div>
+        </div>
+        <div class="obj-item">
+          <div class="obj-num">4</div>
+          <div class="obj-text">Menjelaskan fungsi <strong>Process Control Block (PCB)</strong>.</div>
+        </div>
+        <div class="obj-item">
+          <div class="obj-num">5</div>
+          <div class="obj-text">Menganalisis hubungan <strong>process, CPU, RAM, dan kernel</strong>.</div>
+        </div>
+        <div class="obj-item">
+          <div class="obj-num">6</div>
+          <div class="obj-text">Menjelaskan konsep <strong>context switch</strong>.</div>
+        </div>
+        <div class="obj-item">
+          <div class="obj-num">7</div>
+          <div class="obj-text">Membedakan <strong>process</strong> dan <strong>thread</strong>.</div>
+        </div>
+      </div>
+      <div class="mt-32">
+        <button class="btn btn-primary" onclick="showSection('prog-vs-proc')">Mulai Materi →</button>
+      </div>
+    </section>
+
+    <!-- ─── PROGRAM VS PROCESS ─── -->
+    <section class="section" id="section-prog-vs-proc">
+      <div class="hdr-split">
+        <div class="hdr-split-left">
+          <div class="hs-label">Entitas Pasif (Storage)</div>
+          <div class="hs-icon">📄</div>
+          <div class="hs-title">PROGRAM</div>
+          <div class="hs-desc">Kumpulan instruksi biner yang tersimpan di disk/SSD. Bersifat pasif dan belum mengonsumsi siklus CPU atau RAM aktif.</div>
+        </div>
+        <div class="hdr-split-right">
+          <div class="hs-label">Entitas Aktif (Memory)</div>
+          <div class="hs-icon">⚙️</div>
+          <div class="hs-title">PROCESS</div>
+          <div class="hs-desc">Program yang sedang dieksekusi di RAM, memiliki PID, PCB tersendiri, program counter di CPU, dan alokasi sumber daya aktif.</div>
+        </div>
+      </div>
+
+      <div class="prog-proc-grid">
+        <div class="pp-card prog">
+          <div class="pp-icon">📄</div>
+          <div class="pp-title">PROGRAM</div>
+          <div class="pp-sub">Word.exe</div>
+          <div class="pp-desc">Kumpulan instruksi yang <strong>tersimpan</strong> di disk dan belum tentu sedang dijalankan. Program bersifat pasif.</div>
+        </div>
+        <div class="pp-card proc">
+          <div class="pp-icon">⚙️</div>
+          <div class="pp-title">PROCESS</div>
+          <div class="pp-sub">Word [PID 1024]</div>
+          <div class="pp-desc">Program yang <strong>sedang dieksekusi</strong> dan membutuhkan sumber daya sistem (CPU + RAM). Proses bersifat aktif.</div>
+        </div>
+      </div>
+
+      <!-- Visual flow -->
+      <div class="card mt-24">
+        <div class="card-title">🔄 Alur Program Menjadi Process</div>
+        <div class="flow-diagram mt-16">
+          <div class="flow-node yellow">📄 Microsoft Word.exe</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-label">User double-click</div>
+          <div class="flow-node blue">▶️ Dijalankan oleh OS</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-node green">⚙️ PROCESS: Microsoft Word [PID 1024]</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-label">Menggunakan</div>
+          <div class="flow-node cyan">🖥️ CPU + RAM</div>
+        </div>
+      </div>
+
+      <!-- ══ SIMULASI INTERAKTIF: LAUNCHER PROGRAM -> PROSES ══ -->
+      <div class="launcher-sim">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div>
+            <h3 style="font-size:16px; font-weight:800; color:var(--blue-400);">🚀 Simulasi Interaktif: Pemuatan Program ke RAM &amp; CPU</h3>
+            <p style="font-size:12px; color:var(--text-secondary); margin-top:4px;">Klik salah satu tombol untuk melihat proses pemuatan instruksi biner dari disk menjadi proses aktif ber-PID.</p>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-primary" id="btn-launch-word" style="font-size:11px; padding:7px 14px;">▶ Jalankan Word.exe</button>
+            <button class="btn btn-secondary" id="btn-launch-chrome" style="font-size:11px; padding:7px 14px;">▶ Jalankan Chrome.exe</button>
+          </div>
+        </div>
+
+        <div class="launcher-track">
+          <!-- Step 1: Storage -->
+          <div class="launcher-stage" id="lstage-disk">
+            <div style="font-size:28px;">💾</div>
+            <div style="font-size:12px; font-weight:800; margin-top:4px;">Hard Disk / SSD</div>
+            <div style="font-size:10px; color:var(--text-muted);" id="lstage-disk-desc">File program tersimpan pasif</div>
+            <div class="launcher-capsule" id="lstage-file-chip">📄 Word.exe (0% CPU)</div>
+          </div>
+
+          <div class="launcher-arrow" id="larrow-1">➔</div>
+
+          <!-- Step 2: RAM & Kernel -->
+          <div class="launcher-stage" id="lstage-ram">
+            <div style="font-size:28px;">🧠</div>
+            <div style="font-size:12px; font-weight:800; margin-top:4px;">RAM &amp; Kernel OS</div>
+            <div style="font-size:10px; color:var(--text-muted);" id="lstage-ram-desc">Alokasi memori &amp; PCB</div>
+            <div class="launcher-capsule" id="lstage-ram-chip">⏳ Menunggu eksekusi...</div>
+          </div>
+
+          <div class="launcher-arrow" id="larrow-2">➔</div>
+
+          <!-- Step 3: CPU Core -->
+          <div class="launcher-stage" id="lstage-cpu">
+            <div style="font-size:28px;">⚡</div>
+            <div style="font-size:12px; font-weight:800; margin-top:4px;">CPU Core (Active)</div>
+            <div style="font-size:10px; color:var(--text-muted);" id="lstage-cpu-desc">Instruksi dieksekusi aktif</div>
+            <div class="launcher-capsule" id="lstage-cpu-chip">💤 CPU Idle</div>
+          </div>
+        </div>
+
+        <div id="launcher-status-box" style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:12px 16px; font-size:12px; color:var(--text-secondary); text-align:center;">
+          💡 Klik <strong>▶ Jalankan Word.exe</strong> atau <strong>▶ Jalankan Chrome.exe</strong> untuk menyaksikan animasi transformasi program ke proses.
+        </div>
+      </div>
+
+      <!-- Examples -->
+      <div class="card-grid card-grid-2 mt-24">
+        <div class="card blue">
+          <div class="card-icon">🌐</div>
+          <div class="card-title">Chrome.exe</div>
+          <div class="card-desc"><span class="tag yellow">Program</span> — File di disk</div>
+          <div class="card-desc mt-8">Chrome yang terbuka <span class="tag blue">Process</span></div>
+        </div>
+        <div class="card purple">
+          <div class="card-icon">💻</div>
+          <div class="card-title">VSCode.exe</div>
+          <div class="card-desc"><span class="tag yellow">Program</span> — File di disk</div>
+          <div class="card-desc mt-8">VS Code yang terbuka <span class="tag blue">Process</span></div>
+        </div>
+      </div>
+
+      <button class="btn btn-outline mt-24" id="btn-lihat-perbedaan">📊 Lihat Perbedaannya</button>
+
+      <div class="pp-table-wrap" id="pp-table-wrap">
+        <table class="styled mt-16">
+          <thead>
+            <tr>
+              <th>Aspek</th>
+              <th>Program</th>
+              <th>Process</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Definisi</td><td>Kumpulan instruksi tersimpan</td><td>Program yang sedang dieksekusi</td></tr>
+            <tr><td>Sifat</td><td>Pasif</td><td>Aktif</td></tr>
+            <tr><td>Lokasi</td><td>Disk/Storage</td><td>RAM (memory)</td></tr>
+            <tr><td>Menggunakan CPU</td><td>Tidak</td><td>Ya</td></tr>
+            <tr><td>Memiliki PID</td><td>Tidak</td><td>Ya</td></tr>
+            <tr><td>Memiliki State</td><td>Tidak</td><td>Ya (NEW, READY, RUNNING, dst)</td></tr>
+            <tr><td>Contoh</td><td>chrome.exe di folder</td><td>Chrome yang sedang terbuka</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt-32">
+        <button class="btn btn-primary" onclick="showSection('process')">Materi Berikutnya →</button>
+      </div>
+    </section>
+
+    <!-- ─── APA ITU PROCESS ─── -->
+    <section class="section" id="section-process">
+      <div class="hdr-terminal">
+        <div class="hdr-terminal-bar">
+          <div class="hdr-terminal-dot r"></div>
+          <div class="hdr-terminal-dot y"></div>
+          <div class="hdr-terminal-dot g"></div>
+          <div class="hdr-terminal-title">terminal — pid_lookup.sh</div>
+        </div>
+        <div class="hdr-terminal-body">
+          <div class="cmd">$ ps aux | grep -E "PID|ACTIVE_PROCESS"</div>
+          <h2>Apa itu Process?</h2>
+          <p>Process adalah program yang sedang dieksekusi (in-execution) oleh CPU. Lebih dari sekadar file instruksi, proses mencakup status eksekusi, program counter, register CPU, dan ruang memori (Stack, Heap, Data, Text).</p>
+        </div>
+      </div>
+
+      <div class="card-grid card-grid-2">
+        <div>
+          <div class="flow-diagram">
+            <div class="flow-node cyan">👤 USER</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-label">Menjalankan program</div>
+            <div class="flow-node purple">🖥️ Operating System</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-label">OS mengelola sebagai</div>
+            <div class="flow-node blue">⚙️ PROCESS</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-label">Membutuhkan</div>
+            <div class="flow-node green">🖥️ CPU + RAM</div>
+          </div>
+        </div>
+        <div class="card" style="align-self: start;">
+          <div class="card-title">💡 Penjelasan</div>
+          <div class="card-desc" style="line-height:1.8;">
+            Ketika user menjalankan aplikasi, <strong>sistem operasi</strong> menerima permintaan tersebut dan membuat sebuah <strong>process</strong>.
+            <br/><br/>
+            OS memberikan process tersebut:
+          </div>
+          <div style="margin-top:16px; display:flex; flex-direction:column; gap:10px;">
+            <div class="obj-item" style="padding:10px 14px;">
+              <div class="obj-num" style="background:linear-gradient(135deg,var(--blue-600),var(--cyan-500))">🖥️</div>
+              <div class="obj-text"><strong>PID</strong> — nomor identifikasi unik untuk proses</div>
+            </div>
+            <div class="obj-item" style="padding:10px 14px;">
+              <div class="obj-num" style="background:linear-gradient(135deg,var(--purple-500),var(--purple-400))">💾</div>
+              <div class="obj-text"><strong>Alokasi RAM</strong> — ruang memori untuk data dan instruksi</div>
+            </div>
+            <div class="obj-item" style="padding:10px 14px;">
+              <div class="obj-num" style="background:linear-gradient(135deg,var(--green-500),var(--green-400))">⏱️</div>
+              <div class="obj-text"><strong>Waktu CPU</strong> — giliran menggunakan prosesor</div>
+            </div>
+          </div>
+        </div>
+      <!-- ══ SIMULASI INTERAKTIF: STRUKTUR MEMORI PROSES (STACK & HEAP) ══ -->
+      <div class="pmem-sim">
+        <div style="margin-bottom:16px;">
+          <h3 style="font-size:16px; font-weight:800; color:var(--cyan-400);">🔬 Anatomi Ruang Memori Proses (Memory Layout in RAM)</h3>
+          <p style="font-size:12px; color:var(--text-secondary); margin-top:4px;">
+            Setiap proses di RAM dibagi menjadi 4 segmen: Stack (variabel lokal/fungsi), Heap (memori dinamis), Data (variabel global), dan Text (kode biner).
+          </p>
+        </div>
+
+        <div class="pmem-grid">
+          <div class="pmem-box">
+            <div class="pmem-seg stack" id="pmem-stack" style="min-height:54px;">
+              🔽 STACK (Tumbuh ke Bawah)<br/>
+              <small id="pmem-stack-info">3 Frame Fungsi Aktif</small>
+            </div>
+            <div class="pmem-seg free-space" id="pmem-free">
+              ↕ Ruang Bebas (Unallocated RAM)
+            </div>
+            <div class="pmem-seg heap" id="pmem-heap" style="min-height:42px;">
+              🔼 HEAP (Tumbuh ke Atas)<br/>
+              <small id="pmem-heap-info">2 Objek Dinamis (malloc)</small>
+            </div>
+            <div class="pmem-seg data">DATA (Variabel Global &amp; Statis)</div>
+            <div class="pmem-seg text">TEXT (Instruksi Kode Program Biner)</div>
+          </div>
+
+          <div>
+            <div style="font-size:12px; font-weight:700; color:var(--text-primary); margin-bottom:10px;">
+              Uji Coba Dinamika Memori Proses (Klik Aksi):
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn btn-secondary" id="btn-pmem-call" style="font-size:11px; padding:9px 14px; justify-content:flex-start;">
+                📥 Panggil Fungsi Baru: <code>hitungTotal()</code> (+Stack Frame)
+              </button>
+              <button class="btn btn-secondary" id="btn-pmem-return" style="font-size:11px; padding:9px 14px; justify-content:flex-start;">
+                📤 Fungsi Selesai Dieksekusi / Return (-Stack Frame)
+              </button>
+              <button class="btn btn-secondary" id="btn-pmem-alloc" style="font-size:11px; padding:9px 14px; justify-content:flex-start;">
+                📦 Alokasi Objek Dinamis: <code>new DataBuffer[1024]</code> (+Heap)
+              </button>
+              <button class="btn btn-secondary" id="btn-pmem-free" style="font-size:11px; padding:9px 14px; justify-content:flex-start;">
+                🧹 Bebaskan Memori: <code>free() / Garbage Collect</code> (-Heap)
+              </button>
+            </div>
+            <div id="pmem-status" style="margin-top:14px; font-size:12px; color:var(--blue-400); font-family:'JetBrains Mono',monospace; background:var(--bg-card); padding:8px 12px; border-radius:6px; border:1px solid var(--border);">
+              Status: Memori stabil. Ruang Stack &amp; Heap aman.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-32">
+        <button class="btn btn-primary" onclick="showSection('process-state')">Materi Berikutnya →</button>
+      </div>
+    </section>
+
+    <!-- ─── PROCESS STATE ─── -->
+    <section class="section" id="section-process-state">
+      <div class="hdr-states">
+        <div class="hdr-states-label">Siklus 5 Status Proses</div>
+        <div class="hdr-states-row">
+          <span class="tag blue">NEW</span>
+          <span style="opacity:0.4">→</span>
+          <span class="tag green">READY</span>
+          <span style="opacity:0.4">⇄</span>
+          <span class="tag yellow">RUNNING</span>
+          <span style="opacity:0.4">⇄</span>
+          <span class="tag orange">WAITING</span>
+          <span style="opacity:0.4">→</span>
+          <span class="tag red">TERMINATED</span>
+        </div>
+        <h2>Process State (Siklus Hidup Proses)</h2>
+        <p>Setiap proses mengalami transisi status secara deterministik berdasarkan instruksi penjadwalan dan operasi I/O. Klik tiap state di diagram bawah untuk membaca detail arsitektur.</p>
+      </div>
+
+      <div class="state-diagram">
+        <div class="state-row">
+          <div class="state-node new" data-state="new">🟡 NEW</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-label">Admitted</div>
+        <div class="state-row">
+          <div class="state-node ready" data-state="ready">🟢 READY</div>
+        </div>
+
+        <div style="display:flex; gap:32px; align-items:center; margin:4px 0;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:0;">
+            <div class="flow-arrow">↑</div>
+            <div class="flow-label" style="font-size:10px;">I/O Done</div>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:0;">
+            <div class="flow-label" style="font-size:10px;">Scheduler Dispatch</div>
+            <div class="flow-arrow">↓</div>
+          </div>
+        </div>
+
+        <div class="state-row" style="gap:32px;">
+          <div class="state-node waiting" data-state="waiting">🟠 WAITING</div>
+          <div class="flow-arrow" style="font-size:28px;">⟵</div>
+          <div class="state-node running" data-state="running">🔵 RUNNING</div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:flex-end; width:100%; max-width:460px; padding-right:20px;">
+          <div class="flow-label" style="font-size:10px; margin-right:12px;">I/O Request</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-label">Exit</div>
+        <div class="state-node terminated" data-state="terminated">🔴 TERMINATED</div>
+      </div>
+
+      <div class="state-info-box" id="state-info-box">
+        <h4>👆 Klik state di atas</h4>
+        <p>Pilih salah satu state untuk melihat penjelasan lengkap.</p>
+      </div>
+
+      <!-- ══ KONTROL SIMULASI INTERAKTIF EVENT TRANSISI STATE ══ -->
+      <div class="card mt-20" style="background:var(--bg-secondary); border:1px solid var(--border);">
+        <div style="font-size:13px; font-weight:800; color:var(--yellow-400); margin-bottom:6px;">
+          ⚡ Pemicu Event Sistem Operasi (Simulasi Perubahan State Nyata)
+        </div>
+        <div style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;">
+          Klik event berikut untuk melihat transisi status proses dipicu secara langsung:
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+          <button class="btn btn-secondary" id="btn-ev-admit" style="font-size:11px; padding:7px 12px;">1️⃣ NEW ➔ READY (Admit)</button>
+          <button class="btn btn-secondary" id="btn-ev-dispatch" style="font-size:11px; padding:7px 12px;">2️⃣ READY ➔ RUNNING (Dispatch)</button>
+          <button class="btn btn-secondary" id="btn-ev-io" style="font-size:11px; padding:7px 12px;">3️⃣ RUNNING ➔ WAITING (I/O Request)</button>
+          <button class="btn btn-secondary" id="btn-ev-iodone" style="font-size:11px; padding:7px 12px;">4️⃣ WAITING ➔ READY (I/O Selesai)</button>
+          <button class="btn btn-secondary" id="btn-ev-preempt" style="font-size:11px; padding:7px 12px;">⏱️ RUNNING ➔ READY (Quantum Habis)</button>
+          <button class="btn btn-secondary" id="btn-ev-exit" style="font-size:11px; padding:7px 12px;">5️⃣ RUNNING ➔ TERMINATED (Exit)</button>
+        </div>
+      </div>
+
+      <!-- State cards -->
+      <div class="card-grid card-grid-3 mt-32">
+        <div class="card yellow">
+          <div class="card-icon">🟡</div>
+          <div class="card-title">NEW</div>
+          <div class="card-desc">Proses baru dibuat. OS mengalokasikan PCB dan sumber daya awal.</div>
+        </div>
+        <div class="card green">
+          <div class="card-icon">🟢</div>
+          <div class="card-title">READY</div>
+          <div class="card-desc">Proses siap dijalankan, menunggu giliran mendapatkan CPU dari scheduler.</div>
+        </div>
+        <div class="card blue">
+          <div class="card-icon">🔵</div>
+          <div class="card-title">RUNNING</div>
+          <div class="card-desc">Proses sedang dieksekusi CPU. Hanya satu proses per CPU core.</div>
+        </div>
+        <div class="card orange">
+          <div class="card-icon">🟠</div>
+          <div class="card-title">WAITING</div>
+          <div class="card-desc">Proses menunggu event eksternal selesai, seperti operasi I/O.</div>
+        </div>
+        <div class="card red">
+          <div class="card-icon">🔴</div>
+          <div class="card-title">TERMINATED</div>
+          <div class="card-desc">Proses selesai. OS membebaskan seluruh sumber daya yang digunakan.</div>
+        </div>
+      </div>
+
+      <div class="mt-32">
+        <button class="btn btn-primary" onclick="showSection('simulator')">Coba Simulator →</button>
+      </div>
+    </section>
+
+    <!-- ─── SIMULATOR ─── -->
+    <section class="section" id="section-simulator">
+      <div class="hdr-game-banner">
+        <div class="hgb-icon">🎮</div>
+        <div class="hgb-content">
+          <div class="hgb-label">Laboratorium Interaktif</div>
+          <h2>Simulator Manajemen Proses &amp; CPU Scheduler</h2>
+          <p>Eksperimen langsung dengan transisi 5-State proses, antrean Ready Queue, dan algoritma CPU Round Robin dengan linimasa Gantt Chart interaktif.</p>
+        </div>
+      </div>
+
+      <div class="simulator-wrap">
+        <div class="sim-title">⚙️ SIMULATOR 1: SIKLUS HIDUP 5-STATE</div>
+        <div class="sim-subtitle">Amati pergerakan kartu proses antar state secara visual dan real-time</div>
+
+        <!-- Step info -->
+        <div class="sim-step-info" id="sim-step-info">
+          <div class="step-num">SIMULATOR</div>
+          <div class="step-text">Klik ▶ MULAI untuk memulai simulasi manajemen proses.</div>
+        </div>
+
+        <!-- Zones -->
+        <div class="sim-zones">
+          <div class="sim-zone new-zone" id="simzone-new">
+            <div class="sim-zone-label">NEW</div>
+          </div>
+          <div class="sim-zone ready-zone" id="simzone-ready">
+            <div class="sim-zone-label">READY</div>
+          </div>
+          <div class="sim-zone running-zone" id="simzone-running">
+            <div class="sim-zone-label">RUNNING</div>
+            <div class="cpu-indicator mt-4"><div class="cpu-dot"></div> CPU</div>
+          </div>
+          <div class="sim-zone waiting-zone" id="simzone-waiting">
+            <div class="sim-zone-label">WAITING</div>
+          </div>
+          <div class="sim-zone terminated-zone" id="simzone-terminated">
+            <div class="sim-zone-label">TERMINATED</div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="sim-controls">
+          <button class="sim-btn primary" id="sim-btn-start">▶ Mulai Simulasi</button>
+          <button class="sim-btn secondary" id="sim-btn-pause">⏸ Pause / Resume</button>
+          <button class="sim-btn success" id="sim-btn-next">⏭ Next Step</button>
+          <button class="sim-btn danger" id="sim-btn-reset">↺ Reset</button>
+        </div>
+      </div>
+
+      <!-- Step-by-step explanation -->
+      <div class="card mt-24">
+        <div class="card-title">📋 Penjelasan Tahap Transisi State</div>
+        <div class="mt-16" style="display:flex; flex-direction:column; gap:10px;">
+          <div class="obj-item" style="padding:12px 16px;">
+            <div class="obj-num">1</div>
+            <div class="obj-text"><strong>NEW → READY:</strong> Proses baru dibuat oleh OS dan dimasukkan ke antrean Ready Queue.</div>
+          </div>
+          <div class="obj-item" style="padding:12px 16px;">
+            <div class="obj-num">2</div>
+            <div class="obj-text"><strong>READY → RUNNING:</strong> CPU Scheduler mengalokasikan giliran CPU kepada proses terdepan.</div>
+          </div>
+          <div class="obj-item" style="padding:12px 16px;">
+            <div class="obj-num">3</div>
+            <div class="obj-text"><strong>RUNNING → WAITING:</strong> Proses memanggil System Call I/O dan diblokir sementara sampai data siap.</div>
+          </div>
+          <div class="obj-item" style="padding:12px 16px;">
+            <div class="obj-num">4</div>
+            <div class="obj-text"><strong>WAITING → READY:</strong> Operasi I/O selesai via Interrupt hardware, proses kembali siap diantrekan.</div>
+          </div>
+          <div class="obj-item" style="padding:12px 16px;">
+            <div class="obj-num">5</div>
+            <div class="obj-text"><strong>RUNNING → TERMINATED:</strong> Proses selesai mengeksekusi instruksi terakhir dan memorinya dibersihkan.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SIMULATOR 2: CPU SCHEDULER (ROUND ROBIN) ══ -->
+      <div class="sched-wrap mt-32">
+        <div class="sched-header">
+          <div>
+            <h3>⏱️ SIMULATOR 2: CPU Scheduler (Round Robin &amp; Gantt Chart)</h3>
+            <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">
+              Saksikan bagaimana CPU membagi waktu (Time Slice/Quantum) antar banyak proses yang bersaing di Ready Queue.
+            </p>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <label style="font-size:11px; font-weight:700; color:var(--text-muted);">QUANTUM:</label>
+            <select id="sched-quantum-select" style="background:var(--bg-card); color:var(--blue-400); border:1px solid var(--border); border-radius:6px; padding:4px 10px; font-weight:700; font-family:'JetBrains Mono',monospace;">
+              <option value="2">q = 2s (Standar)</option>
+              <option value="3">q = 3s (Sedang)</option>
+              <option value="1">q = 1s (Cepat)</option>
+              <option value="4">q = 4s (Panjang)</option>
+            </select>
+            <span class="sched-algo">Round Robin</span>
+          </div>
+        </div>
+
+        <!-- CPU Core Box -->
+        <div class="sched-cpu-box" id="sched-cpu-box">
+          <div class="sched-cpu-label">⚡ CPU CORE 1 (RUNNING PROCESS)</div>
+          <div class="sched-cpu-running" id="sched-cpu-running">
+            <span class="sched-cpu-idle">CPU sedang Idle. Klik ▶ Mulai Scheduler untuk eksekusi.</span>
+          </div>
+          <div class="sched-timebar-wrap mt-16">
+            <div class="sched-timebar-label">
+              <span>Time Slice Quantum Terpakai</span>
+              <span id="sched-quantum-text">0 / 2 detik</span>
+            </div>
+            <div class="sched-timebar-track">
+              <div class="sched-timebar-fill" id="sched-quantum-bar" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ready Queue Visual -->
+        <div class="sched-queue-label">📥 Ready Queue (Antrean Proses Menunggu Giliran CPU)</div>
+        <div class="sched-queue" id="sched-queue">
+          <!-- Dynamic queue chips -->
+        </div>
+
+        <!-- Gantt Chart Timeline -->
+        <div class="gantt-wrap">
+          <div class="gantt-label">📊 Gantt Chart Linimasa Eksekusi CPU (Animasi Real-Time)</div>
+          <div class="gantt-track" id="gantt-track">
+            <div class="gantt-block idle" data-tip="CPU Idle">Siap...</div>
+          </div>
+          <div class="gantt-time" id="gantt-time">
+            <span class="gantt-tick">0s</span>
+          </div>
+        </div>
+
+        <!-- Sched Controls -->
+        <div class="sim-controls mt-20">
+          <button class="sim-btn primary" id="btn-sched-start">▶ Mulai Scheduler</button>
+          <button class="sim-btn secondary" id="btn-sched-pause">⏸ Pause</button>
+          <button class="sim-btn success" id="btn-sched-step">⏭ Step 1 Detik</button>
+          <button class="sim-btn danger" id="btn-sched-reset">↺ Reset Scheduler</button>
+        </div>
+      </div>
+
+      <div class="mt-32">
+        <button class="btn btn-primary" onclick="showSection('context-switch')">Context Switch →</button>
+      </div>
+    </section>
+
+    <!-- ─── CONTEXT SWITCH ─── -->
+    <section class="section" id="section-context-switch">
+      <div class="hdr-ctx">
+        <div class="hdr-ctx-proc">
+          <div class="hcp-icon">📄</div>
+          <div class="hcp-name">Proses P1 (Word)</div>
+          <span class="tag red mt-8">Simpan PCB 1</span>
+        </div>
+        <div class="hdr-ctx-mid">
+          <div class="hcm-icon">⇄</div>
+          <div class="hcm-label">KERNEL OVERHEAD</div>
+        </div>
+        <div class="hdr-ctx-proc">
+          <div class="hcp-icon">🌐</div>
+          <div class="hcp-name">Proses P2 (Chrome)</div>
+          <span class="tag green mt-8">Muat PCB 2</span>
+        </div>
+      </div>
+      <div class="hdr-ctx-info mb-24">
+        <div class="hci-label">Mekanisme Pergantian Proses</div>
+        <h2 style="font-size:28px; font-weight:800; margin-bottom:8px;">Context Switch</h2>
+        <p style="font-size:14px; color:var(--text-secondary); line-height:1.7;">Mekanisme ketika sistem operasi berpindah dari menjalankan satu proses ke proses lainnya dengan menyimpan kondisi proses aktif ke PCB dan memulihkan PCB proses berikutnya.</p>
+      </div>
+
+      <div class="card mb-24">
+        <div class="card-icon">💡</div>
+        <div class="card-title">Apa itu Context Switch?</div>
+        <div class="card-desc" style="font-size:15px; line-height:1.8;">
+          Context Switch adalah mekanisme ketika sistem operasi <strong>berpindah dari menjalankan satu proses ke proses lainnya</strong>
+          dengan cara <strong>menyimpan</strong> kondisi proses yang sedang berjalan ke PCB-nya, lalu
+          <strong>memulihkan</strong> kondisi proses berikutnya dari PCB-nya.
+        </div>
+      </div>
+
+      <!-- Visual -->
+      <div class="ctx-wrap">
+        <div class="ctx-process active" id="ctx-chrome">
+          <div class="cp-icon">🌐</div>
+          <div class="cp-name">Chrome</div>
+          <div class="cp-status">Running → Paused</div>
+        </div>
+        <div class="ctx-middle">
+          <div class="ctx-arrow">↓</div>
+          <div class="ctx-switch-box">CONTEXT<br/>SWITCH</div>
+          <div class="ctx-arrow">↓</div>
+        </div>
+        <div class="ctx-process" id="ctx-word">
+          <div class="cp-icon">📝</div>
+          <div class="cp-name">Word</div>
+          <div class="cp-status">Paused → Running</div>
+        </div>
+      </div>
+
+      <!-- Steps -->
+      <div class="ctx-steps">
+        <div class="ctx-step">
+          <div class="cs-num">1</div>
+          <span>CPU sedang menjalankan Chrome</span>
+        </div>
+        <div class="ctx-step">
+          <div class="cs-num">2</div>
+          <span>OS menyimpan kondisi Chrome ke PCB-nya (register, program counter, dll)</span>
+        </div>
+        <div class="ctx-step">
+          <div class="cs-num">3</div>
+          <span>⚡ Context Switch — CPU berpindah proses</span>
+        </div>
+        <div class="ctx-step">
+          <div class="cs-num">4</div>
+          <span>OS memuat kondisi Word dari PCB-nya</span>
+        </div>
+        <div class="ctx-step">
+          <div class="cs-num">5</div>
+          <span>CPU mulai menjalankan Word dari titik terakhir</span>
+        </div>
+      </div>
+
+      <div class="sim-controls mt-20">
+        <button class="sim-btn primary" id="ctx-btn-start">▶ Animasikan Context Switch</button>
+        <button class="sim-btn danger" id="ctx-btn-reset">↺ Reset</button>
+      </div>
+
+      <div class="mt-32">
+        <button class="btn btn-primary" onclick="showSection('pcb')">Pelajari PCB →</button>
+      </div>
+    </section>
+
+    <!-- ─── PCB ─── -->
+    <section class="section" id="section-pcb">
+      <div class="hdr-pcb">
+        <div class="hdr-pcb-card">
+          <div class="pcb-line-green">[PCB STRUCTURE]</div>
+          <div class="pcb-line-blue">PID: 1042 (Word.exe)</div>
+          <div class="pcb-line-yellow">PC: 0x7FFF82A0</div>
+          <div class="pcb-line-purple">State: RUNNING</div>
+          <div class="pcb-line-muted">Registers: EAX, EBX, SP</div>
+        </div>
+        <div class="hdr-pcb-content">
+          <div class="hpb-label">Identitas &amp; Pengendali Kernel</div>
+          <h2>Process Control Block (PCB)</h2>
+          <p>KTP atau kartu identitas digital proses di Kernel. Menyimpan informasi vital seperti Program Counter, Register CPU, Limit Memori, dan daftar file I/O yang dibuka.</p>
+        </div>
+      </div>
+
+      <div class="card mb-24">
+        <div class="card-icon">📋</div>
+        <div class="card-title">Apa itu PCB?</div>
+        <div class="card-desc" style="font-size:15px; line-height:1.8;">
+          PCB (Process Control Block) adalah <strong>struktur data di kernel</strong> yang menyimpan semua informasi
+          yang diperlukan OS untuk mengelola suatu proses. Setiap proses memiliki PCB-nya sendiri.
+        </div>
+      </div>
+
+      <div class="card-grid card-grid-2" style="align-items:start;">
+        <!-- PCB Card -->
+        <div class="pcb-card" id="pcb-card">
+          <div class="pcb-header">
+            <h3>PROCESS CONTROL BLOCK</h3>
+          </div>
+          <div class="pcb-body">
+            <div class="pcb-row">
+              <div class="pcb-key">PID</div>
+              <div class="pcb-val mono">1024</div>
+            </div>
+            <div class="pcb-row">
+              <div class="pcb-key">Process Name</div>
+              <div class="pcb-val">Microsoft Word</div>
+            </div>
+            <div class="pcb-row" style="cursor:pointer;" title="Klik untuk siklus state">
+              <div class="pcb-key">State</div>
+              <div class="pcb-val running" id="pcb-state-val">RUNNING</div>
+            </div>
+            <div class="pcb-row">
+              <div class="pcb-key">Program Counter</div>
+              <div class="pcb-val mono" id="pcb-pc-val">0x004A12</div>
+            </div>
+            <div class="pcb-row">
+              <div class="pcb-key">CPU Registers</div>
+              <div class="pcb-val">Active</div>
+            </div>
+            <div class="pcb-row">
+              <div class="pcb-key">Memory (RAM)</div>
+              <div class="pcb-val mono">350 MB</div>
+            </div>
+            <div class="pcb-row">
+              <div class="pcb-key">I/O Status</div>
+              <div class="pcb-val" id="pcb-io-val">Ready</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div class="card blue">
+            <div class="card-icon">🔢</div>
+            <div class="card-title">PID</div>
+            <div class="card-desc">Process Identifier — nomor unik yang diberikan OS kepada setiap proses.</div>
+          </div>
+          <div class="card green">
+            <div class="card-icon">🔄</div>
+            <div class="card-title">State</div>
+            <div class="card-desc">Kondisi proses saat ini: NEW, READY, RUNNING, WAITING, atau TERMINATED.</div>
+          </div>
+          <div class="card purple">
+            <div class="card-icon">📍</div>
+            <div class="card-title">Program Counter</div>
+            <div class="card-desc">Alamat instruksi berikutnya yang akan dieksekusi oleh CPU.</div>
+          </div>
+          <div class="card cyan">
+            <div class="card-icon">💾</div>
+            <div class="card-title">Memory Info</div>
+            <div class="card-desc">Informasi alokasi RAM yang digunakan oleh proses ini.</div>
+          </div>
+          <button class="btn btn-outline" id="pcb-cycle">🔄 Siklus State PCB</button>
+        </div>
+      </div>
+
+      <div class="mt-32">
+        <button class="btn btn-primary" onclick="showSection('cpu-ram')">CPU &amp; RAM →</button>
+      </div>
+    </section>
+
+    <!-- ─── CPU & RAM ─── -->
+    <section class="section" id="section-cpu-ram">
+      <div class="hdr-stats">
+        <div class="hdr-stat-box">
+          <div class="hsb-label">CPU LOAD</div>
+          <div class="hsb-val text-blue" id="hdr-cpu-val">42%</div>
+          <div class="hsb-sub">Multi-Core Active</div>
+        </div>
+        <div class="hdr-stat-box">
+          <div class="hsb-label">RAM USAGE</div>
+          <div class="hsb-val text-purple" id="hdr-ram-val">4.8 GB</div>
+          <div class="hsb-sub">Total 8.0 GB</div>
+        </div>
+        <div class="hdr-stats-content">
+          <div class="hsc-label">Integrasi Sumber Daya</div>
+          <h2>Hubungan Process, CPU, RAM &amp; Kernel</h2>
+          <p>CPU mengeksekusi instruksi per siklus clock, RAM menampung data dan kode aktif secara volatile, dan Kernel mengoordinasikan alokasi via interrupt.</p>
+        </div>
+      </div>
+
+      <!-- Relationship diagram -->
+      <div class="card mb-24">
+        <div class="flow-diagram">
+          <div class="flow-node blue">⚙️ PROCESS</div>
+          <div style="display:flex; gap:40px; margin:8px 0;">
+            <div style="display:flex; flex-direction:column; align-items:center;">
+              <div class="flow-arrow">↓</div>
+              <div class="flow-node cyan" style="min-width:120px;">🖥️ CPU<br/><small style="font-weight:400;font-size:11px;">Menjalankan instruksi</small></div>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center;">
+              <div class="flow-arrow">↓</div>
+              <div class="flow-node purple" style="min-width:120px;">💾 RAM<br/><small style="font-weight:400;font-size:11px;">Menyimpan data aktif</small></div>
+            </div>
+          </div>
+          <div class="flow-arrow">↑ ↑</div>
+          <div class="flow-node green">⚙️ KERNEL — Mengelola semuanya</div>
+        </div>
+      </div>
+
+      <!-- Resource bars -->
+      <div class="resource-list">
+        <div class="resource-item">
+          <div class="resource-header">
+            <div class="resource-name"><span class="resource-icon">🌐</span> Chrome</div>
+            <div class="resource-stats">
+              <div class="resource-stat">
+                <div class="rs-label">CPU</div>
+                <div class="rs-val cpu-val" id="pct-cpu-chrome">20%</div>
+              </div>
+              <div class="resource-stat">
+                <div class="rs-label">RAM</div>
+                <div class="rs-val ram-val" id="pct-ram-chrome">500 MB</div>
+              </div>
+            </div>
+          </div>
+          <div class="multi-bar">
+            <div class="bar-row">
+              <div class="bar-label">CPU</div>
+              <div class="bar-track"><div class="bar-fill blue" id="bar-cpu-chrome" style="width:20%"></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label">RAM</div>
+              <div class="bar-track"><div class="bar-fill purple" id="bar-ram-chrome" style="width:6.25%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="resource-item">
+          <div class="resource-header">
+            <div class="resource-name"><span class="resource-icon">📝</span> Microsoft Word</div>
+            <div class="resource-stats">
+              <div class="resource-stat">
+                <div class="rs-label">CPU</div>
+                <div class="rs-val cpu-val" id="pct-cpu-word">10%</div>
+              </div>
+              <div class="resource-stat">
+                <div class="rs-label">RAM</div>
+                <div class="rs-val ram-val" id="pct-ram-word">350 MB</div>
+              </div>
+            </div>
+          </div>
+          <div class="multi-bar">
+            <div class="bar-row">
+              <div class="bar-label">CPU</div>
+              <div class="bar-track"><div class="bar-fill blue" id="bar-cpu-word" style="width:10%"></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label">RAM</div>
+              <div class="bar-track"><div class="bar-fill purple" id="bar-ram-word" style="width:4.375%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="resource-item">
+          <div class="resource-header">
+            <div class="resource-name"><span class="resource-icon">💻</span> VS Code</div>
+            <div class="resource-stats">
+              <div class="resource-stat">
+                <div class="rs-label">CPU</div>
+                <div class="rs-val cpu-val" id="pct-cpu-vscode">15%</div>
+              </div>
+              <div class="resource-stat">
+                <div class="rs-label">RAM</div>
+                <div class="rs-val ram-val" id="pct-ram-vscode">700 MB</div>
+              </div>
+            </div>
+          </div>
+          <div class="multi-bar">
+            <div class="bar-row">
+              <div class="bar-label">CPU</div>
+              <div class="bar-track"><div class="bar-fill blue" id="bar-cpu-vscode" style="width:15%"></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label">RAM</div>
+              <div class="bar-track"><div class="bar-fill purple" id="bar-ram-vscode" style="width:8.75%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider"/>
+
+      <!-- RAM Analysis Quiz -->
+      <!-- ══ RAM MEMORY MAP SIMULATOR ══ -->
+      <div class="memmap-wrap">
+        <div class="memmap-title">🗺️ Simulator Peta Memori RAM (Dynamic Memory Allocation &amp; Paging)</div>
+        <div class="memmap-grid">
+          <div class="memmap-bar-col">
+            <div class="memmap-bar-label">Alokasi Fisik Blok RAM (0x0000 - 0xFFFF)</div>
+            <div class="memmap-bar" id="memmap-bar">
+              <!-- Dynamically populated via script.js -->
+            </div>
+          </div>
+
+          <div class="memmap-legend">
+            <div style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:4px;">Legenda Partisi RAM</div>
+            <div class="memmap-legend-item"><span class="ml-dot" style="background:var(--yellow-400);"></span><span>Kernel Space (OS Protected)</span></div>
+            <div class="memmap-legend-item"><span class="ml-dot" style="background:var(--orange-400);"></span><span>Google Chrome (Browser)</span></div>
+            <div class="memmap-legend-item"><span class="ml-dot" style="background:var(--blue-400);"></span><span>Microsoft Word (Office)</span></div>
+            <div class="memmap-legend-item"><span class="ml-dot" style="background:var(--cyan-400);"></span><span>VS Code (IDE)</span></div>
+            <div class="memmap-legend-item"><span class="ml-dot" style="background:var(--purple-400);"></span><span>Windows Explorer (Shell)</span></div>
+            <div class="memmap-legend-item"><span class="ml-dot" style="border:1px dashed var(--border); background:rgba(255,255,255,0.05);"></span><span>Free Available RAM</span></div>
+
+            <div class="memmap-usage">
+              <div class="mu-title">Metrik RAM Real-Time</div>
+              <div class="mu-row"><span class="mu-label">Total Kapasitas:</span><span class="mu-val">8,192 MB</span></div>
+              <div class="mu-row"><span class="mu-label">Terpakai (Used):</span><span class="mu-val" id="mem-used-val">4,850 MB</span></div>
+              <div class="mu-row"><span class="mu-label">Tersedia (Free):</span><span class="mu-val text-green" id="mem-free-val">3,342 MB</span></div>
+              <div class="mu-row"><span class="mu-label">Utilisasi:</span><span class="mu-val text-yellow" id="mem-util-val">59.2%</span></div>
+            </div>
+
+            <!-- Dynamic Actions -->
+            <div style="display:flex; flex-direction:column; gap:8px; margin-top:14px;">
+              <button class="btn btn-primary" id="btn-mem-launch" style="padding:9px 14px; font-size:11px;">➕ Luncurkan Proses Baru</button>
+              <button class="btn btn-secondary" id="btn-mem-kill" style="padding:9px 14px; font-size:11px;">❌ Hentikan Proses Terbesar</button>
+              <button class="btn btn-outline" id="btn-mem-defrag" style="padding:9px 14px; font-size:11px;">🧹 Kompaksi / Defrag RAM</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-24">
+        <div class="section-badge" style="margin-bottom:16px;">🧠 Analisis</div>
+        <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap; margin-bottom:20px;">
+          <div class="card blue" style="padding:16px 24px; text-align:center;">
+            <div style="font-size:12px; color:var(--text-muted);">CPU</div>
+            <div style="font-size:32px; font-weight:900; color:var(--blue-400);">35%</div>
+          </div>
+          <div class="card red" style="padding:16px 24px; text-align:center;">
+            <div style="font-size:12px; color:var(--text-muted);">RAM</div>
+            <div style="font-size:32px; font-weight:900; color:var(--red-400);">97%</div>
+          </div>
+          <div style="flex:1; min-width:220px;">
+            <div style="font-size:16px; font-weight:700; margin-bottom:8px;">
+              Laptop mengalami penurunan kinerja. Apa yang perlu dianalisis?
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button class="game-opt quiz-ram-opt" data-answer="A">
+            <span class="opt-letter">A</span> RAM sedang hampir penuh
+          </button>
+          <button class="game-opt quiz-ram-opt" data-answer="B">
+            <span class="opt-letter">B</span> CPU pasti rusak
+          </button>
+          <button class="game-opt quiz-ram-opt" data-answer="C">
+            <span class="opt-letter">C</span> Keyboard rusak
+          </button>
+          <button class="game-opt quiz-ram-opt" data-answer="D">
+            <span class="opt-letter">D</span> Monitor rusak
+          </button>
+        </div>
+        <div class="game-feedback" id="ram-quiz-feedback"></div>
+      </div>
+
+      <div class="mt-32">
+        <button class="btn btn-primary" onclick="showSection('thread')">Process &amp; Thread →</button>
+      </div>
+    </section>
+
+    <!-- ─── THREAD ─── -->
+    <section class="section" id="section-thread">
+      <div class="hdr-tree">
+        <div class="hdr-tree-viz">
+          <div class="tv-proc">📦 Process (PID 1024)</div>
+          <div class="tv-line">├── 🧵 Thread 1 (UI Render)</div>
+          <div class="tv-line">├── 🧵 Thread 2 (Network Fetch)</div>
+          <div class="tv-line">└── 🧵 Thread 3 (Auto-Save Disk)</div>
+        </div>
+        <div class="hdr-tree-content">
+          <div class="htc-label">Concurrency &amp; Multithreading</div>
+          <h2>Process &amp; Thread</h2>
+          <p>Proses memiliki ruang alamat memori independen yang terisolasi, sedangkan thread adalah unit eksekusi ringan (Lightweight Process) yang berbagi memori heap dan data di dalam proses yang sama.</p>
+        </div>
+      </div>
+
+      <div class="card-grid card-grid-2 mb-24">
+        <div class="card blue">
+          <div class="card-icon">⚙️</div>
+          <div class="card-title">Process</div>
+          <div class="card-desc">Program yang sedang berjalan dengan sumber daya yang dikelola OS secara independen. Setiap proses memiliki memori terpisah.</div>
+        </div>
+        <div class="card purple">
+          <div class="card-icon">🧵</div>
+          <div class="card-title">Thread</div>
+          <div class="card-desc">Unit eksekusi di dalam proses. Berbagi memori yang sama dengan thread lain dalam satu proses.</div>
+        </div>
+      </div>
+
+      <!-- Thread visualization -->
+      <div class="thread-viz">
+        <div class="thread-process-box">
+          <div class="tp-title">🌐 Chrome [PID: 2048]</div>
+          <div class="tp-sub">Process — memiliki memori dan sumber daya sendiri</div>
+        </div>
+        <div style="text-align:center; color:var(--text-muted); margin-bottom:8px;">↓ Thread di dalam process:</div>
+        <div class="thread-row">
+          <div class="thread-box">
+            <div class="tb-icon">🖥️</div>
+            Thread 1<br/>
+            <small style="font-weight:400;color:var(--text-muted);">Render UI</small>
+          </div>
+          <div class="thread-box">
+            <div class="tb-icon">📡</div>
+            Thread 2<br/>
+            <small style="font-weight:400;color:var(--text-muted);">Network I/O</small>
+          </div>
+          <div class="thread-box">
+            <div class="tb-icon">📌</div>
+            Thread 3<br/>
+            <small style="font-weight:400;color:var(--text-muted);">Extensions</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparison table -->
+      <table class="styled mt-24">
+        <thead>
+          <tr>
+            <th>Aspek</th>
+            <th>Process</th>
+            <th>Thread</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Definisi</td><td>Program yang sedang berjalan</td><td>Unit eksekusi dalam proses</td></tr>
+          <tr><td>Memori</td><td>Memori terpisah per proses</td><td>Berbagi memori proses</td></tr>
+          <tr><td>Overhead</td><td>Lebih besar</td><td>Lebih kecil</td></tr>
+          <tr><td>Komunikasi</td><td>IPC (Inter-Process Communication)</td><td>Langsung via memori bersama</td></tr>
+          <tr><td>Contoh</td><td>Chrome, Word, VS Code</td><td>Tab-tab dalam Chrome</td></tr>
+        </tbody>
+      </table>
+
+      <!-- ══ SIMULASI INTERAKTIF: SINGLE-THREAD VS MULTI-THREAD RACE ══ -->
+      <div class="thread-race-wrap">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div>
+            <h3 style="font-size:16px; font-weight:800; color:var(--purple-400);">🏎️ Simulasi Konkurensi: Single-Thread vs Multi-Thread</h3>
+            <p style="font-size:12px; color:var(--text-secondary); margin-top:4px;">
+              Bandingkan bagaimana aplikasi single-thread membeku (UI freeze) saat memproses data, sementara multi-thread tetap responsif.
+            </p>
+          </div>
+          <button class="btn btn-primary" id="btn-run-thread-race" style="font-size:11px; padding:8px 16px;">
+            ▶ Jalankan Uji Balapan
+          </button>
+        </div>
+
+        <div class="thread-race-grid">
+          <!-- App 1: Single Thread -->
+          <div class="thread-app-card" id="card-single-thread">
+            <span class="app-status-badge smooth" id="badge-st">Siap</span>
+            <div style="font-size:14px; font-weight:800;">Aplikasi A (Single Thread)</div>
+            <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">1 Main Thread menangani UI + Download + Render</div>
+
+            <div class="thread-bar-group">
+              <div class="tbg-row">
+                <div class="tbg-label"><span>Thread Utama (Eksekusi Sekuensial)</span><span id="st-pct">0%</span></div>
+                <div class="tbg-track"><div class="tbg-fill blue" id="st-bar"></div></div>
+              </div>
+            </div>
+
+            <div style="margin-top:12px;">
+              <button class="interactive-test-btn" id="btn-test-st-click">👆 Klik Tombol UI (Tes Freeze)</button>
+              <div id="st-click-msg" style="font-size:10px; color:var(--text-muted); margin-top:6px; text-align:center;">
+                Coba klik saat simulasi berjalan: Jika membeku, tombol tidak merespons!
+              </div>
+            </div>
+          </div>
+
+          <!-- App 2: Multi Thread -->
+          <div class="thread-app-card" id="card-multi-thread">
+            <span class="app-status-badge smooth" id="badge-mt">Siap</span>
+            <div style="font-size:14px; font-weight:800;">Aplikasi B (Multi-Threaded)</div>
+            <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">UI Thread terpisah dari Background Worker</div>
+
+            <div class="thread-bar-group">
+              <div class="tbg-row">
+                <div class="tbg-label"><span>Thread 1: UI Event Loop</span><span class="text-green">60 FPS Aktif</span></div>
+                <div class="tbg-track"><div class="tbg-fill green" style="width:100%"></div></div>
+              </div>
+              <div class="tbg-row">
+                <div class="tbg-label"><span>Thread 2: Network Fetching</span><span id="mt-net-pct">0%</span></div>
+                <div class="tbg-track"><div class="tbg-fill blue" id="mt-net-bar"></div></div>
+              </div>
+              <div class="tbg-row">
+                <div class="tbg-label"><span>Thread 3: File Processing</span><span id="mt-file-pct">0%</span></div>
+                <div class="tbg-track"><div class="tbg-fill purple" id="mt-file-bar"></div></div>
+              </div>
+            </div>
+
+            <div style="margin-top:12px;">
+              <button class="interactive-test-btn" id="btn-test-mt-click">👆 Klik Tombol UI (Tes Responsif)</button>
+              <div id="mt-click-msg" style="font-size:10px; color:var(--green-400); margin-top:6px; text-align:center;">
+                UI tetap instan dan lancar meskipun background threads bekerja 100%!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-32">
+        <button class="btn btn-primary" onclick="showSection('studi-kasus')">Studi Kasus →</button>
+      </div>
+    </section>
+
+    <!-- ─── STUDI KASUS ─── -->
+    <section class="section" id="section-studi-kasus">
+      <div class="hdr-case">
+        <div class="hc-label">🔍 Analisis Kasus Nyata</div>
+        <h2>Studi Kasus: Sistem Komputer Lemot &amp; Not Responding</h2>
+        <p>Investigasi akar masalah teknis saat laptop mengalami bottleneck resource ketika membuka Chrome, Word, dan VS Code secara bersamaan.</p>
+      </div>
+
+      <div class="case-scenario">
+        <p>
+          <strong>🎓 Skenario:</strong> Seorang mahasiswa membuka
+          <strong>Chrome</strong>, <strong>Microsoft Word</strong>, dan <strong>Visual Studio Code</strong>
+          secara bersamaan di laptopnya.
+        </p>
+      </div>
+
+      <div class="case-proc-row">
+        <div class="case-proc-item">
+          <div class="cpi-icon">🌐</div>
+          <div class="cpi-name">Chrome</div>
+          <div class="cpi-badge">Process</div>
+        </div>
+        <div class="case-proc-item">
+          <div class="cpi-icon">📝</div>
+          <div class="cpi-name">Word</div>
+          <div class="cpi-badge">Process</div>
+        </div>
+        <div class="case-proc-item">
+          <div class="cpi-icon">💻</div>
+          <div class="cpi-name">VS Code</div>
+          <div class="cpi-badge">Process</div>
+        </div>
+      </div>
+
+      <div class="card mb-24">
+        <div class="card-title">❓ Pertanyaan Analisis</div>
+        <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
+          <div class="analisis-item"><div class="analisis-num">1.</div> Apakah ketiganya merupakan process?</div>
+          <div class="analisis-item"><div class="analisis-num">2.</div> Mengapa ketiganya membutuhkan CPU?</div>
+          <div class="analisis-item"><div class="analisis-num">3.</div> Mengapa ketiganya membutuhkan RAM?</div>
+          <div class="analisis-item"><div class="analisis-num">4.</div> Siapa yang mengelola penggunaan CPU dan RAM?</div>
+          <div class="analisis-item"><div class="analisis-num">5.</div> Apa yang terjadi jika terlalu banyak proses berjalan?</div>
+        </div>
+      </div>
+
+      <button class="btn btn-outline mb-24" id="btn-lihat-pembahasan">💬 Lihat Pembahasan</button>
+
+      <div class="pembahasan-wrap" id="pembahasan-wrap">
+        <div class="card">
+          <div class="card-title">✅ Pembahasan</div>
+          <div class="pembahasan-item">
+            <div>
+              <div class="pb-q">1. Apakah ketiganya merupakan process?</div>
+              <div class="pb-a">Ya. Setiap aplikasi yang sedang berjalan adalah sebuah process. OS akan membuat PCB unik untuk Chrome, Word, dan VS Code masing-masing.</div>
+            </div>
+          </div>
+          <div class="pembahasan-item">
+            <div>
+              <div class="pb-q">2. Mengapa ketiganya membutuhkan CPU?</div>
+              <div class="pb-a">CPU diperlukan untuk mengeksekusi instruksi program. Tanpa CPU, tidak ada kode yang bisa dijalankan. OS mengatur giliran (scheduling) penggunaan CPU antar proses.</div>
+            </div>
+          </div>
+          <div class="pembahasan-item">
+            <div>
+              <div class="pb-q">3. Mengapa ketiganya membutuhkan RAM?</div>
+              <div class="pb-a">RAM menyimpan data dan instruksi yang sedang aktif digunakan oleh proses. Semakin banyak proses berjalan, semakin banyak RAM yang digunakan.</div>
+            </div>
+          </div>
+          <div class="pembahasan-item">
+            <div>
+              <div class="pb-q">4. Siapa yang mengelola CPU dan RAM?</div>
+              <div class="pb-a"><strong>Kernel</strong> (inti OS) bertugas mengatur alokasi CPU (process scheduling) dan RAM (memory management) untuk seluruh proses yang berjalan.</div>
+            </div>
+          </div>
+          <div class="pembahasan-item">
+            <div>
+              <div class="pb-q">5. Terlalu banyak proses?</div>
+              <div class="pb-a">Kinerja turun drastis karena: RAM bisa penuh (swapping ke disk), CPU harus berbagi ke banyak proses (context switch berlebihan), dan sistem menjadi lambat atau hang.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Final Simulation -->
+      <div class="card mt-24">
+        <div class="sim-title">🖥️ SIMULASIKAN: Membuka Microsoft Word</div>
+        <div class="sim-subtitle">Klik tombol untuk melihat animasi lengkap lifecycle sebuah proses</div>
+
+        <div class="final-sim-wrap">
+          <div id="final-sim-container"></div>
+          <div style="text-align:center; margin-top:20px;">
+            <button class="btn btn-primary" id="final-sim-btn">▶ Simulasikan Membuka Word</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-32">
+        <button class="btn btn-primary" onclick="showSection('mini-game')">Mini Game →</button>
+      </div>
+    </section>
+
+    <!-- ─── MINI GAME ─── -->
+    <section class="section" id="section-mini-game">
+      <div class="hdr-minigame">
+        <div class="hdr-mg-score">🕵️‍♂️</div>
+        <div class="hdr-mg-content">
+          <div class="hmc-label">Uji Ketelitian &amp; Analisis</div>
+          <h2>Process Detective: Pecahkan Kasus Sistem!</h2>
+          <p>Identifikasi perilaku proses pada skenario sistem operasi nyata. Dapatkan skor sempurna dan buktikan pemahaman konsep Anda!</p>
+          <div class="hdr-mg-rules">
+            <span class="hdr-mg-rule">🎯 9 Skenario Nyata</span>
+            <span class="hdr-mg-rule">⚡ Skor Real-Time</span>
+            <span class="hdr-mg-rule">💡 Penjelasan Teknis Tiap Kasus</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-wrap">
+        <!-- Progress dots -->
+        <div class="game-progress-bar">
+          <div class="gp-dot" id="gdot-0"></div>
+          <div class="gp-dot" id="gdot-1"></div>
+          <div class="gp-dot" id="gdot-2"></div>
+          <div class="gp-dot" id="gdot-3"></div>
+          <div class="gp-dot" id="gdot-4"></div>
+          <div class="gp-dot" id="gdot-5"></div>
+          <div class="gp-dot" id="gdot-6"></div>
+          <div class="gp-dot" id="gdot-7"></div>
+          <div class="gp-dot" id="gdot-8"></div>
+        </div>
+
+        <!-- Belum mulai -->
+        <div class="game-card" style="text-align:center; padding:48px;" id="game-intro">
+          <div style="font-size:64px; margin-bottom:16px;">🔍</div>
+          <h3 style="font-size:22px; margin-bottom:12px;">Process Detective</h3>
+          <p style="color:var(--text-muted); margin-bottom:28px;">9 soal tentang Process State, PCB, CPU, RAM, dan Context Switch. Jawab setiap soal dengan benar!</p>
+          <button class="btn btn-primary" id="game-start-btn">🎮 Mulai Game</button>
+        </div>
+
+        <!-- Game container -->
+        <div id="game-container" style="display:none;"></div>
+
+        <!-- Score box -->
+        <div id="game-score-box" style="display:none;">
+          <div class="game-card game-score-box">
+            <div style="font-size:48px; margin-bottom:12px;">🏆</div>
+            <div class="score-circle">
+              <div class="sc-num">0</div>
+              <div class="sc-total">/9</div>
+            </div>
+            <div class="score-grade" style="margin-top:16px;">Hasil</div>
+            <div style="margin-top:20px;">
+              <button class="btn btn-primary" id="game-restart-btn">🔄 Main Lagi</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-32">
+        <button class="btn btn-primary" onclick="showSection('latihan')">Latihan Cepat →</button>
+      </div>
+    </section>
+
+    <!-- ─── LATIHAN CEPAT ─── -->
+    <section class="section" id="section-latihan">
+      <div class="hdr-exam">
+        <div class="hdr-exam-top">
+          <div class="het-left">UJI PEMAHAMAN — PERTEMUAN 4</div>
+          <div class="het-right">FORMAT: PILIHAN GANDA INTERAKTIF</div>
+        </div>
+        <div class="hdr-exam-body">
+          <h2>Latihan Cepat &amp; Kuis Pemahaman</h2>
+          <p>Uji pemahaman Anda seputar konsep proses, perbedaan dengan program, siklus 5-state, PCB, dan multithreading dengan evaluasi nilai otomatis.</p>
+          <div class="hdr-exam-meta">
+            <span>📝 5 Soal Esensial</span>
+            <span>⭐ Nilai Maksimal 100</span>
+            <span>📊 Feedback &amp; Pembahasan Instan</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-wrap">
+        <div id="quiz-steps">
+          <!-- Q1 -->
+          <div class="quiz-step active" id="quiz-step-0">
+            <div class="quiz-step-num">Soal 1 / 5 — Program vs Process</div>
+            <div class="quiz-q">Apa perbedaan utama antara Program dan Process?</div>
+            <div class="quiz-opts">
+              <button class="quiz-opt"><span class="opt-letter">A</span>Program menggunakan CPU, Process tidak</button>
+              <button class="quiz-opt"><span class="opt-letter">B</span>Process adalah program yang sedang dieksekusi</button>
+              <button class="quiz-opt"><span class="opt-letter">C</span>Program lebih besar dari Process</button>
+              <button class="quiz-opt"><span class="opt-letter">D</span>Tidak ada perbedaan</button>
+            </div>
+            <div class="quiz-nav">
+              <button class="btn btn-primary quiz-next">Berikutnya →</button>
+            </div>
+          </div>
+
+          <!-- Q2 -->
+          <div class="quiz-step" id="quiz-step-1">
+            <div class="quiz-step-num">Soal 2 / 5 — Process State</div>
+            <div class="quiz-q">State proses ketika sedang menunggu operasi I/O selesai adalah...</div>
+            <div class="quiz-opts">
+              <button class="quiz-opt"><span class="opt-letter">A</span>NEW</button>
+              <button class="quiz-opt"><span class="opt-letter">B</span>READY</button>
+              <button class="quiz-opt"><span class="opt-letter">C</span>RUNNING</button>
+              <button class="quiz-opt"><span class="opt-letter">D</span>WAITING</button>
+            </div>
+            <div class="quiz-nav">
+              <button class="btn btn-secondary quiz-prev">← Kembali</button>
+              <button class="btn btn-primary quiz-next">Berikutnya →</button>
+            </div>
+          </div>
+
+          <!-- Q3 -->
+          <div class="quiz-step" id="quiz-step-2">
+            <div class="quiz-step-num">Soal 3 / 5 — PCB</div>
+            <div class="quiz-q">Informasi apa yang TIDAK tersimpan dalam PCB?</div>
+            <div class="quiz-opts">
+              <button class="quiz-opt"><span class="opt-letter">A</span>PID</button>
+              <button class="quiz-opt"><span class="opt-letter">B</span>State proses</button>
+              <button class="quiz-opt"><span class="opt-letter">C</span>Warna desktop</button>
+              <button class="quiz-opt"><span class="opt-letter">D</span>Program Counter</button>
+            </div>
+            <div class="quiz-nav">
+              <button class="btn btn-secondary quiz-prev">← Kembali</button>
+              <button class="btn btn-primary quiz-next">Berikutnya →</button>
+            </div>
+          </div>
+
+          <!-- Q4 -->
+          <div class="quiz-step" id="quiz-step-3">
+            <div class="quiz-step-num">Soal 4 / 5 — CPU &amp; RAM</div>
+            <div class="quiz-q">Fungsi RAM dalam manajemen proses adalah...</div>
+            <div class="quiz-opts">
+              <button class="quiz-opt"><span class="opt-letter">A</span>Menjalankan instruksi proses</button>
+              <button class="quiz-opt"><span class="opt-letter">B</span>Menyimpan data dan instruksi yang sedang digunakan</button>
+              <button class="quiz-opt"><span class="opt-letter">C</span>Mengatur jadwal proses</button>
+              <button class="quiz-opt"><span class="opt-letter">D</span>Menghentikan proses</button>
+            </div>
+            <div class="quiz-nav">
+              <button class="btn btn-secondary quiz-prev">← Kembali</button>
+              <button class="btn btn-primary quiz-next">Berikutnya →</button>
+            </div>
+          </div>
+
+          <!-- Q5 -->
+          <div class="quiz-step" id="quiz-step-4">
+            <div class="quiz-step-num">Soal 5 / 5 — Context Switch</div>
+            <div class="quiz-q">Context Switch adalah...</div>
+            <div class="quiz-opts">
+              <button class="quiz-opt"><span class="opt-letter">A</span>Mengganti tema OS</button>
+              <button class="quiz-opt"><span class="opt-letter">B</span>Perpindahan CPU dari satu proses ke proses lain dengan simpan/muat kondisi</button>
+              <button class="quiz-opt"><span class="opt-letter">C</span>Mematikan semua proses</button>
+              <button class="quiz-opt"><span class="opt-letter">D</span>Menyimpan file di disk</button>
+            </div>
+            <div class="quiz-nav">
+              <button class="btn btn-secondary quiz-prev">← Kembali</button>
+              <button class="btn btn-success quiz-next">Selesai &amp; Lihat Nilai ✓</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result area -->
+        <div id="quiz-result" style="display:none;"></div>
+      </div>
+
+      <div class="mt-32">
+        <button class="btn btn-primary" onclick="showSection('tugas')">Lihat Tugas →</button>
+      </div>
+    </section>
+
+    <!-- ─── TUGAS ─── -->
+    <section class="section" id="section-tugas">
+      <div class="hdr-tugas">
+        <div class="hdr-tugas-left">
+          <div class="htl-course">Tugas Praktikum Mandiri</div>
+          <h2>Analisis Proses Task Manager / Sistem Operasi</h2>
+          <p>Lakukan observasi proses aktual di komputer Anda (Windows Task Manager / Linux top / Mac Activity Monitor), catat PID dan utilisasi resource, lalu lengkapi template laporan.</p>
+        </div>
+        <div class="hdr-tugas-right">
+          <div class="ht-meta"><span>📁 Format:</span> <strong>Laporan Tertulis (.pdf/.docx)</strong></div>
+          <div class="ht-meta"><span>⏱️ Tenggat:</span> <strong>1 Minggu Sebelum Pertemuan 5</strong></div>
+          <div class="ht-badge">Wajib Dikumpulkan</div>
+        </div>
+      </div>
+
+      <div class="tugas-section">
+        <div class="tugas-header">
+          <h2>ANALISIS PROSES YANG BERJALAN PADA SISTEM OPERASI</h2>
+          <p>Mata Kuliah Sistem Operasi — Pertemuan 4 | Dikerjakan Secara Individu</p>
+        </div>
+
+        <div class="tugas-body">
+          <!-- Petunjuk -->
+          <div class="section-badge mb-16">📋 Petunjuk Tugas</div>
+          <div class="petunjuk-list">
+            <div class="petunjuk-item">
+              <div class="petunjuk-num">1</div>
+              <div class="petunjuk-text">Buka <strong>Task Manager</strong> pada Windows menggunakan <code style="background:var(--border);padding:2px 6px;border-radius:4px;">Ctrl + Shift + Esc</code>, atau gunakan <strong>System Monitor</strong> pada Linux.</div>
+            </div>
+            <div class="petunjuk-item">
+              <div class="petunjuk-num">2</div>
+              <div class="petunjuk-text">Amati proses-proses yang sedang berjalan pada komputer/laptop Anda.</div>
+            </div>
+            <div class="petunjuk-item">
+              <div class="petunjuk-num">3</div>
+              <div class="petunjuk-text">Pilih <strong>5 proses yang berbeda</strong> untuk diamati.</div>
+            </div>
+            <div class="petunjuk-item">
+              <div class="petunjuk-num">4</div>
+              <div class="petunjuk-text">Catat <strong>nama proses, penggunaan CPU, penggunaan RAM, dan fungsi</strong> setiap proses.</div>
+            </div>
+            <div class="petunjuk-item">
+              <div class="petunjuk-num">5</div>
+              <div class="petunjuk-text">Ambil <strong>screenshot</strong> hasil pengamatan dari Task Manager / System Monitor.</div>
+            </div>
+            <div class="petunjuk-item">
+              <div class="petunjuk-num">6</div>
+              <div class="petunjuk-text">Gunakan hasil pengamatan untuk <strong>menjawab pertanyaan analisis</strong> di bawah.</div>
+            </div>
+            <div class="petunjuk-item">
+              <div class="petunjuk-num">7</div>
+              <div class="petunjuk-text">Buat <strong>kesimpulan</strong> berdasarkan hasil pengamatan Anda.</div>
+            </div>
+          </div>
+
+          <hr class="divider"/>
+
+          <!-- Pertanyaan Analisis -->
+          <div class="section-badge mb-16">❓ Pertanyaan Analisis</div>
+          <p style="color:var(--text-secondary); font-size:14px; margin-bottom:16px;">
+            Berdasarkan hasil pengamatan Anda, jawab pertanyaan berikut:
+          </p>
+          <div class="analisis-list">
+            <div class="analisis-item"><div class="analisis-num">1.</div>Sebutkan 5 proses yang Anda amati dan jelaskan fungsi masing-masing.</div>
+            <div class="analisis-item"><div class="analisis-num">2.</div>Proses mana yang menggunakan CPU paling tinggi? Berapa persentase penggunaannya?</div>
+            <div class="analisis-item"><div class="analisis-num">3.</div>Proses mana yang menggunakan RAM paling tinggi? Berapa besar penggunaannya?</div>
+            <div class="analisis-item"><div class="analisis-num">4.</div>Mengapa proses yang sedang berjalan membutuhkan CPU dan RAM?</div>
+            <div class="analisis-item"><div class="analisis-num">5.</div>Bagaimana Kernel berperan dalam mengelola proses-proses tersebut?</div>
+            <div class="analisis-item"><div class="analisis-num">6.</div>Apa yang kemungkinan terjadi jika terlalu banyak proses berjalan secara bersamaan?</div>
+            <div class="analisis-item"><div class="analisis-num">7.</div>Berdasarkan hasil pengamatan, jelaskan hubungan antara Process, CPU, RAM, dan Kernel.</div>
+          </div>
+
+          <div class="info-note mt-20">
+            <span>ℹ️</span>
+            <span>Pertanyaan analisis di atas merupakan bagian dari tugas. Mahasiswa tidak mengerjakan petunjuk dan pertanyaan sebagai dua tugas terpisah.</span>
+          </div>
+
+          <hr class="divider"/>
+
+          <!-- Template -->
+          <div class="section-badge mb-16">📊 Template Hasil Pengamatan</div>
+          <div class="template-table-wrap">
+            <table class="template-table">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Nama Proses</th>
+                  <th>CPU (%)</th>
+                  <th>RAM (MB)</th>
+                  <th>Fungsi Proses</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>2</td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>3</td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>4</td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>5</td><td></td><td></td><td></td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <button class="btn btn-outline mt-16" id="btn-download-template">⬇️ Download Template</button>
+
+          <hr class="divider"/>
+
+          <!-- Ketentuan -->
+          <div class="section-badge mb-16">📋 Ketentuan Pengumpulan</div>
+          <div class="ketentuan-list">
+            <div class="ketentuan-item"><span class="ketentuan-icon">👤</span>Tugas dikerjakan secara <strong>individu</strong>.</div>
+            <div class="ketentuan-item"><span class="ketentuan-icon">🔢</span>Minimal <strong>5 proses</strong> yang diamati.</div>
+            <div class="ketentuan-item"><span class="ketentuan-icon">📸</span>Wajib menyertakan <strong>screenshot</strong> Task Manager / System Monitor.</div>
+            <div class="ketentuan-item"><span class="ketentuan-icon">✍️</span>Jawaban berdasarkan <strong>hasil pengamatan sendiri</strong> dengan bahasa sendiri.</div>
+            <div class="ketentuan-item"><span class="ketentuan-icon">📄</span>Laporan <strong>2–3 halaman</strong>, format <strong>PDF</strong>.</div>
+            <div class="ketentuan-item"><span class="ketentuan-icon">📁</span>Nama file: <code style="background:var(--border);padding:2px 8px;border-radius:4px;font-family:monospace;">NIM_Nama_Tugas4_SistemOperasi.pdf</code></div>
+            <div class="ketentuan-item"><span class="ketentuan-icon">📤</span>Dikumpulkan melalui <strong>SPARING</strong> sesuai jadwal.</div>
+          </div>
+
+          <div class="card mt-24 blue">
+            <div class="card-title">🗺️ Alur Tugas</div>
+            <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:12px;">
+              <span class="tag blue">📸 Screenshot</span>
+              <span>→</span>
+              <span class="tag green">📊 Data 5 Proses</span>
+              <span>→</span>
+              <span class="tag yellow">❓ Jawaban Analisis</span>
+              <span>→</span>
+              <span class="tag orange">📝 Kesimpulan</span>
+              <span>→</span>
+              <span class="tag blue">📤 SPARING</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-32">
+        <button class="btn btn-primary" onclick="showSection('rangkuman')">Lihat Rangkuman →</button>
+      </div>
+    </section>
+
+    <!-- ─── RANGKUMAN ─── -->
+    <section class="section" id="section-rangkuman">
+      <div class="hdr-rangkuman">
+        <div style="font-size:11px; font-weight:700; color:var(--blue-400); letter-spacing:2px; text-transform:uppercase; margin-bottom:10px;">Ringkasan Inti Pertemuan 4</div>
+        <h2 style="font-size:32px; font-weight:800; margin-bottom:12px;">Rangkuman Manajemen Proses</h2>
+        <p style="font-size:14px; color:var(--text-secondary); max-width:620px; margin:0 auto; line-height:1.7;">8 Poin esensial yang wajib diingat dan dipahami seputar arsitektur serta pengelolaan proses pada sistem operasi modern.</p>
+      </div>
+
+      <div class="rangkuman-grid">
+        <div class="rang-card">
+          <div class="rc-icon">📄</div>
+          <div class="rc-title text-yellow">PROGRAM</div>
+          <div class="rc-desc">"Kumpulan instruksi yang tersimpan di disk. Bersifat pasif, belum menggunakan CPU."</div>
+        </div>
+        <div class="rang-card">
+          <div class="rc-icon">⚙️</div>
+          <div class="rc-title text-blue">PROCESS</div>
+          <div class="rc-desc">"Program yang sedang dieksekusi. Bersifat aktif, memiliki PID, dan menggunakan sumber daya."</div>
+        </div>
+        <div class="rang-card">
+          <div class="rc-icon">🔄</div>
+          <div class="rc-title text-cyan">PROCESS STATE</div>
+          <div class="rc-desc">"Keadaan yang menunjukkan kondisi proses: NEW → READY → RUNNING → WAITING → TERMINATED."</div>
+        </div>
+        <div class="rang-card">
+          <div class="rc-icon">📋</div>
+          <div class="rc-title text-purple">PCB</div>
+          <div class="rc-desc">"Struktur data yang digunakan OS untuk menyimpan dan mengelola informasi sebuah proses."</div>
+        </div>
+        <div class="rang-card">
+          <div class="rc-icon">🖥️</div>
+          <div class="rc-title text-blue">CPU</div>
+          <div class="rc-desc">"Menjalankan instruksi proses. Hanya satu proses yang dapat dieksekusi per CPU core dalam satu waktu."</div>
+        </div>
+        <div class="rang-card">
+          <div class="rc-icon">💾</div>
+          <div class="rc-title text-purple">RAM</div>
+          <div class="rc-desc">"Menyimpan data dan instruksi yang sedang aktif digunakan. Semakin banyak proses, semakin besar kebutuhan RAM."</div>
+        </div>
+        <div class="rang-card">
+          <div class="rc-icon">🔀</div>
+          <div class="rc-title text-orange">CONTEXT SWITCH</div>
+          <div class="rc-desc">"Mekanisme perpindahan CPU dari satu proses ke proses lain dengan menyimpan dan memulihkan kondisi proses."</div>
+        </div>
+        <div class="rang-card">
+          <div class="rc-icon">🧵</div>
+          <div class="rc-title text-green">THREAD</div>
+          <div class="rc-desc">"Unit eksekusi di dalam sebuah process. Berbagi memori dengan thread lain dalam proses yang sama."</div>
+        </div>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="card blue mt-8">
+        <div class="card-icon">🎓</div>
+        <div class="card-title">Selamat! Anda telah menyelesaikan materi Pertemuan 4</div>
+        <div class="card-desc mt-8" style="line-height:1.8;">
+          Anda telah mempelajari konsep dasar manajemen proses, termasuk state proses, PCB, hubungan CPU &amp; RAM, context switch, dan thread.
+          Jangan lupa kerjakan <strong>Tugas Pertemuan 4</strong> sesuai ketentuan!
+        </div>
+        <div style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="showSection('mini-game')">🎮 Ulangi Mini Game</button>
+          <button class="btn btn-outline" onclick="showSection('latihan')">✏️ Ulangi Latihan</button>
+          <button class="btn btn-outline" onclick="showSection('tugas')">📝 Lihat Tugas</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
